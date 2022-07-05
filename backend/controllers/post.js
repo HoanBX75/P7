@@ -62,6 +62,7 @@ exports.getAllPost = (req, res, next) => {
 // 3. GET ONE POST 
 exports.getOnePost = (req, res, next) => {
     console.log (scriptname + 'getOnePost '  );
+    console.log (scriptname + 'getOnePost req = ', req  );
     /*
         Sauce.findOne({_id: req.params.id})
         .then(sauce => res.status(200).json(sauce))
