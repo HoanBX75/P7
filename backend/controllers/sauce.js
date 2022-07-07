@@ -57,7 +57,7 @@ exports.getAllSauce = (req, res, next) => {
 
 // 3. GET ONE SAUCE 
 exports.getOneSauce = (req, res, next) => {
-    console.log (scriptname + 'getOneSauce '  );
+    console.log (scriptname + 'getOneSauce  req', req.protocol + '://' + req.get('host') + req.originalUrl );
 
         Sauce.findOne({_id: req.params.id})
         .then(sauce => res.status(200).json(sauce))

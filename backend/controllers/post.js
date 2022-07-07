@@ -1,6 +1,7 @@
 const Sauce = require('../models/post');
 const fs = require('fs');
-scriptname = 'controllers/post.js : ';
+
+scriptname = 'controllers/post.js popo: ';
 console.log (scriptname + 'begin  xxx'  );
 
 // 1.  CREATE POST 
