@@ -11,7 +11,7 @@ function Logout (){
 
 return (
 <div>
-    LOGOUT 
+     
     <Header  state={0}/>
    <br/>
  
