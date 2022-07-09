@@ -6,12 +6,13 @@ import { useNavigate } from 'react-router-dom'
 function Signup (){
 
     // p7a conncectionForm  https://react-hook-form.com/
+    console.log (" Signup : begin ");
 
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState()
     const navigate = useNavigate()
 
-
+/* ------------------------ */    
     const onSubmit = (data) => {
         if (data.password === "" || data.email === "") {
             setError("Veuillez remplir tous les champs")
@@ -27,12 +28,12 @@ function Signup (){
         }
     }
    
-
+/* ------------------------ */ 
     const resetError = () => {
         setError("")
     }
+/* ------------------------ */    
 
-console.log (" Signup ");
 
     return (
         <div>
