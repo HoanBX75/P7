@@ -6,14 +6,14 @@ import Header from "../components/Header";
 
 function Logout (){
 
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-
+    localStorage.clear();
+ 
 return (
 <div>
      
     <Header  state={0}/>
-   <br/>
+  
+   <p>Bye! Would you like to connect again ?</p>
  
 </div>  
 );    

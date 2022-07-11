@@ -21,13 +21,13 @@ function Login (){
     const navigate = useNavigate()
   
 
-/* ------------------------ */  
+    /* ------------------------ */  
     const onSubmit = async (data) => {
         let  LoginCompName = 'Login.js/onSubmit()';    
         traceLog_obj (1,  LoginCompName , 'Input Form data ', data );
 
         if (data.password === "" || data.email === "") {
-            traceLog_msg (1,  LoginCompName , 'Input Form Fields are not all filled');
+            traceLog_msg (1,  LoginCompName , 'Input Form Fields are not all filled!');
             setError("Please fill all the Form fields!")
         }
         else {
@@ -37,13 +37,14 @@ function Login (){
             const request = { method: 'POST',headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(userLogin)};          
             let api_url = "http://localhost:3000/api/auth/login";
+
             let resp_ok = false;
-            let token = null;
-            let userId = null;
+            let user = {userid : '', username : '',   usertype : '',   token : '' };
             let err_msg = '';
             
-            traceLog (1,  LoginCompName , 'send  HTTP post url =', api_url )
 
+            traceLog (1,  LoginCompName , 'send  HTTP post url =', api_url )
+            /* ---------- */
             await fetch(api_url, request)
             .then(response => {
                 traceLog_obj (1,  LoginCompName , 'HTTP post response =', response );
@@ -55,8 +56,10 @@ function Login (){
             .then(data  => {
                 traceLog_obj (1,  LoginCompName , 'HTTP post response body =', data );
                 if (resp_ok) {
-                    token = data.token;
-                    userId = data.userId;  
+                    user.token = data.token;
+                    user.userid = data.userid;  
+                    user.username=  data.username;  
+                    user.usertype = data.usertype;
                 }
                 else 
                 {
@@ -72,10 +75,9 @@ function Login (){
             /* ---------- */
             if (resp_ok) {
                 traceLog_msg (1,  LoginCompName , 'Login Succesfull');
-                traceLog (1,  LoginCompName , 'token = ', token );
-                traceLog (1,  LoginCompName , 'userId = ', userId );
-                localStorage.setItem( "token" , token);
-                localStorage.setItem( "user" ,  userId);        
+                traceLog_obj (1,  LoginCompName , 'user = ', user );
+
+                localStorage.setItem( "user" , user);
                        
             }
             else 
@@ -86,31 +88,30 @@ function Login (){
             } 
 
             navigate("/"); 
-           }   // end of else : form fields are filled 
+        }   // end of else : form fields are filled 
 
         traceLog_msg (1,  LoginCompName , 'end');
         traceLog_line ();    
     } // end of on submit callback 
        
-/* ------------------------ */         
+    /* ------------------------ */         
     const resetError = () => {
-            let  LoginCompName = 'Login.js/resetError()';  
-            traceLog_msg (1,  LoginCompName , 'setError ()');
-            setError("")
+        let  LoginCompName = 'Login.js/resetError()';  
+        traceLog_msg (1,  LoginCompName , 'setError ()');
+        setError("")
     }
-/* ------------------------ */   
+    /* ------------------------ */   
    
 
-
-
-/* ------------------------ */   
-traceLog_msg (1,  LoginCompName , 'return');
-return (
+    /* ------------------------ */   
+    traceLog_msg (1,  LoginCompName , 'return');
+    return (
     <div>
-        
+    
     <Header  state={2}/>
-
+    <p>Provide your credentials to login and post ! </p>
     <form onSubmit={handleSubmit(onSubmit)}>
+        <></>
         <div>
             <label htmlFor="email">Email</label>
             <input {...register('email')} type="email" onChange={resetError} id="email" />
@@ -124,8 +125,8 @@ return (
         <button>Login</button>
     </form>
 
-</div>
-);  
+    </div>
+    );  
 }  // end of Login function
 /* ------------------------------------------------- */
 

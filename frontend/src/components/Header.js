@@ -16,7 +16,7 @@ function Header (props){
         <br/>
         <Link to="/login">LOGIN</Link>
         <hr/>
-        <p>Please Login or Sign up and Communicate !   </p>
+       
         </nav>
        );   
 
@@ -32,7 +32,7 @@ function Header (props){
         <br/>
         <Link to="/login">LOGIN</Link>
         <hr/>
-        <p>Let's Register and Communicate!   </p>
+     
         </nav>
         
         
@@ -51,7 +51,7 @@ function Header (props){
         <br/>
         <Link to="/login"><strong>LOGIN</strong></Link>
         <hr/>
-        <p>Let's Login and Communicate !  </p>
+    
         </nav>
         
         
@@ -67,7 +67,7 @@ function Header (props){
       <br/>
       <Link to="/logout">LOGOUT</Link>
       <hr/>
-      <p>Here are the posts !  </p>
+   
       </nav>
  );
           break;
@@ -81,7 +81,7 @@ function Header (props){
         <br/>
         <Link to="/logout">LOGOUT</Link>
         <hr/>
-        <p>Add a Post ! </p>
+     
         </nav>
    );
 
@@ -96,7 +96,7 @@ function Header (props){
         <br/>
         <Link to="/logout">LOGOUT</Link>
         <hr/>
-        <p>Update a Post !</p>
+     
         </nav>
    );
 
@@ -112,7 +112,7 @@ function Header (props){
         <br/>
         <Link to="/login">LOGIN</Link>
         <hr/>
-        <p>Let's communicate! Connect and Post  </p>
+     
         </nav>
         
         
