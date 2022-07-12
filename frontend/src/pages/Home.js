@@ -8,18 +8,104 @@ import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/Trace
 const LoginCompName = 'Home.js';
 traceLog_msg (1,  LoginCompName , 'begin');
 
+
+
 function Home() {
 
   const [posts, setPosts] = useState([]);
+  const [posted, setPosted] = useState(false)
   const [user, setUser] = useState({});
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const   LoginCompName = 'Home.js/Home()';
 
   traceLog_line ();
   traceLog_msg (1,  LoginCompName , 'begin');
+
+
+  /* ----------*/
+  
+  useEffect(() => {
+    let  LoginCompName = 'Home.js/Home()';
+    let funcName = LoginCompName + 'useEffect() : ';
+
+    let token = getToken();
+    console.log (funcName +  ' connected  token = ', token );
+
+    if (getToken()) {
+      // Get All the posts 
+       fetch("http://localhost:3000/api/post", {
+        method: 'GET',
+        headers: {
+        'authorization': 'bearer ' + token},
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            console.log (funcName + 'fetch  - data = ', data); 
+            setPosts(data)
+        // console.log("DATA", data)
+        })
+        .catch(err => console.log(err));
+    }
+    else 
+    {
+      console.log (funcName +  ' Not connected  token = ', token );
+      setPosts([])
+    }  
+ }, []);
+   //[posted, setPosted]);
+  
+ /* ----------*/
+  function getStringTime(s_date)
+  {
+    let dateObj = new Date (s_date);
+    let year = dateObj.getFullYear();
+
+    let month = dateObj.getMonth();
+    month = ('0' + month).slice(-2);
+    // To make sure the month always has 2-character-formate. For example, 1 => 01, 2 => 02
+    
+    let date = dateObj.getDate();
+    date = ('0' + date).slice(-2);
+    // To make sure the date always has 2-character-formate
+    
+    let hour = dateObj.getHours();
+    hour = ('0' + hour).slice(-2);
+    // To make sure the hour always has 2-character-formate
+    
+    let minute = dateObj.getMinutes();
+    minute = ('0' + minute).slice(-2);
+    // To make sure the minute always has 2-character-formate
+    
+    let second = dateObj.getSeconds();
+    second = ('0' + second).slice(-2);
+    // To make sure the second always has 2-character-formate
+    
+    const time = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+  //   console.log(time); 
+    return (time);
+  }
+
+
+ /* ----------*/
+  function getToken ()
+  {
+    let user = localStorage.getItem("user");
+    if (user) {
+      let o_user =  JSON.parse (user);
+      return (o_user.token);
+    }
+    else {
+      return null;
+    }  
+  }
   /* ----------*/
   function isConnected (){
       let user = localStorage.getItem("user");
+      console.log ('isConnected() user = ' , user );
+
+
       if (user) return (true);
       return (false);
    }
@@ -48,33 +134,60 @@ function Home() {
   }
 
   /* ----------*/
-  function deletePost (id, name){
+  async function deletePost (id, name){
     let LoginCompName = 'Home.js/Home()/deletePost()';
+    traceLog_line ();
     traceLog_obj (1,  LoginCompName , 'id = ', id);
+    let token = getToken();
+    let url_delete = "http://localhost:3000/api/post/" + id; 
+    await  fetch(url_delete, {
+      method: 'DELETE',
+      headers: {
+        'authorization': 'bearer ' + token,
+      },
+    })
+    .then((res) => {
+
+      traceLog_msg (1,  LoginCompName , 'delete post  ' );
+      traceLog_obj (1,  LoginCompName , 'delete post  res ', res  );
+      setPosted(true);
+    //   navigate ("/")
+
+    })
+    .catch(err => console.log(err)) ;
+
+    traceLog_msg (1,  LoginCompName , 'delete end  ' );
+  
+
   }
 
   /* ----------*/
-  function getAllPosts (){
+   function getAllPosts (){
+   const  funcName = 'Home.js/getAllPosts () :';
+   console.log (" ========================================= >"); 
+   console.log (funcName +  ' begin ');
+
    if (isConnected())
    {
 
-      // Get All the posts 
-     
-        return (
-          <div>
-          <p>  Here are the Posts :  </p>
-          <ul >
-          {postList.map(({ id, name, text  }) => (
-            <div key={id}>
-                id = {id} - name={name } - text = {text}
-                <button onClick={() => deletePost (id, name)}>Delete</button><span>  </span>
-                <button onClick={() => updatePost (id, name)}>Update</button><span>  </span>
-                <button onClick={() => likePost (id, name)}>Like</button>
-            </div>
-          ))}
-          </ul>
-          </div>
-        )     
+    return (
+      <div>
+      <p>  Here are the Posts :  </p>
+      <ul >
+      {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate  }) => (
+        <div key={_id}>
+            id = {_id} <br/>title={title } <br/>text = {text}<br/>
+            imageUrl={imageUrl}  <br/> userId={userId}<br/>  userName={userName}<br/> 
+            postDate={getStringTime(postDate)}  <br/>
+            <button onClick={() => deletePost (_id, title)}>Delete</button><span>  </span>
+            <button onClick={() => updatePost (_id, title)}>Update</button><span>  </span>
+            <button onClick={() => likePost (_id, title)}>Like</button>
+        </div>
+      ))}
+      </ul>
+      </div>
+    );
+   
    }
    else {
         
@@ -87,14 +200,14 @@ function Home() {
 
   }  
 /* ----------*/
-
+/*  {getAllPosts()} */
 /* ----------------------------------------------*/
 
 traceLog_msg (1,  LoginCompName , 'return');  
 return (
         <div>
             <Header  state={getHeaderState()}/>
-            {getAllPosts()}
+            {getAllPosts()} 
         </div>
     );    
 }   // end of function Home

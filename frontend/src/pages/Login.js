@@ -77,8 +77,12 @@ function Login (){
                 traceLog_msg (1,  LoginCompName , 'Login Succesfull');
                 traceLog_obj (1,  LoginCompName , 'user = ', user );
 
-                localStorage.setItem( "user" , user);
-                       
+                localStorage.setItem( 'user' , JSON.stringify(user));
+
+
+                   let kk =     localStorage.getItem( 'user');
+                   let user2 = JSON.parse(kk);
+                   traceLog_obj (1,  LoginCompName , 'user2 = ',user2 );
             }
             else 
             {

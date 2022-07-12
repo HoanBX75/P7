@@ -1,114 +1,144 @@
-const Sauce = require('../models/post');
+const Post = require('../models/post');
 const fs = require('fs');
 
-scriptname = 'controllers/post.js popo: ';
-console.log (scriptname + 'begin  xxx'  );
+scriptname = 'controllers/post.js: ';
+console.log (scriptname + 'begin'  );
 
+// ========================================
 // 1.  CREATE POST 
+// ========================================
+/*
+DB post : 
+ {
+_id: "62cda538f4a278fac373ba14"
+imageUrl: "http://localhost:3000/images/febrian-zakaria-sjvU0THccQA-unsplash.jpg1657644344094.jpg"
+postDate: "2022-07-12T16:45:44.098Z"
+text: "fg"
+title: "rdetg"
+userId: "62cc84c93b888b5ec569245a"
+userName: "titi"
+usersLiked: Array []
+  }
+*/
 
 exports.createPost = (req, res, next) => {
-    const funcName =  scriptname + ' - createSauce : ';
-        console.log (funcName + "debut");
-        console.log (funcName  + " req.body = ", req.body);
-/*
-        const sauceObjet = JSON.parse(req.body.sauce);
-        console.log (funcName  + " req.sauceObjet = ", sauceObjet);
-     
-      //   res.status(201).json({message: "Sauce ajouté !"});
-    
-            delete req.body._id
-            console.log (funcName  + " req.sauceObjet (after delete _id) = ", sauceObjet);
-      
-         let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-         console.log (funcName  + " url0  ", url0);
+    scriptname = 'controllers/post.js';
+    const funcName =  scriptname + '/createPost() : '; 
+    console.log ('--------------------------------------> ');
+    console.log (funcName  + "begin :  req.body = ", req.body);
 
-     //    let url = "http://www.hoanbx.fr/Projects/P3/images/restaurants/jay-wennington-N_Y88TWmGwA-unsplash.jpg";
-     //    console.log (funcName  + " url  ", url);
+    let i_post = req.body;
+    delete i_post._id;
+    let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
-            const sauce = new Sauce ({
-                ...sauceObjet,
-                likes: 0,
-                dislikes:0,
-                imageUrl: url0 ,
-                usersLiked: [],
-                usersDisliked: [],
+    let i_date =   Date.now();
+    console.log (funcName  + " i_post  = ", i_post);
+    console.log (funcName  + " i_date  = ", i_date);
+    console.log (funcName  + " url0 = ", url0);
+
+    // let i_date =  new Date().toJSON();
+    // const backToDate = new Date(i_date);
+    //   https://www.w3schools.com/js/js_dates.asp
+
+    const db_post = new Post ({
+            ...i_post,
+            imageUrl: url0,
+            usersLiked: [],
+            postDate: i_date
+    })
+
+    console.log (funcName  + " Create DB post =  ", db_post);
+
+    db_post.save()
+    .then(() => { 
+            console.log (funcName  + "End: Post added sucessfully  ");
+            console.log ('--------------------------------------> ');
+            res.status(201).json({message: "Post  added !"})
             })
-            console.log (funcName  + " model Sauce  ", sauce);
-      
-           
-            sauce.save()
-            .then(() => res.status(201).json({message: "Sauce ajouté !"}))
-            .catch((error) => res.status(400).json({error}))
-   */         
+    .catch((error) => {
+            console.log (funcName  + " End:  Error,  Post not added : " + error );
+            console.log ('--------------------------------------> ');
+            res.status(400).json({error} ) 
+    })
 }
         
-    
+// ========================================    
 // 2. GET ALL POSTS
+// ========================================
+
 
 exports.getAllPost = (req, res, next) => {
     console.log (scriptname + 'getAllPost '  );
+    // https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573/12
+    // https://stackoverflow.com/questions/67264632/mongoose-sorting-by-createdat
+    // https://www.statology.org/mongodb-sort-by-date/
 
-    /*
-        Sauce.find()
-        .then(sauces => {
-            console.log (scriptname + 'getAllSauce  sauces= ', sauces );
-            res.status(200).json(sauces);
+    
+        Post.find().sort({"postDate": -1}) 
+        .then(posts => {
+            console.log (scriptname + 'getAllSauce  posts= ', posts );
+            res.status(200).json(posts);
         }
         )
         .catch(error => res.status(400).json({error}));
-     */   
-    }
+        
+}
 
 
 // 3. GET ONE POST 
 exports.getOnePost = (req, res, next) => {
     console.log (scriptname + 'getOnePost '  );
-    console.log (scriptname + 'getOnePost req = ', req  );
-    /*
-        Sauce.findOne({_id: req.params.id})
-        .then(sauce => res.status(200).json(sauce))
+  //   console.log (scriptname + 'getOnePost req = ', req  );
+    
+        Post.findOne({_id: req.params.id})
+        .then(post => res.status(200).json(post))
         .catch(error => res.status(400).json({error}));
 
 
-     */   
+    
     }
 
+// ========================================
 // 4. DELETE  ONE POST 
-
-exports.deletePost = (req, res, next) =>{
-    const funcName =  scriptname + ' - deletePost : ';
+// ========================================
+exports.deletePost = async  (req, res, next) =>{
+    const scriptname = 'controllers/post.js';
+    const funcName =  scriptname + '/deletePost() : '; 
+    console.log ('--------------------------------------> ');
     console.log (funcName + " post  id (params id ) = ", req.params.id);
 
     // Search for a post  with the id 
 
-/*
-    Sauce.findOne({_id: req.params.id})
-    .then(sauce => {
-        console.log (funcName + " Found sauce id = ", req.params.id);
-        const filename = sauce.imageUrl.split('/images/')[1];
+
+    Post.findOne({_id: req.params.id})
+    .then(post => {
+        console.log (funcName + " Found post  id = ", req.params.id);
+        const filename = post.imageUrl.split('/images/')[1];
         console.log (funcName + " Image Filename to remove  = ", filename);
 
+        
         fs.unlink(`images/${filename}`, () => {
-            // Image sauce is deleted 
+            // Image Post  is deleted 
             console.log (funcName + " Deleted filename   = ", filename);
-            // Delete the object Sauce in Mongodb  
-            Sauce.deleteOne({_id: req.params.id})
+            // Delete the object Post in Mongodb  
+            Post.deleteOne({_id: req.params.id})
             .then(() => {
-                console.log (funcName + " Deleted sauce id  = ", req.params.id);
-                res.status(200).json({message: 'Sauce supprimé.'})
+                console.log (funcName + " Deleted Post  id  = ", req.params.id);
+                res.status(200).json({message: 'Post deleted .'})
 
             })
-            .catch(error => res.status(400).json({error}));
-            });
-
-        })
+        .catch(error => res.status(400).json({error}));
+        });
+        
+        
+     })
     .catch(error => {
         console.log (funcName + " Error Not Deleted file   = ", error);
         res.status(400).json({error})
-    } );
-*/
-                  
-}
+    });
+
+
+} // end of delete 
 
 
 // 6. UPDATE POST 
@@ -288,4 +318,4 @@ exports.updatePost = (req, res, next) => {
 
 }
 
-console.log (scriptname + 'end '  );
+console.log (scriptname + 'end');

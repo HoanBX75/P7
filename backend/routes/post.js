@@ -8,7 +8,7 @@ const postCrtl = require('../controllers/post');
 
 
 /* end point posts  */
-router.post('/', auth, multer, postCrtl.createPost);
+router.post('/add', auth, multer, postCrtl.createPost);
 router.get("/", auth, postCrtl.getAllPost);
 router.get("/:id", auth, postCrtl.getOnePost);
 
