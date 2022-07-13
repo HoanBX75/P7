@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
 
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
-
+import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
 
 const LoginCompName = 'Signup.js';
@@ -110,8 +110,9 @@ function Signup (){
     return (
         <div>
             
-        <Header  state={1}/>
-        <p>Please provide your credentials to sign up !</p>
+        <Header  state={1} user={getLocalStorageUser()}/>
+        <h2>Sign Up</h2>
+         <p>Please fill the following form: </p> 
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
                 <label htmlFor="email">Email</label>

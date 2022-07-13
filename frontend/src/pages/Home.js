@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
-import { postList } from "../datas/postList";
+
 import { Link, useNavigate } from 'react-router-dom'
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
+import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
 
 const LoginCompName = 'Home.js';
@@ -10,10 +11,11 @@ traceLog_msg (1,  LoginCompName , 'begin');
 
 
 
-function Home() {
+function Home(props) {
 
   const [posts, setPosts] = useState([]);
   const [posted, setPosted] = useState(false)
+
   const [user, setUser] = useState({});
   const navigate = useNavigate();
 
@@ -21,6 +23,9 @@ function Home() {
 
   traceLog_line ();
   traceLog_msg (1,  LoginCompName , 'begin');
+  const state = props.state; 
+  traceLog_obj (1,  LoginCompName , 'state = ', state);
+ 
 
 
   /* ----------*/
@@ -29,6 +34,7 @@ function Home() {
     let  LoginCompName = 'Home.js/Home()';
     let funcName = LoginCompName + 'useEffect() : ';
 
+    traceLog_line ();
     let token = getToken();
     console.log (funcName +  ' connected  token = ', token );
 
@@ -44,7 +50,8 @@ function Home() {
 
             console.log (funcName + 'fetch  - data = ', data); 
             setPosts(data)
-        // console.log("DATA", data)
+            setPosted(true);
+        
         })
         .catch(err => console.log(err));
     }
@@ -53,7 +60,7 @@ function Home() {
       console.log (funcName +  ' Not connected  token = ', token );
       setPosts([])
     }  
- }, []);
+ }, [posted]);
    //[posted, setPosted]);
   
  /* ----------*/
@@ -83,12 +90,13 @@ function Home() {
     // To make sure the second always has 2-character-formate
     
     const time = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
-  //   console.log(time); 
+ 
     return (time);
   }
 
 
  /* ----------*/
+  
   function getToken ()
   {
     let user = localStorage.getItem("user");
@@ -103,7 +111,7 @@ function Home() {
   /* ----------*/
   function isConnected (){
       let user = localStorage.getItem("user");
-      console.log ('isConnected() user = ' , user );
+ 
 
 
       if (user) return (true);
@@ -150,8 +158,9 @@ function Home() {
 
       traceLog_msg (1,  LoginCompName , 'delete post  ' );
       traceLog_obj (1,  LoginCompName , 'delete post  res ', res  );
-      setPosted(true);
-    //   navigate ("/")
+      setPosted(false);
+     
+     navigate ("/")
 
     })
     .catch(err => console.log(err)) ;
@@ -162,25 +171,40 @@ function Home() {
   }
 
   /* ----------*/
-   function getAllPosts (){
-   const  funcName = 'Home.js/getAllPosts () :';
-   console.log (" ========================================= >"); 
+   function displayAllPosts (){
+   
+   const  funcName = 'Home.js/displayAllPosts () :';
+   
    console.log (funcName +  ' begin ');
+   const current_user = getLocalStorageUser ();
+  
+
+   
 
    if (isConnected())
    {
+    traceLog_obj (1,  LoginCompName , ' current current_user ', current_user );
+    const cur_username =  current_user.username;
+    
+    traceLog_obj (1,  LoginCompName , ' cur_username =', cur_username );
+    traceLog_obj (1,  LoginCompName , ' posts ', posts );
 
     return (
       <div>
-      <p>  Here are the Posts :  </p>
+       <h2>All Posts </h2>
       <ul >
       {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate  }) => (
         <div key={_id}>
+          <br/>
             id = {_id} <br/>title={title } <br/>text = {text}<br/>
             imageUrl={imageUrl}  <br/> userId={userId}<br/>  userName={userName}<br/> 
             postDate={getStringTime(postDate)}  <br/>
+            { cur_username === userName?
+            <div>
             <button onClick={() => deletePost (_id, title)}>Delete</button><span>  </span>
             <button onClick={() => updatePost (_id, title)}>Update</button><span>  </span>
+            </div>: null
+            } 
             <button onClick={() => likePost (_id, title)}>Like</button>
         </div>
       ))}
@@ -198,18 +222,20 @@ function Home() {
         )
    }
 
-  }  
+  } 
 /* ----------*/
-/*  {getAllPosts()} */
+
 /* ----------------------------------------------*/
 
 traceLog_msg (1,  LoginCompName , 'return');  
 return (
         <div>
-            <Header  state={getHeaderState()}/>
-            {getAllPosts()} 
+            <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
+            {displayAllPosts()} 
         </div>
     );    
+
+
 }   // end of function Home
 
 traceLog_msg (1,  LoginCompName , 'end');

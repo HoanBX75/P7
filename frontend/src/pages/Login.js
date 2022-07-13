@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
+import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
   // p7a conncectionForm  https://react-hook-form.com/
 
@@ -112,7 +113,8 @@ function Login (){
     return (
     <div>
     
-    <Header  state={2}/>
+    <Header  state={2} user={getLocalStorageUser()}/>
+    <h2>Log In</h2>
     <p>Provide your credentials to login and post ! </p>
     <form onSubmit={handleSubmit(onSubmit)}>
         <></>

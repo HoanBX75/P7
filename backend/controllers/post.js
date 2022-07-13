@@ -76,23 +76,31 @@ exports.getAllPost = (req, res, next) => {
     
         Post.find().sort({"postDate": -1}) 
         .then(posts => {
-            console.log (scriptname + 'getAllSauce  posts= ', posts );
+          //   console.log (scriptname + ' - getAll  posts= ', posts );
             res.status(200).json(posts);
         }
         )
-        .catch(error => res.status(400).json({error}));
+        .catch(error => {
+            console.log (scriptname + ' - getAll  error= ', error );
+            res.status(400).json({error})
+        });
         
 }
 
 
 // 3. GET ONE POST 
 exports.getOnePost = (req, res, next) => {
-    console.log (scriptname + 'getOnePost '  );
+    console.log (scriptname + ' - getOnePost '  );
   //   console.log (scriptname + 'getOnePost req = ', req  );
     
         Post.findOne({_id: req.params.id})
-        .then(post => res.status(200).json(post))
-        .catch(error => res.status(400).json({error}));
+        .then(post => { 
+            console.log (scriptname + ' - getOnePost  post = '  , post );
+            res.status(200).json(post)})
+        .catch(error => {
+            console.log (scriptname + ' - getOnePost  error  = '  , error );
+            res.status(400).json({error})
+        });
 
 
     
@@ -140,68 +148,107 @@ exports.deletePost = async  (req, res, next) =>{
 
 } // end of delete 
 
-
+// ======================
 // 6. UPDATE POST 
+// ======================
 /*
-PUT /api/sauces/:id 
+PUT /api/post/:id 
 EITHER
-Sauce as JSON
-OR { sauce: String,
+Post  as JSON
+OR { post: String,
 image: File }
 The response :  { message: String }
+
+controllers/post.js/updatePost() :  postObject     =  {
+  userName: 'titi',
+  text: 'zzzz',
+  title: 'zzzzz',
+  userId: '62cc84c93b888b5ec569245a',
+  image: 'undefined'
+}
+
+En base :
+    _id    :62cdeb974b8d11f7c369d07a
+    userId    :"62cdb253b4135cd12ad451dc"
+    userName    :"hoan"
+    title    :"jkdljf"
+    text    :"ff"
+    imageUrl    :"http://localhost:3000/images/annie-spratt-Eg1qcIitAuA-unsplash.jpg1657..."
+    usersLiked    :    Array
+    postDate    :2022-07-12T21:45:59.085+00:00
+    __v
+    :0
 
 */
 
 exports.updatePost = (req, res, next) => {
-    const funcName =  scriptname + ' - updatePost : ';
+  
     // Search for a sauce with the id 
+    const scriptname = 'controllers/post.js';
+    const funcName =  scriptname + '/updatePost() : '; 
+    console.log ('--------------------------------------> ');
+    console.log (funcName + " post  id (params id ) = ", req.params.id);
+  
 
-/*
 
     console.log("============");
    //  console.log (funcName + " req  = ", req );
     console.log (funcName + " req file  = ", req.file );
     console.log (funcName + " req image  = ", req.image );
     console.log (funcName + " req body  = ", req.body );
-
+ //   res.status(200).json({ message: 'Sauce modifiée avec succès !' });
+  
    if (req.file ) {
-       // The image is to udpate  :  Sauce as JSON
+       // The image is to udpate  :  Post  as JSON
     console.log (funcName + " Image to update   ");
-    Sauce.findOne({_id: req.params.id})
-    .then(sauce => {
+    Post.findOne({_id: req.params.id})
+    .then(post  => {
 
-        console.log (funcName + " Found in MongoDB sauce id = ", req.params.id);
+        console.log (funcName + " Found in MongoDB post  id = ", req.params.id);
         let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
-        const filename = sauce.imageUrl.split('/images/')[1];
+        const filename = post.imageUrl.split('/images/')[1];
         console.log (funcName + " deleting this file  = ", filename);
 
         
         fs.unlink(`images/${filename}`, () => {
             console.log (funcName + " Ok deleted file  = ", filename);
-            let osauce =  JSON.parse(req.body.sauce);
-            console.log (funcName + " req osauce  = ", osauce);
+            
+      
+
+            let opost =  req.body;
+            let i_date =   Date.now();
+
+            console.log (funcName + " req opost  = ", opost);
             console.log (funcName + "  imageUrl  = ", url0);
-            const sauceObject = {
-                  ...osauce,
+            const postObject = {
+                  ...opost,
                 imageUrl: url0,
+                postDate: i_date 
             };
 
-            console.log (funcName + " input sauce  = ", sauceObject);
 
-            Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+            console.log (funcName + " input post   = ", postObject);
+
+            Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
             .then(() =>{ 
-                console.log (funcName + " OK sauce updated -  id   = ", req.params.id);
+                console.log (funcName + " OK post  updated -  id   = ", req.params.id);
                 console.log("============");
-                res.status(200).json({ message: 'Sauce modifiée avec succès !' });
+                res.status(200).json({ message: 'Post  updated with success !' });
             })
-            .catch(error => res.status(400).json({ error }))
+            .catch(error =>{
+                console.log (funcName + " ERROR  post  updated -  id   = ", error );
+ 
+
+                res.status(400).json({ error })
+            })
+            
         })    ;
         // .catch(error => res.status(500).json({ error })); 
 
     })
     .catch(error => {
-        console.log (funcName + " Error Sauce update - error    = ", error);
+        console.log (funcName + " Error Post  update - error    = ", error);
         res.status(400).json({error})
     } );    
    }
@@ -210,18 +257,28 @@ exports.updatePost = (req, res, next) => {
    // ============================================
 
     console.log (funcName + " No  image to update   ");
-    const sauceObject = { ...req.body } ;
-    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+   
+   //  delete postObject.image;
+   // delete postObject._id;
+   
+    let i_date =   Date.now();
+   const postObject = { ...req.body,  postDate: i_date } ;
+
+ //   const postObject = { ...req.body } ;
+   console.log (funcName + " postObject     = ", postObject);
+
+
+    Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
         .then(() => {
-         console.log (funcName + " OK sauce updated -  id   = ", req.params.id);
+         console.log (funcName + " OK Post  updated -  id   = ", req.params.id);
          console.log("============");
-         res.status(200).json({ message: 'Sauce modifiée avec succès !' })
+         res.status(200).json({ message: 'Post updated with success !' })
         })
         .catch(error => res.status(400).json({ error }));
 
    }
 
-*/
+
 
 }
 

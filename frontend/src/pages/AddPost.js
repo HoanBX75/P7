@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
+import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
 /* ------------------------------------------------- */
 const LoginCompName = 'AddPost.js';
@@ -92,20 +93,20 @@ traceLog_msg (1,  LoginCompName , 'return');
 return (
 <div>
      
-    <Header  state={4}/>
-    <p>Fill the Post Form : </p>
+    <Header  state={4} user={getLocalStorageUser()}/>
+    <h2>Add Post </h2>
     <form onSubmit={handleSubmit(onSubmit)}>
         <div>
             <div>
                 <label htmlFor="titre">Title</label>
             </div>
-            <textarea {...register('title')} type="text" rows="2" cols="100" autoFocus maxLength={255} id="titre" />
+            <textarea {...register('title')} type="text" rows="1" cols="100" autoFocus maxLength={255} id="titre" />
         </div>
         <div>
             <div>
                 <label htmlFor="texte">Text</label>
             </div>
-                <textarea {...register('text')} type="text" rows="5" cols="100" maxLength={500} id="texte" />
+                <textarea {...register('text')} type="text" rows="3" cols="100" maxLength={500} id="texte" />
         </div>
         <div>
                 <input {...register('image')} aria-label="Ajouter une image" type="file" />

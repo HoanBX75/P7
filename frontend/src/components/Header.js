@@ -5,7 +5,12 @@ import { Link } from 'react-router-dom'
 function Header (props){
 
     let state = props.state;
-   
+    let user =  props.user;
+    
+    function getCurrentUser(){
+      return (<p><strong>USER : {user.username}</strong></p>);
+    }
+
     switch (state)
     {
       case 0:   /* SIGN UP	LOGIN */
@@ -53,12 +58,13 @@ function Header (props){
         <hr/>
     
         </nav>
-        
+       
         
     );   
           break;
       case 3:    /*  x ALL POSTS  	ADD POST  LOGOUT */
       return (
+
       <nav>
  
       <Link to="/"><strong>ALL POSTS</strong></Link> 
@@ -66,10 +72,11 @@ function Header (props){
       <Link to="/post/add">ADD POST</Link> 
       <br/>
       <Link to="/logout">LOGOUT</Link>
+      {getCurrentUser()}
       <hr/>
    
       </nav>
- );
+      );
           break;
       case 4 :    /* add   ALL POSTS  x 	ADD POST  LOGOUT */
       return (
@@ -80,10 +87,11 @@ function Header (props){
         <Link to="/post/add"><strong>ADD POST</strong ></Link> 
         <br/>
         <Link to="/logout">LOGOUT</Link>
+        {getCurrentUser()}
         <hr/>
      
         </nav>
-   );
+        );
 
           break;
       case 5 :   /*  update .  ALL POSTS  	ADD POST  LOGOUT */
@@ -95,10 +103,11 @@ function Header (props){
         <Link to="/post/add">ADD POST</Link> 
         <br/>
         <Link to="/logout">LOGOUT</Link>
+        {getCurrentUser()}
         <hr/>
-     
+      
         </nav>
-   );
+      );
 
           break; 
       default : 
