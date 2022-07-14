@@ -135,11 +135,51 @@ function Home(props) {
    }
 
   /* ----------*/
-   function likePost (id, name){
-    let LoginCompName = 'Home.js/Home()/likePost()';
-    traceLog_obj (1,  LoginCompName , 'id = ', id);
- 
+   async function likePost ( post_id, cur_token, cur_userid, dotheLike){
+      let funcName = 'Home.js/Home()/likePost()';
+      traceLog_line ();
+      traceLog_obj (1,  funcName , 'post_id = ', post_id);
+      traceLog_obj (1,  funcName , 'cur_userid = ', cur_userid);
+      traceLog_obj (1,  funcName , 'cur_token = ', cur_token);
+      traceLog_obj (1,  funcName , 'dotheLike = ', dotheLike);
+
+
+
+      const postData = { userid: cur_userid, 
+                        dotheLike: dotheLike};
+
+
+      let url_postlike = "http://localhost:3000/api/post/like/" + post_id; 
+
+      traceLog (1,  funcName , 'send  HTTP post like  url =', url_postlike )
+      /* ---------- */
+      await fetch(url_postlike, {
+        method: 'POST',
+        headers: {
+          'authorization': 'bearer ' + cur_token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData)
+      })
+      .then((res) => {
+
+        traceLog_msg (1,  LoginCompName , 'like  post  ' );
+        traceLog_obj (1,  LoginCompName , 'like post  res ', res  );
+      //   setPosted(false);
+       
+       // navigate ("/")
+  
+      })
+      .catch(err => console.log(err)) ;
+  
+      traceLog_msg (1,  LoginCompName , 'like post end  ' );
+      setPosted(false);
+
+    // navigate("/"); 
+
   }
+  /* ----------*/
+
 
   /* ----------*/
   async function deletePost (id, name){
@@ -160,7 +200,7 @@ function Home(props) {
       traceLog_obj (1,  LoginCompName , 'delete post  res ', res  );
       setPosted(false);
      
-     navigate ("/")
+      // navigate ("/")
 
     })
     .catch(err => console.log(err)) ;
@@ -169,6 +209,28 @@ function Home(props) {
   
 
   }
+
+
+  /* ----------*/
+  function isUserLiking ( cur_userid, usersLikesList)
+  {
+    let res_userid = null;
+
+    if (usersLikesList.length === 0 ) {
+      return (false);
+    }
+    else {
+      res_userid = usersLikesList.find (userid  => cur_userid ==  userid);
+    }
+    
+    if (res_userid) {
+      return (true);
+    }
+    else {
+      return (false);
+    }
+  }
+
 
   /* ----------*/
    function displayAllPosts (){
@@ -185,7 +247,9 @@ function Home(props) {
    {
     traceLog_obj (1,  LoginCompName , ' current current_user ', current_user );
     const cur_username =  current_user.username;
-    
+    const cur_userid = current_user.userid ; 
+    const cur_token = current_user.token ; 
+
     traceLog_obj (1,  LoginCompName , ' cur_username =', cur_username );
     traceLog_obj (1,  LoginCompName , ' posts ', posts );
 
@@ -193,19 +257,29 @@ function Home(props) {
       <div>
        <h2>All Posts </h2>
       <ul >
-      {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate  }) => (
+      {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
         <div key={_id}>
           <br/>
-            id = {_id} <br/>title={title } <br/>text = {text}<br/>
-            imageUrl={imageUrl}  <br/> userId={userId}<br/>  userName={userName}<br/> 
-            postDate={getStringTime(postDate)}  <br/>
-            { cur_username === userName?
+            <b>post_id</b>  {_id} <br/>
+            <b>title</b> {title } <br/>
+            <b>text</b>  {text}<br/>
+            <b>imageUrl</b> {imageUrl}  <br/>
+            <b>userId</b>  {userId}<br/>
+            <b>userName</b>   {userName}<br/> 
+            <b>likesNb</b> {usersLiked.length} <br/>
+            <b>likesUsers</b> {usersLiked.map (u => u + ' : ')}<br/>
+            <b>postDate</b> {getStringTime(postDate)}  <br/>
+            { cur_username === userName  || cur_username === 'admin'?
             <div>
             <button onClick={() => deletePost (_id, title)}>Delete</button><span>  </span>
             <button onClick={() => updatePost (_id, title)}>Update</button><span>  </span>
             </div>: null
             } 
-            <button onClick={() => likePost (_id, title)}>Like</button>
+            { isUserLiking(cur_userid,usersLiked )?
+            <button onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>Unlike</button>
+            :
+            <button onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like</button>
+            }
         </div>
       ))}
       </ul>

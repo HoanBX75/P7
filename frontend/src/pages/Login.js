@@ -35,8 +35,9 @@ function Login (){
             // DO an http post to authenticate, in return get userid and token 
             
             const userLogin = { email: data.email, password: data.password};
-            const request = { method: 'POST',headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(userLogin)};          
+            const request = { method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify(userLogin)};          
             let api_url = "http://localhost:3000/api/auth/login";
 
             let resp_ok = false;

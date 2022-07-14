@@ -177,7 +177,7 @@ return (
                 <div>
                     <input {...register('image')} aria-label="Ajouter une image" type="file"  />
                 </div>
-                <button>Modifier un post</button>
+                <button>Update  post</button>
                 {error ?
                     error : null}
             </form>

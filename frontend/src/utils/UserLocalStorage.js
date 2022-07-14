@@ -2,6 +2,14 @@
 
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 
+/*
+                user  object stored :
+                    user.token 
+                    user.userid 
+                    user.username 
+                    user.usertype 
+*/
+
 function getLocalStorageUser()
 {
   let funcName = 'UserLocalStorage.js/getLocalStorageUser()';

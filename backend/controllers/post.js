@@ -285,66 +285,49 @@ exports.updatePost = (req, res, next) => {
 
 
 // 5. LIKE  DISLIKE SAUCE     
-// /api/sauces/:id/like
+// /api/post/like/:id
 // { userId: String, like: Number }
 // { message: String }
 
     exports.likePost = (req, res, next) => {
 
-        const funcName =  scriptname + ' - likePost : ';
+        const funcName =  scriptname + ' - likePost() : ';
+    
+        const userid  = req.body.userid;
+        const dotheLike = req.body.dotheLike;
+        const post_id =  req.params.id;
 
-
-/*
-
-        const userId = req.body.userId;
-        const like = req.body.like;
-      
         console.log("============");
-        console.log (funcName + " userId   ", userId);
-        console.log (funcName + " like   ", like);
-        console.log (funcName + " sauce id   ", req.params.id);
+        console.log (funcName + " req   ", req.body);
+        console.log (funcName + " post  id   ", post_id);
+        console.log (funcName + " userid   ", userid);
+        console.log (funcName + " dotheLike   ", dotheLike);
 
-         // Search for a sauce with the id 
-        Sauce.findOne({_id: req.params.id})
-        .then((sauce) => {
+       
 
-             // Get the  likes 
-             let usersLiked =  sauce.usersLiked;
-             let usersDisliked =  sauce.usersDisliked;
+
+         // Search for a Post  with the id 
+        Post.findOne({_id: post_id})
+        .then((post) => {
+            console.log (funcName + " post  found   ", post );
+             // Get the  user likes 
+             let usersLiked =  post.usersLiked;
             let new_usersLiked = [];
-            let new_usersDisliked =  [];
 
-
-             // Get the unlikes   
-
-            console.log (funcName + " sauce found   ", sauce);
-            switch (like) {
-                case 0: 
+         
+            switch (dotheLike) {
+                case 0:  /* unlike case */ 
                     // the user cancels his choice 
                     // so we need to remove the user from the like list or dislike list 
                     // https://developer.mozilla.org/fr/docs/Learn/JavaScript/First_steps/Arrays
 
                     let l_liked = usersLiked.length;
                     new_usersLiked = usersLiked.filter (function(value, index, arr){ 
-                        return userId != value ; });
-
-                   
-                    new_usersDisliked = usersDisliked.filter (function(value, index, arr){ 
-                            return userId != value ; });
+                        return userid != value ; });
    
                     break;
-                case 1 :   
-                    // the user likes 
-                    // add the user in the like list 
-                    usersLiked.push (userId);
-                    new_usersLiked = usersLiked;
-                    new_usersDisliked = usersDisliked;
-                    break;
-                case -1 :   
-                // the user does not like 
-                // add the user in the dikslike list  
-                    usersDisliked.push (userId);
-                    new_usersDisliked = usersDisliked;
+                case 1 :    /* like case */
+                    usersLiked.push (userid);
                     new_usersLiked = usersLiked;
                     break;
         
@@ -352,25 +335,29 @@ exports.updatePost = (req, res, next) => {
 
             console.log (funcName + " new usersLiked   ", new_usersLiked);
             console.log (funcName + " new usersLiked  length  ", new_usersLiked.length);
-            console.log (funcName + " new usersDisliked   ", new_usersDisliked);
-            console.log (funcName + " new usersLiked  length  ", new_usersDisliked.length);
-            // Update the sauce 
-            const newSauceLikeDislike = {
-                usersLiked: new_usersLiked,
-                usersDisliked: new_usersDisliked,
-                likes: new_usersLiked.length,
-                dislikes: new_usersDisliked.length
+
+            // Update the Post  
+            const newPost_usersLiked  = {
+                usersLiked: new_usersLiked
             }
 
-            Sauce.updateOne({ _id: req.params.id }, {...newSauceLikeDislike, _id: req.params.id})
-            .then(()=> res.status(201).json({message: 'like/dislike mis à jour.'}))
-            .catch(error => res.status(400).json({error}));
-
+            Post.updateOne({ _id: req.params.id }, {...newPost_usersLiked, _id: req.params.id})
+            .then(()=> {
+                console.log (funcName + " Post usersLiked updated    ");
+                 res.status(201).json({message: 'usersLike  updated .'})
+            })
+            .catch(error => {
+                console.log (funcName + " Post usersLiked Not updated  - Error =    ", error) ;
+                res.status(400).json({error})
+            });
 
         })
-        .catch(error => res.status(400).json({error}));
+        .catch(error => { 
+            console.log (funcName + " Cannot find Post - Error   = ", error) ;
+            res.status(400).json({error})
+        });
        
-*/
+
   
 
 }
