@@ -8,7 +8,10 @@ function Header (props){
     let user =  props.user;
     
     function getCurrentUser(){
-      return (<p><strong>USER : {user.username}</strong></p>);
+      if (user.usertype === 'admin') 
+      return (<p><strong>Admin User : {user.username}</strong></p>);
+      else 
+      return (<p><strong>User: {user.username}</strong></p>);
     }
 
     switch (state)
@@ -67,8 +70,7 @@ function Header (props){
 
       <nav>
  
-      <Link to="/"><strong>ALL POSTS</strong></Link> 
-      <br/>
+     
       <Link to="/post/add">ADD POST</Link> 
       <br/>
       <Link to="/logout">LOGOUT</Link>

@@ -1,4 +1,6 @@
 const User = require ('../models/User');
+const adminUserList  = require ('../data/adminUserList.js');
+
 const bcrypt =  require ('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -8,18 +10,30 @@ console.log ("controller : begin");
 // Sign up 
 // ------------------------------------------  
 
+
 exports.signup = (req, res, next) => {
     console.log ('controllers : signup req = ');
-
+   
 
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
 
-        console.log ('controllers : hashing  = ',hash);
+      console.log ('controllers : signup  hashing  = ',hash);
+    
+   
+  
+      let  username = req.body.username 
+      let usertype = 'user';
+      let found   = adminUserList.find (name => name === username);
+      if (found)  usertype = 'admin';
+
+      console.log ('controllers : signup  username  = ',username);
+      console.log ('controllers : signup  usertype  = ',usertype);
+
         const user = new User({
           email: req.body.email,
-          username: req.body.username,
-          usertype: 'user',
+          username: username,
+          usertype: usertype,
           password: hash
         });
 

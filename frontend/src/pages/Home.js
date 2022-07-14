@@ -209,7 +209,13 @@ function Home(props) {
   
 
   }
-
+ /* ----------*/
+async  function refreshPosts() {
+  traceLog_line ();
+  let LoginCompName = 'Home.js/Home()/refreshPosts()';
+  setPosted(false);
+  traceLog_msg (1,  LoginCompName , ' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  begin / end  ' );
+}
 
   /* ----------*/
   function isUserLiking ( cur_userid, usersLikesList)
@@ -249,27 +255,36 @@ function Home(props) {
     const cur_username =  current_user.username;
     const cur_userid = current_user.userid ; 
     const cur_token = current_user.token ; 
+    const cur_usertype  = current_user.usertype ; 
+
+   const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
+
 
     traceLog_obj (1,  LoginCompName , ' cur_username =', cur_username );
+    traceLog_obj (1,  LoginCompName , ' cur_user_isAdmin =', cur_user_isAdmin );
     traceLog_obj (1,  LoginCompName , ' posts ', posts );
 
     return (
       <div>
        <h2>All Posts </h2>
-      <ul >
+       <button onClick={() => refreshPosts ()}>Refresh</button>
+      <ol >
       {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
+       <li>
         <div key={_id}>
-          <br/>
-            <b>post_id</b>  {_id} <br/>
+          
+            <b>postId</b>  {_id} <br/>
             <b>title</b> {title } <br/>
             <b>text</b>  {text}<br/>
-            <b>imageUrl</b> {imageUrl}  <br/>
-            <b>userId</b>  {userId}<br/>
             <b>userName</b>   {userName}<br/> 
+           
+            <b>userId</b>  {userId}<br/>
+           
             <b>likesNb</b> {usersLiked.length} <br/>
             <b>likesUsers</b> {usersLiked.map (u => u + ' : ')}<br/>
-            <b>postDate</b> {getStringTime(postDate)}  <br/>
-            { cur_username === userName  || cur_username === 'admin'?
+            <b>imageUrl</b> {imageUrl}  <br/>
+            <b>postDate</b> {getStringTime(postDate)}  <br/><br/>
+            { cur_username === userName  || cur_user_isAdmin ?
             <div>
             <button onClick={() => deletePost (_id, title)}>Delete</button><span>  </span>
             <button onClick={() => updatePost (_id, title)}>Update</button><span>  </span>
@@ -280,9 +295,12 @@ function Home(props) {
             :
             <button onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like</button>
             }
+           
         </div>
+        <br/>
+      </li>   
       ))}
-      </ul>
+      </ol>
       </div>
     );
    
