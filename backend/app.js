@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const userRoutes = require('./routes/user');
-const sauceRoutes= require('./routes/sauce');
 const postRoutes= require('./routes/post');
 
 // Getting environment parameters 
@@ -21,8 +20,6 @@ mongoose.connect(MY_CONNECT,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
-
 
 
 const app = express();
@@ -53,18 +50,8 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
 app.use('/api/auth/', userRoutes);
-app.use('/api/sauces/', sauceRoutes);
 app.use('/api/post/', postRoutes);
 
-/*
-app.use('/api/auth/', userRoutes);
-app.use('/api/sauces/', sauceRoutes);
-app.use('/api/sauce/:id/like', sauceRoutes);
-*/
-/*
-app.use((req, res) => {
-   res.json({ message: 'Hello, Votre requête a bien été reçue !!' }); 
-});
-*/
+
 
 module.exports = app;

@@ -12,7 +12,6 @@ import { useState } from "react";
 
 function App() {
 
-console.log ( "APP AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
   return (
     <BrowserRouter>
