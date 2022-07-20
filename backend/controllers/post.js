@@ -68,7 +68,9 @@ exports.createPost = (req, res, next) => {
 
 
 exports.getAllPost = (req, res, next) => {
-    console.log (scriptname + 'getAllPost '  );
+    console.log (scriptname + 'getAllPost() '  );
+   //  console.log (scriptname + 'getAllPost()  req ', req.body  );
+   //  console.log (scriptname + 'getAllPost()  req ================ '  );
     // https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573/12
     // https://stackoverflow.com/questions/67264632/mongoose-sorting-by-createdat
     // https://www.statology.org/mongodb-sort-by-date/

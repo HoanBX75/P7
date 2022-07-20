@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
       console.log ("aaaaaa");
       throw 'Invalid user ID';
     } else {
-      console.log ("auth.js : ssssssssssssss");
+      console.log ("auth.js : UTILISATEUR ENREGISTRE");
       next();
     }
   } catch {

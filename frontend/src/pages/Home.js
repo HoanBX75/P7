@@ -2,66 +2,29 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 
 import { Link, useNavigate } from 'react-router-dom'
+import { Loader } from '../styles/Atoms'
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
+import communicate from '../icons/communicate.jpg'
 
 const LoginCompName = 'Home.js';
 traceLog_msg (1,  LoginCompName , 'begin');
 
 
 
+/* =========================================================== */
 function Home(props) {
 
   const [posts, setPosts] = useState([]);
-  const [posted, setPosted] = useState(false)
-
-  const [user, setUser] = useState({});
+  const [effectstatus, setEffectstatus] = useState(1);
   const navigate = useNavigate();
-
   const   LoginCompName = 'Home.js/Home()';
 
-  traceLog_line ();
-  traceLog_msg (1,  LoginCompName , 'begin');
-  const state = props.state; 
-  traceLog_obj (1,  LoginCompName , 'state = ', state);
+ //  const [user, setUser] = useState({});
  
 
-
-  /* ----------*/
-  
-  useEffect(() => {
-    let  LoginCompName = 'Home.js/Home()';
-    let funcName = LoginCompName + 'useEffect() : ';
-
-    traceLog_line ();
-    let token = getToken();
-    console.log (funcName +  ' connected  token = ', token );
-
-    if (getToken()) {
-      // Get All the posts 
-       fetch("http://localhost:3000/api/post", {
-        method: 'GET',
-        headers: {
-        'authorization': 'bearer ' + token},
-        })
-        .then(response => response.json())
-        .then(data => {
-
-            console.log (funcName + 'fetch  - data = ', data); 
-            setPosts(data)
-            setPosted(true);
-        
-        })
-        .catch(err => console.log(err));
-    }
-    else 
-    {
-      console.log (funcName +  ' Not connected  token = ', token );
-      setPosts([])
-    }  
- }, [posted]);
-   //[posted, setPosted]);
+    /* =========================================================== */
   
  /* ----------*/
   function getStringTime(s_date)
@@ -94,9 +57,26 @@ function Home(props) {
     return (time);
   }
 
+  /* ----------*/
+  function isUserLiking ( cur_userid, usersLikesList)
+  {
+    let res_userid = null;
 
- /* ----------*/
-  
+    if (usersLikesList.length === 0 ) {
+      return (false);
+    }
+    else {
+      res_userid = usersLikesList.find (userid  => cur_userid ==  userid);
+    }
+    
+    if (res_userid) {
+      return (true);
+    }
+    else {
+      return (false);
+    }
+  }
+  /* ----------*/
   function getToken ()
   {
     let user = localStorage.getItem("user");
@@ -127,14 +107,14 @@ function Home(props) {
   }
   /* ----------*/
    function updatePost (id, name){
-    let LoginCompName = 'Home.js/Home()/updatePost';
-    traceLog_obj (1,  LoginCompName , 'id = ', id);
+    let funcName  = 'Home.js/Home()/updatePost';
+    traceLog_obj (1,  funcName , 'id = ', id);
      navigate (`post/update/${id}`)
 
      // `/post/edit/${element.id}`
    }
 
-  /* ----------*/
+   /* =========================================================== */
    async function likePost ( post_id, cur_token, cur_userid, dotheLike){
       let funcName = 'Home.js/Home()/likePost()';
       traceLog_line ();
@@ -163,25 +143,23 @@ function Home(props) {
       })
       .then((res) => {
 
-        traceLog_msg (1,  LoginCompName , 'like  post  ' );
-        traceLog_obj (1,  LoginCompName , 'like post  res ', res  );
-      //   setPosted(false);
-       
+        traceLog_msg (1,  funcName , 'Response Like OK   ' );
+        traceLog_obj (1,  funcName , 'Response Like =  ', res  );
+        setEffectstatus (2);
+   
        // navigate ("/")
   
       })
       .catch(err => console.log(err)) ;
   
-      traceLog_msg (1,  LoginCompName , 'like post end  ' );
-      setPosted(false);
+      traceLog_msg (1,  funcName , ' End  ' );
+    
 
     // navigate("/"); 
 
   }
-  /* ----------*/
 
-
-  /* ----------*/
+  /* =========================================================== */
   async function deletePost (id, name){
     let LoginCompName = 'Home.js/Home()/deletePost()';
     traceLog_line ();
@@ -198,60 +176,86 @@ function Home(props) {
 
       traceLog_msg (1,  LoginCompName , 'delete post  ' );
       traceLog_obj (1,  LoginCompName , 'delete post  res ', res  );
-      setPosted(false);
-     
+   
+      setEffectstatus (3);  /* deletePost */
       // navigate ("/")
 
     })
     .catch(err => console.log(err)) ;
 
     traceLog_msg (1,  LoginCompName , 'delete end  ' );
-  
 
   }
- /* ----------*/
+ /* =========================================================== */
 async  function refreshPosts() {
   traceLog_line ();
-  let LoginCompName = 'Home.js/Home()/refreshPosts()';
-  setPosted(false);
-  traceLog_msg (1,  LoginCompName , ' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  begin / end  ' );
+  let funcName  = 'Home.js/Home()/refreshPosts()';
+
+  setEffectstatus (4);  /* refreshPosts */
+  traceLog_msg (1,  funcName , '   begin / end  ' );
 }
 
-  /* ----------*/
-  function isUserLiking ( cur_userid, usersLikesList)
-  {
-    let res_userid = null;
-
-    if (usersLikesList.length === 0 ) {
-      return (false);
-    }
-    else {
-      res_userid = usersLikesList.find (userid  => cur_userid ==  userid);
-    }
+   /* =========================================================== */
+   useEffect(() => {
+    let funcName  = 'Home.js/Home()/useEffect()';
+    traceLog_line ();
+    traceLog_obj (1,  funcName , 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  effectstatus ', effectstatus  );
     
-    if (res_userid) {
-      return (true);
+    switch (effectstatus) {
+      case 1: break;     /* update, add, init */
+      case 2 : break ;   /* like */
+      case 3 : break ;  /* delete */
+      case 4 : break ;  /* refresh */
+      default :   /* 10 treatment en cours, 20 - 29 : traitment fait ,  0 acknowledment  */
+         traceLog_msg  (1,  funcName , 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  No treatment ');
+         return;
     }
-    else {
-      return (false);
+
+    traceLog_msg  (1,  funcName , 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  treatment ');
+    setEffectstatus (10);
+
+    let token = getToken();
+    traceLog_obj (1,  funcName , '  token  ', token  );
+
+    if (getToken()) {
+      // Get All the posts 
+       fetch("http://localhost:3000/api/post", {
+        method: 'GET',
+        headers: {
+        'authorization': 'bearer ' + token},
+        })
+        .then(response => response.json())
+        .then(data => {
+          traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYY  response data   ', data  );
+            setPosts(data)
+            setEffectstatus (20);
+        })
+        .catch(err => {
+          setEffectstatus (21);
+          console.log(err)
+        });
     }
-  }
+    else 
+    {
+      traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYY  Not connected  token   ', token  );
+      setEffectstatus (22);
+      setPosts([])
+    }  
+ }, [effectstatus]);
 
-
-  /* ----------*/
+  /* =========================================================== */
    function displayAllPosts (){
    
    const  funcName = 'Home.js/displayAllPosts () :';
    
-   console.log (funcName +  ' begin ');
+  
+   traceLog_msg (1,  funcName , ' begin ');
+
    const current_user = getLocalStorageUser ();
   
-
-   
-
    if (isConnected())
    {
-    traceLog_obj (1,  LoginCompName , ' current current_user ', current_user );
+    traceLog_obj (1,  funcName , ' current current_user ', current_user );
     const cur_username =  current_user.username;
     const cur_userid = current_user.userid ; 
     const cur_token = current_user.token ; 
@@ -260,15 +264,34 @@ async  function refreshPosts() {
    const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
 
 
-    traceLog_obj (1,  LoginCompName , ' cur_username =', cur_username );
-    traceLog_obj (1,  LoginCompName , ' cur_user_isAdmin =', cur_user_isAdmin );
-    traceLog_obj (1,  LoginCompName , ' posts ', posts );
+  
+/*  */
+
+    traceLog_obj (1,  funcName , ' ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ    effectstatus ', effectstatus );
+  /* acknowledging use effect 
+    if (effectstatus >= 20 ) {  
+      setEffectstatus (0);
+    }
+    */
+
+    traceLog_obj (1,  funcName , ' cur_username =', cur_username );
+    traceLog_obj (1,  funcName , ' cur_user_isAdmin =', cur_user_isAdmin );
+    traceLog_obj (1,  funcName , ' posts ', posts );
+  
+    traceLog_msg (1,  funcName , ' Display  Posts      ' );
+    if (effectstatus === 10) {
+      return ( <Loader />)
+    }
+
 
     return (
-      <div>
-       <h2>All Posts </h2>
+      <div >
+       <h2 key='h2dd'>All Posts </h2>
        <button onClick={() => refreshPosts ()}>Refresh</button>
       <ol >
+      
+
+      
       {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
        <li>
         <div key={_id}>
@@ -298,37 +321,42 @@ async  function refreshPosts() {
            
         </div>
         <br/>
-      </li>   
+       </li>   
       ))}
+     
       </ol>
       </div>
     );
    
    }
    else {
-        
+     /* Not connected */
+
         return(
-        <div>
-         <p>  Let's communicate ! Connect and Post !   </p>
+        <div class='connect_body'>
+         <h2 class='connect_title'>Let's communicate !</h2> 
+         <p class='connect_text'>   Just sign up, log in, and post    </p>
+         <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
         </div>
         )
    }
 
   } 
-/* ----------*/
+/* ----------
 
-/* ----------------------------------------------*/
-
-traceLog_msg (1,  LoginCompName , 'return');  
+*/
+/* =========================================================== */
+traceLog_line ();
+traceLog_msg (1,  LoginCompName , 'begin');
+  
 return (
         <div>
-            <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
+         <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
             {displayAllPosts()} 
         </div>
     );    
 
-
 }   // end of function Home
-
+/* =========================================================== */
 traceLog_msg (1,  LoginCompName , 'end');
 export default Home;

@@ -7,6 +7,9 @@ import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/Trace
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
 
+import  "../styles/index.css"
+
+
 const LoginCompName = 'Signup.js';
 traceLog_msg (1,  LoginCompName , 'begin');
 
@@ -108,30 +111,31 @@ function Signup (){
 
 
     return (
-        <div>
-            
+    <div>
         <Header  state={1} user={getLocalStorageUser()}/>
-        <h2>Sign Up</h2>
-         <p>Please fill the following form: </p> 
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <label htmlFor="email">Email</label>
-                <input {...register('email')} type="email" onChange={resetError} id="email" />
+        <div class='connect_body'>
+            <h2 class='connect_title'>Join our   Community </h2>
+            <p class='connect_text'>Please Fill the Form: </p> 
+            <div class='connect_form_container'>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input {...register('email')} type="email" onChange={resetError} id="email" />
+                </div>
+                <div>
+                    <label htmlFor="username">Username</label>
+                    <input {...register('username')} type="text" onChange={resetError} id="username" />
+                </div>
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input type="password" onChange={resetError} {...register('password')} id="password" />
+                </div>
+                {error ?
+                    <><div className='connect_form_error'>{error}</div><br></br></> : null}
+                <button class='connect_button'>Sign up</button>
+            </form>
             </div>
-             <div>
-                <label htmlFor="username">Username</label>
-                <input {...register('username')} type="text" onChange={resetError} id="username" />
-            </div>
-
-            <div>
-                <label htmlFor="password">Password</label>
-                <input type="password" onChange={resetError} {...register('password')} id="password" />
-            </div>
-            {error ?
-                <><div>{error}</div><br></br></> : null}
-            <button>Sign up</button>
-        </form>
-
+        </div>
     </div>
     );   
 }

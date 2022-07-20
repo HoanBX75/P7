@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
+import  "../styles/index.css"
+
   // p7a conncectionForm  https://react-hook-form.com/
 
 const LoginCompName = 'Login.js';
@@ -113,26 +115,29 @@ function Login (){
     traceLog_msg (1,  LoginCompName , 'return');
     return (
     <div>
-    
-    <Header  state={2} user={getLocalStorageUser()}/>
-    <h2>Log In</h2>
-    <p>Provide your credentials to login and post ! </p>
-    <form onSubmit={handleSubmit(onSubmit)}>
-        <></>
-        <div>
-            <label htmlFor="email">Email</label>
-            <input {...register('email')} type="email" onChange={resetError} id="email" />
+        <Header  state={2} user={getLocalStorageUser()}/>
+        <div class='connect_body'>
+        <h2 class='connect_title'>Connect to our Community</h2>
+        <p class='connect_text'>Provide your Credentials: </p>
+        <div class='connect_form_container'>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <></>
+            <div>
+                <label htmlFor="email">Email</label>
+                <input {...register('email')} type="email" onChange={resetError} id="email" />
+            </div>
+            <div>
+                <label htmlFor="password">Password</label>
+                <input type="password" onChange={resetError} {...register('password')} id="password" />
+            </div>
+            {error ?
+                <><div>{error}</div><br></br></> : null}
+            <button class='connect_button'>Login</button>
+        </form>
         </div>
-        <div>
-            <label htmlFor="password">Password</label>
-            <input type="password" onChange={resetError} {...register('password')} id="password" />
         </div>
-        {error ?
-            <><div>{error}</div><br></br></> : null}
-        <button>Login</button>
-    </form>
-
     </div>
+  
     );  
 }  // end of Login function
 /* ------------------------------------------------- */

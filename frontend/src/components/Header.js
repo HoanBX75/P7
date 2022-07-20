@@ -1,5 +1,7 @@
 
 import { Link } from 'react-router-dom'
+import  "../styles/index.css"
+import logo from '../icons/icon-left-font.png'
 
 
 function Header (props){
@@ -18,83 +20,75 @@ function Header (props){
     {
       case 0:   /* SIGN UP	LOGIN */
       return (
-        <nav>
-   
-        <Link to="/signup">SIGN UP</Link> 
-        <br/>
-        <Link to="/login">LOGIN</Link>
-        <hr/>
-       
-        </nav>
+         <div>
+          <nav class='header_connect_container'>
+             <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+             <Link className='header_main_link' to="/">Home</Link> 
+            <Link  className='header_link' to="/signup">SIGN UP</Link> 
+            <Link  className='header_link' to="/login">LOGIN</Link>
+          </nav>
+          <hr/>    
+          </div> 
        );   
 
           break;
-      case 1:   /* x SIGN UP	LOGIN  */ 
+      case 1:   /* SIGNUP  =   HOME x SIGN UP	LOGIN  */ 
+      return (
+        <div>
+          <nav class='header_connect_container'> 
+                <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+                <Link className='header_link' to="/">Home</Link>  
+                <Link className='header_main_link' to="/signup">SIGN UP </Link> 
+                <Link className='header_link' to="/login">LOGIN</Link>
+          </nav>    
+          <hr/>    
+        </div>      
+        );   
+
+      case 2:    /*  LOGIN = HOME SIGN UP	x LOGIN  */  
+
+      return (
+        <div>  
+            <nav class='header_connect_container'>
+              <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+              <Link className='header_link' to="/">Home</Link> 
+              <Link className='header_link' to="/signup">SIGN UP</Link> 
+              <Link  className='header_main_link' to="/login">LOGIN</Link>
+            </nav>
+            <hr/>    
+        </div> 
+        );   
+        break;
+
+      case 3:    /*  ALL POSTS =  x ALL POSTS  	ADD POST  LOGOUT */
+      return (
+        <div>  
+            <nav class='header_connect_container'>
+                <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+                <Link className='header_main_link' to="/">ALL POSTS</Link> 
+                <Link className='header_link'  to="/post/add">ADD POST</Link> 
+                <Link className='header_link' to="/logout">LOGOUT</Link>
+            </nav>
       
-      return (
-        <nav>
-        
-        <Link to="/">Home</Link> 
-        <br/>
-         <Link to="/signup"><strong>SIGN UP</strong></Link> 
-        <br/>
-        <Link to="/login">LOGIN</Link>
-        <hr/>
-     
-        </nav>
-        
-        
-    );   
-
-
-          break;
-      case 2:    /*  SIGN UP	x LOGIN  */  
-
-      return (
-        <nav>
-      
-        <Link to="/">Home</Link> 
-        <br/>
-        <Link to="/signup">SIGN UP</Link> 
-        <br/>
-        <Link to="/login"><strong>LOGIN</strong></Link>
-        <hr/>
-    
-        </nav>
-       
-        
-    );   
-          break;
-      case 3:    /*  x ALL POSTS  	ADD POST  LOGOUT */
-      return (
-
-      <nav>
- 
-     
-      <Link to="/post/add">ADD POST</Link> 
-      <br/>
-      <Link to="/logout">LOGOUT</Link>
-      {getCurrentUser()}
-      <hr/>
-   
-      </nav>
+            <hr/>
+            {getCurrentUser()}
+        </div> 
       );
           break;
-      case 4 :    /* add   ALL POSTS  x 	ADD POST  LOGOUT */
+      case 4 :    /* ADD POST =    ALL POSTS  x 	ADD POST  LOGOUT */
       return (
-        <nav>
-  
-        <Link to="/">ALL POSTS</Link> 
-        <br/>
-        <Link to="/post/add"><strong>ADD POST</strong ></Link> 
-        <br/>
-        <Link to="/logout">LOGOUT</Link>
-        {getCurrentUser()}
-        <hr/>
-     
-        </nav>
-        );
-
+        <div>  
+            <nav class='header_connect_container'>
+                <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+                <Link className='header_link' to="/">ALL POSTS</Link> 
+                <Link className='header_main_link'  to="/post/add">ADD POST</Link> 
+                <Link className='header_link' to="/logout">LOGOUT</Link>
+            </nav>
+           
+            <hr/>
+            {getCurrentUser()}
+        </div> 
+          );
           break;
       case 5 :   /*  update .  ALL POSTS  	ADD POST  LOGOUT */
       return (

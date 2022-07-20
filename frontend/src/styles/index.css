@@ -1,0 +1,129 @@
+
+
+/* var(--star-fontsize) */
+
+/* header connect */
+.header_connect_container {
+  display: flex;
+  flex-direction:row ;
+  justify-content:space-around;
+  align-items: center;
+}
+
+/* .header_image_logo  */
+.header_image_logo{
+  width: 150px; 
+  height: 90px;
+  object-fit: cover;
+  /* border: 1px  solid green; */
+}
+
+.header_link{
+  font-size: 15px;
+  color: black;
+
+}
+
+.header_main_link {
+  font-size: 15px;
+  color: black;
+  font-weight: bold;
+}
+/* connect  sign up and log in  : */
+/* ****************************** */
+
+.connect_body {
+    display: flex;
+    flex-direction:column ;
+    align-items: center;
+}
+
+.connect_title{
+    font-size: 24px;
+    color: #FD2D01;
+}
+.connect_text  {
+    font-size: 18px;
+}
+
+.connect_form_container  {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width: 60vw;
+    margin:auto;
+  }
+
+
+.connect_button{
+    background-color: #4E5166; /* Green #4CAF50*/
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    margin: 8px 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    width:100%
+}
+/*
+Primaire : #FD2D01
+● Secondaire : #FFD7D7
+● Tertiaire : #4E5166
+*/
+
+/* form connect  : */
+
+.connect_form_error {
+  color: #FD2D01;
+}
+
+label {
+    font-size: 16px;
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  input[type=email] {
+    width: 100%;
+    padding: 12px 20px; 
+    margin: 8px 0; 
+    display: inline-block; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .home_communicate_image  {
+    width: 150px; 
+    height: 90px;
+    object-fit: cover;
+    background-color: #FFD7D7;
+    
+  }
+
+
+
