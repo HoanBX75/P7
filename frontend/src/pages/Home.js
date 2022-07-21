@@ -243,6 +243,11 @@ async  function refreshPosts() {
     }  
  }, [effectstatus]);
 
+
+  function displayText (text)
+  {
+    alert (text);
+  }
   /* =========================================================== */
    function displayAllPosts (){
    
@@ -291,10 +296,66 @@ async  function refreshPosts() {
           
           <h2 class='connect_title'>Browse Our Posts </h2>
           </div>
+
           <div class='refresh_button_container'>
           <button className='refresh_button' onClick={() => refreshPosts ()}>Refresh</button>
-          </div>
+  </div>
          
+
+<div class="posts">
+
+{posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
+
+
+
+   <div className="post" key={`post-${_id}`}>
+
+      <div class='post_info'>
+          {title ? <h2 className='post_title'>{title}</h2> : null}
+          <div className="post_date">{getStringTime(postDate)}   </div>
+          <div class='post_author_username'>  by  {userName}</div>
+             
+      </div>
+
+      
+
+      <button className='post_text_button' onClick={() => displayText (text)}>
+                 <div class='post_text'>{text}</div> 
+      </button>
+
+
+       <div class='post_image'>
+       <img   src={imageUrl} alt="" />
+       </div>
+       <div class='post_likes'>{usersLiked.length} Likes</div>
+
+       <div className="post_buttons">
+       
+        { isUserLiking(cur_userid,usersLiked )?
+                      <button  className='post_button' onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>Unlike</button>
+                      :
+                      <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like</button>
+                      } 
+                  
+        { cur_username === userName  || cur_user_isAdmin ?
+                       <span>
+                      <button className='post_button' onClick={() => deletePost (_id, title)}>Delete</button>
+                      <button className='post_button'onClick={() => updatePost (_id, title)}>Update</button>
+                      </span>: null
+                      } 
+         
+        </div>
+     
+   
+
+
+   </div>
+  
+
+   ))}
+</div>   
+
+<hr/>
           <ol >  
           
               {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
