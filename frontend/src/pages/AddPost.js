@@ -97,12 +97,14 @@ return (
     <Header  state={4} user={getLocalStorageUser()}/>
     <div class='connect_body'>
          <h2 class='connect_title'>Send  Your New Post  </h2>
-         <p class='connect_text'>Just Provide a Text, an Image File    </p> 
+    <div>   
+         <p class='connect_text'>Just Provide your Text, and Photo:  </p> 
          <div class='addPost_form_container'>
+         
          <form onSubmit={handleSubmit(onSubmit)}>
          <div>
             <div>
-                <label htmlFor="titre">Title</label>
+                <label htmlFor="titre">Post Title</label>
             </div>
             <textarea {...register('title')} type="text" rows="1" cols="100" autoFocus maxLength={255} id="titre" />
         </div>
@@ -116,11 +118,11 @@ return (
         <div>
                 <input {...register('image')} aria-label="Ajouter une image" type="file" />
         </div>
-        <button>Add a Post</button>
+        <button>Send</button>
         {error ?error : null}
         </form>
         </div>
-
+    </div>  
     </div>
 </div>  
 );    

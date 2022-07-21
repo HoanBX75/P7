@@ -286,45 +286,46 @@ async  function refreshPosts() {
 
     return (
       <div >
-       <h2 key='h2dd'>All Posts </h2>
-       <button onClick={() => refreshPosts ()}>Refresh</button>
-      <ol >
-      
+          <div class='post_body'>
+          <h2 class='connect_title'>Browse Our Posts </h2>
+          </div>
 
-      
-      {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
-       <li>
-        <div key={_id}>
+
+         
+          <ol >  
+          <button onClick={() => refreshPosts ()}>Refresh</button>
+              {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
+                 <li>
+                      <div key={_id}>
           
-            <b>postId</b>  {_id} <br/>
-            <b>title</b> {title } <br/>
-            <b>text</b>  {text}<br/>
-            <b>userName</b>   {userName}<br/> 
-           
-            <b>userId</b>  {userId}<br/>
-           
-            <b>likesNb</b> {usersLiked.length} <br/>
-            <b>likesUsers</b> {usersLiked.map (u => u + ' : ')}<br/>
-            <b>imageUrl</b> {imageUrl}  <br/>
-            <b>postDate</b> {getStringTime(postDate)}  <br/><br/>
-            { cur_username === userName  || cur_user_isAdmin ?
-            <div>
-            <button onClick={() => deletePost (_id, title)}>Delete</button><span>  </span>
-            <button onClick={() => updatePost (_id, title)}>Update</button><span>  </span>
-            </div>: null
-            } 
-            { isUserLiking(cur_userid,usersLiked )?
-            <button onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>Unlike</button>
-            :
-            <button onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like</button>
-            }
-           
-        </div>
-        <br/>
-       </li>   
-      ))}
-     
-      </ol>
+                      <b>postId</b>  {_id} <br/>
+                      <b>title</b> {title } <br/>
+                      <b>text</b>  {text}<br/>
+                      <b>userName</b>   {userName}<br/> 
+                    
+                      <b>userId</b>  {userId}<br/>
+                    
+                      <b>likesNb</b> {usersLiked.length} <br/>
+                      <b>likesUsers</b> {usersLiked.map (u => u + ' : ')}<br/>
+                      <b>imageUrl</b> {imageUrl}  <br/>
+                      <b>postDate</b> {getStringTime(postDate)}  <br/><br/>
+                      { cur_username === userName  || cur_user_isAdmin ?
+                      <div>
+                      <button onClick={() => deletePost (_id, title)}>Delete</button><span>  </span>
+                      <button onClick={() => updatePost (_id, title)}>Update</button><span>  </span>
+                      </div>: null
+                      } 
+                      { isUserLiking(cur_userid,usersLiked )?
+                      <button onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>Unlike</button>
+                      :
+                      <button onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like</button>
+                      }
+                    
+                       </div>
+                      <br/>
+                   </li>   
+              ))}
+          </ol>
       </div>
     );
    
@@ -334,7 +335,7 @@ async  function refreshPosts() {
 
         return(
         <div class='connect_body'>
-         <h2 class='connect_title'>Let's communicate !</h2> 
+         <h2 class='connect_title'>Let's Communicate !</h2> 
          <p class='connect_text'>   Just sign up, log in, and post    </p>
          <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
         </div>

@@ -10,10 +10,23 @@ function Header (props){
     let user =  props.user;
     
     function getCurrentUser(){
+      let admin=null
+      if (user.usertype === 'admin') admin ='*';
+         
+      /*
       if (user.usertype === 'admin') 
       return (<p>User*: {user.username}</p>);
       else 
       return (<p>User: {user.username}</p>);
+      */
+      return (
+        <div class='current_user_container'>
+         
+          <span class='current_user'> {admin }Logged: </span> 
+          <span class='current_username'>{user.username}</span> 
+        </div>
+      );
+
     }
 
     switch (state)
@@ -63,44 +76,49 @@ function Header (props){
       case 3:    /*  ALL POSTS =  x ALL POSTS  	ADD POST  LOGOUT */
       return (
         <div>  
+                {getCurrentUser()}
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_main_link' to="/">ALL POSTS</Link> 
                 <Link className='header_link'  to="/post/add">NEW POST</Link> 
                 <Link className='header_link' to="/logout">LOGOUT</Link>
             </nav>
+      
             <hr/>
-            {getCurrentUser()}
+           
         </div> 
       );
           break;
       case 4 :    /* NEW POST =    ALL POSTS  x 	ADD POST  LOGOUT */
       return (
         <div>  
+            {getCurrentUser()}
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_link' to="/">ALL POSTS</Link> 
                 <Link className='header_main_link'  to="/post/add">NEW POST</Link> 
                 <Link className='header_link' to="/logout">LOGOUT</Link>
+                
             </nav>
             <hr/>
-            {getCurrentUser()}
+           
         </div> 
           );
           break;
-      case 5 :   /*  update .  ALL POSTS  	ADD POST  LOGOUT */
+      case 5 :   /*  UPDATE POST =  ALL POSTS  	ADD POST  LOGOUT */
       return (
-        <nav>
-  
-        <Link to="/">ALL POSTS</Link> 
-        <br/>
-        <Link to="/post/add">ADD POST</Link> 
-        <br/>
-        <Link to="/logout">LOGOUT</Link>
-        {getCurrentUser()}
-        <hr/>
-      
-        </nav>
+        <div>  
+            {getCurrentUser()}
+            <nav class='header_connect_container'>
+                <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+                <Link className='header_link' to="/">ALL POSTS</Link> 
+ 
+                <Link className='header_link' to="/logout">LOGOUT</Link>
+                
+            </nav>
+            <hr/>
+           
+        </div>
       );
 
           break; 
