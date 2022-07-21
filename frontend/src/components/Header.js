@@ -11,9 +11,9 @@ function Header (props){
     
     function getCurrentUser(){
       if (user.usertype === 'admin') 
-      return (<p><strong>Admin User : {user.username}</strong></p>);
+      return (<p>User*: {user.username}</p>);
       else 
-      return (<p><strong>User: {user.username}</strong></p>);
+      return (<p>User: {user.username}</p>);
     }
 
     switch (state)
@@ -66,25 +66,23 @@ function Header (props){
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_main_link' to="/">ALL POSTS</Link> 
-                <Link className='header_link'  to="/post/add">ADD POST</Link> 
+                <Link className='header_link'  to="/post/add">NEW POST</Link> 
                 <Link className='header_link' to="/logout">LOGOUT</Link>
             </nav>
-      
             <hr/>
             {getCurrentUser()}
         </div> 
       );
           break;
-      case 4 :    /* ADD POST =    ALL POSTS  x 	ADD POST  LOGOUT */
+      case 4 :    /* NEW POST =    ALL POSTS  x 	ADD POST  LOGOUT */
       return (
         <div>  
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_link' to="/">ALL POSTS</Link> 
-                <Link className='header_main_link'  to="/post/add">ADD POST</Link> 
+                <Link className='header_main_link'  to="/post/add">NEW POST</Link> 
                 <Link className='header_link' to="/logout">LOGOUT</Link>
             </nav>
-           
             <hr/>
             {getCurrentUser()}
         </div> 

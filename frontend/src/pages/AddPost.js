@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
+import  "../styles/index.css"
 
 /* ------------------------------------------------- */
 const LoginCompName = 'AddPost.js';
@@ -94,14 +95,18 @@ return (
 <div>
      
     <Header  state={4} user={getLocalStorageUser()}/>
-    <h2>Add Post </h2>
-    <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
+    <div class='connect_body'>
+         <h2 class='connect_title'>Send  Your New Post  </h2>
+         <p class='connect_text'>Just Provide a Text, an Image File    </p> 
+         <div class='addPost_form_container'>
+         <form onSubmit={handleSubmit(onSubmit)}>
+         <div>
             <div>
                 <label htmlFor="titre">Title</label>
             </div>
             <textarea {...register('title')} type="text" rows="1" cols="100" autoFocus maxLength={255} id="titre" />
         </div>
+
         <div>
             <div>
                 <label htmlFor="texte">Text</label>
@@ -113,7 +118,10 @@ return (
         </div>
         <button>Add a Post</button>
         {error ?error : null}
-    </form>
+        </form>
+        </div>
+
+    </div>
 </div>  
 );    
 

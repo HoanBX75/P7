@@ -118,7 +118,7 @@ function Login (){
         <Header  state={2} user={getLocalStorageUser()}/>
         <div class='connect_body'>
         <h2 class='connect_title'>Connect to our Community</h2>
-        <p class='connect_text'>Provide your Credentials: </p>
+        <p class='connect_text'>Just Provide your Credentials: </p>
         <div class='connect_form_container'>
         <form onSubmit={handleSubmit(onSubmit)}>
             <></>

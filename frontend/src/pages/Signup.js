@@ -115,7 +115,7 @@ function Signup (){
         <Header  state={1} user={getLocalStorageUser()}/>
         <div class='connect_body'>
             <h2 class='connect_title'>Join our   Community </h2>
-            <p class='connect_text'>Please Fill the Form: </p> 
+            <p class='connect_text'>Just Fill the Form: </p> 
             <div class='connect_form_container'>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
