@@ -31,6 +31,23 @@
 }
 
 
+.refresh_button_container {
+  display:flex;
+  flex-direction:row ;
+  justify-content:flex-end;
+  align-items: center;
+  margin-right:20px;
+  margin-top: 0px;
+}
+
+.refresh_button{
+  background-color: #FFD7D7;
+  color:#FD2D01;
+  border-radius: 10px;
+  font-weight: bold;
+
+}
+
 .current_user_container {
   display:flex;
   flex-direction:row ;

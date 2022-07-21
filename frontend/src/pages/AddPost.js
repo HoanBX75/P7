@@ -98,7 +98,7 @@ return (
     <div class='connect_body'>
          <h2 class='connect_title'>Send  Your New Post  </h2>
     <div>   
-         <p class='connect_text'>Just Provide your Text, and Photo:  </p> 
+         <p class='connect_text'>Just Provide your Text, an Image:  </p> 
          <div class='addPost_form_container'>
          
          <form onSubmit={handleSubmit(onSubmit)}>

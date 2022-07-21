@@ -286,14 +286,17 @@ async  function refreshPosts() {
 
     return (
       <div >
+ 
           <div class='post_body'>
+          
           <h2 class='connect_title'>Browse Our Posts </h2>
           </div>
-
-
+          <div class='refresh_button_container'>
+          <button className='refresh_button' onClick={() => refreshPosts ()}>Refresh</button>
+          </div>
          
           <ol >  
-          <button onClick={() => refreshPosts ()}>Refresh</button>
+          
               {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
                  <li>
                       <div key={_id}>

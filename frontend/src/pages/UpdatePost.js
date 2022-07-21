@@ -159,28 +159,37 @@ function UpdatePost (){
      */
 return (
     <div>
-         <Header state={5} user={getLocalStorageUser()}/>
-     <h2>Update Post </h2>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
+        <Header state={5} user={getLocalStorageUser()}/>
+     
+        <div class='connect_body'>
+            <h2 class='connect_title'>Update Your Post </h2>
+            <div>
+                <p class='connect_text'>Change your Text, and Image:  </p> 
+                <div class='addPost_form_container'>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <label htmlFor="titre">Title</label>
+                        <div>
+                            <label htmlFor="titre">Post Title</label>
+                        </div>
+                        <textarea {...register('title')} defaultValue={postTitle} type="text" rows="1" cols="100" autoFocus maxLength={255} id="titre" />
                     </div>
-                    <textarea {...register('title')} defaultValue={postTitle} type="text" rows="2" cols="100" autoFocus maxLength={255} id="titre" />
-                </div>
-                <div>
                     <div>
-                        <label htmlFor="texte">Text</label>
+                        <div>
+                            <label htmlFor="texte">Text</label>
+                        </div>
+                        <textarea {...register('text')} defaultValue={postText} type="text" rows="3" cols="100" maxLength={500} id="texte" />
                     </div>
-                    <textarea {...register('text')} defaultValue={postText} type="text" rows="5" cols="100" maxLength={500} id="texte" />
-                </div>
-                <div>
-                    <input {...register('image')} aria-label="Ajouter une image" type="file"  />
-                </div>
-                <button>Update  post</button>
-                {error ?
-                    error : null}
-            </form>
+                    <div>
+                        <input {...register('image')} aria-label="Ajouter une image" type="file"  />
+                    </div>
+                    <button>Update</button>
+                    {error ?
+                        error : null}
+                </form>
+            </div>
+
+            </div>
+          </div>
 
     </div>
 );    

@@ -21,7 +21,6 @@ function Header (props){
       */
       return (
         <div class='current_user_container'>
-         
           <span class='current_user'> {admin }Logged: </span> 
           <span class='current_username'>{user.username}</span> 
         </div>
