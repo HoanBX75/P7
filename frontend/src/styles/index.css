@@ -45,6 +45,7 @@ Primaire : #FD2D01
   border-radius: 10px;
   margin: 5px;
   padding:3px;
+  border: 1px solid black;
 
 }
 
@@ -244,6 +245,10 @@ input[type=text] {
   
 .post_buttons button {
     margin-right: 5px;
+    /*
+    background-color: #4E5166;
+    color: white;
+    */
   }
 
 

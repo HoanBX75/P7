@@ -36,8 +36,8 @@ function Header (props){
           <nav class='header_connect_container'>
              <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
              <Link className='header_main_link' to="/">Home</Link> 
-            <Link  className='header_link' to="/signup">SIGN UP</Link> 
-            <Link  className='header_link' to="/login">LOGIN</Link>
+            <Link  className='header_link' to="/signup">Sign Up </Link> 
+            <Link  className='header_link' to="/login">Login</Link>
           </nav>
           <hr/>    
           </div> 
@@ -50,8 +50,8 @@ function Header (props){
           <nav class='header_connect_container'> 
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_link' to="/">Home</Link>  
-                <Link className='header_main_link' to="/signup">SIGN UP </Link> 
-                <Link className='header_link' to="/login">LOGIN</Link>
+                <Link className='header_main_link' to="/signup">Sign Up </Link> 
+                <Link className='header_link' to="/login">Login</Link>
           </nav>    
           <hr/>    
         </div>      
@@ -64,8 +64,8 @@ function Header (props){
             <nav class='header_connect_container'>
               <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
               <Link className='header_link' to="/">Home</Link> 
-              <Link className='header_link' to="/signup">SIGN UP</Link> 
-              <Link  className='header_main_link' to="/login">LOGIN</Link>
+              <Link className='header_link' to="/signup">Sign Up</Link> 
+              <Link  className='header_main_link' to="/login">Login</Link>
             </nav>
             <hr/>    
         </div> 
@@ -78,9 +78,9 @@ function Header (props){
                 {getCurrentUser()}
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
-                <Link className='header_main_link' to="/">ALL POSTS</Link> 
-                <Link className='header_link'  to="/post/add">NEW POST</Link> 
-                <Link className='header_link' to="/logout">LOGOUT</Link>
+                <Link className='header_main_link' to="/"> Posts</Link> 
+                <Link className='header_link'  to="/post/add">New Post</Link> 
+                <Link className='header_link' to="/logout">Logout</Link>
             </nav>
       
             <hr/>
@@ -94,9 +94,9 @@ function Header (props){
             {getCurrentUser()}
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
-                <Link className='header_link' to="/">ALL POSTS</Link> 
-                <Link className='header_main_link'  to="/post/add">NEW POST</Link> 
-                <Link className='header_link' to="/logout">LOGOUT</Link>
+                <Link className='header_link' to="/"> Posts</Link> 
+                <Link className='header_main_link'  to="/post/add">New Post</Link> 
+                <Link className='header_link' to="/logout">Logout</Link>
                 
             </nav>
             <hr/>
@@ -110,9 +110,9 @@ function Header (props){
             {getCurrentUser()}
             <nav class='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
-                <Link className='header_link' to="/">ALL POSTS</Link> 
+                <Link className='header_link' to="/"> Posts</Link> 
  
-                <Link className='header_link' to="/logout">LOGOUT</Link>
+                <Link className='header_link' to="/logout">Logout</Link>
                 
             </nav>
             <hr/>
