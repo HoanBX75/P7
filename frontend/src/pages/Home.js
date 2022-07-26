@@ -171,6 +171,7 @@ function Home(props) {
       headers: {
         'authorization': 'bearer ' + token,
       },
+      
     })
     .then((res) => {
 
@@ -223,6 +224,7 @@ async  function refreshPosts() {
         method: 'GET',
         headers: {
         'authorization': 'bearer ' + token},
+      
         })
         .then(response => response.json())
         .then(data => {
@@ -307,7 +309,6 @@ async  function refreshPosts() {
 {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
 
 
-
    <div className="post" key={`post-${_id}`}>
 
       <div class='post_info'>
@@ -319,9 +320,9 @@ async  function refreshPosts() {
 
       
 
-      <button className='post_text_button' onClick={() => displayText (text)}>
+      <div className='post_text_button' onClick={() => displayText (text)}>
                  <div class='post_text'>{text}</div> 
-      </button>
+      </div>
 
 
        <div class='post_image'>
@@ -334,7 +335,7 @@ async  function refreshPosts() {
         { isUserLiking(cur_userid,usersLiked )?
                       <button  className='post_button' onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>Unlike</button>
                       :
-                      <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like</button>
+                      <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like ❤</button>
                       } 
                   
         { cur_username === userName  || cur_user_isAdmin ?
