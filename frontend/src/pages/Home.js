@@ -5,80 +5,34 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Loader } from '../styles/Atoms'
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
-
 import communicate from '../icons/communicate.jpg'
 
-const LoginCompName = 'Home.js';
-traceLog_msg (1,  LoginCompName , 'begin');
+const HomeCompName = 'Home.js';
 
 
 
-/* =========================================================== */
+
+/* *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
 function Home(props) {
 
   const [posts, setPosts] = useState([]);
   const [effectstatus, setEffectstatus] = useState(1);
   const navigate = useNavigate();
-  const   LoginCompName = 'Home.js/Home()';
 
- //  const [user, setUser] = useState({});
+  const   HomeCompName = 'Home.js/Home()';
+
+
+
+
  
-
-    /* =========================================================== */
-  
- /* ----------*/
-  function getStringTime(s_date)
-  {
-    let dateObj = new Date (s_date);
-    let year = dateObj.getFullYear();
-
-    let month = dateObj.getMonth();
-    month = ('0' + month).slice(-2);
-    // To make sure the month always has 2-character-formate. For example, 1 => 01, 2 => 02
-    
-    let date = dateObj.getDate();
-    date = ('0' + date).slice(-2);
-    // To make sure the date always has 2-character-formate
-    
-    let hour = dateObj.getHours();
-    hour = ('0' + hour).slice(-2);
-    // To make sure the hour always has 2-character-formate
-    
-    let minute = dateObj.getMinutes();
-    minute = ('0' + minute).slice(-2);
-    // To make sure the minute always has 2-character-formate
-    
-    let second = dateObj.getSeconds();
-    second = ('0' + second).slice(-2);
-    // To make sure the second always has 2-character-formate
-    
-    const time = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
+/* 
+=========================================================== 
+            Miscellaneous Funtions 
+=========================================================== 
+*/
  
-    return (time);
-  }
-
-  /* ----------*/
-  function isUserLiking ( cur_userid, usersLikesList)
-  {
-    let res_userid = null;
-
-    if (usersLikesList.length === 0 ) {
-      return (false);
-    }
-    else {
-      res_userid = usersLikesList.find (userid  => cur_userid ==  userid);
-    }
-    
-    if (res_userid) {
-      return (true);
-    }
-    else {
-      return (false);
-    }
-  }
-  /* ----------*/
-  function getToken ()
-  {
+/* Function getToken() : returns the user token in LocalStorage else null */ 
+function getToken () {
     let user = localStorage.getItem("user");
     if (user) {
       let o_user =  JSON.parse (user);
@@ -87,132 +41,88 @@ function Home(props) {
     else {
       return null;
     }  
-  }
-  /* ----------*/
-  function isConnected (){
+}
+
+/* Function isConnected() : returns true  user connected else false  */ 
+function isConnected (){
       let user = localStorage.getItem("user");
- 
-
-
       if (user) return (true);
       return (false);
-   }
-  /* ----------*/
+}
 
-  function getHeaderState () {
+/* Function getHeaderState() : returns 3 to display the Home header and 0 if the user 
+                               is not connected */ 
+                               
+function getHeaderState () {
         if (isConnected() ) {
             return (3);  /* All posts */ 
         }
         return (0);
-  }
-  /* ----------*/
-   function updatePost (id, name){
-    let funcName  = 'Home.js/Home()/updatePost';
-    traceLog_obj (1,  funcName , 'id = ', id);
-     navigate (`post/update/${id}`)
-
-     // `/post/edit/${element.id}`
-   }
-
-   /* =========================================================== */
-   async function likePost ( post_id, cur_token, cur_userid, dotheLike){
-      let funcName = 'Home.js/Home()/likePost()';
-      traceLog_line ();
-      traceLog_obj (1,  funcName , 'post_id = ', post_id);
-      traceLog_obj (1,  funcName , 'cur_userid = ', cur_userid);
-      traceLog_obj (1,  funcName , 'cur_token = ', cur_token);
-      traceLog_obj (1,  funcName , 'dotheLike = ', dotheLike);
-
-
-
-      const postData = { userid: cur_userid, 
-                        dotheLike: dotheLike};
-
-
-      let url_postlike = "http://localhost:3000/api/post/like/" + post_id; 
-
-      traceLog (1,  funcName , 'send  HTTP post like  url =', url_postlike )
-      /* ---------- */
-      await fetch(url_postlike, {
-        method: 'POST',
-        headers: {
-          'authorization': 'bearer ' + cur_token,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData)
-      })
-      .then((res) => {
-
-        traceLog_msg (1,  funcName , 'Response Like OK   ' );
-        traceLog_obj (1,  funcName , 'Response Like =  ', res  );
-        setEffectstatus (2);
-   
-       // navigate ("/")
-  
-      })
-      .catch(err => console.log(err)) ;
-  
-      traceLog_msg (1,  funcName , ' End  ' );
-    
-
-    // navigate("/"); 
-
-  }
-
-  /* =========================================================== */
-  async function deletePost (id, name){
-    let LoginCompName = 'Home.js/Home()/deletePost()';
-    traceLog_line ();
-    traceLog_obj (1,  LoginCompName , 'id = ', id);
-    let token = getToken();
-    let url_delete = "http://localhost:3000/api/post/" + id; 
-    await  fetch(url_delete, {
-      method: 'DELETE',
-      headers: {
-        'authorization': 'bearer ' + token,
-      },
-      
-    })
-    .then((res) => {
-
-      traceLog_msg (1,  LoginCompName , 'delete post  ' );
-      traceLog_obj (1,  LoginCompName , 'delete post  res ', res  );
-   
-      setEffectstatus (3);  /* deletePost */
-      // navigate ("/")
-
-    })
-    .catch(err => console.log(err)) ;
-
-    traceLog_msg (1,  LoginCompName , 'delete end  ' );
-
-  }
- /* =========================================================== */
-async  function refreshPosts() {
-  traceLog_line ();
-  let funcName  = 'Home.js/Home()/refreshPosts()';
-
-  setEffectstatus (4);  /* refreshPosts */
-  traceLog_msg (1,  funcName , '   begin / end  ' );
 }
 
-   /* =========================================================== */
-   useEffect(() => {
+/* Function displayText() : dipslays the Post text in a window */ 
+function displayText (text) {
+  alert (text);
+}
+
+
+/* 
+  =================================================================================== 
+  Function : refreshPosts()
+  Description : 
+   This function is the call back invoked when clicking on the refresh buttons
+   It sets the Effectstatus to 4 , so that the useEffect () function is called 
+   to fetch the posts from backend.
+  ================================================================================== 
+*/  
+async  function refreshPosts() {
+  let funcName  = 'Home.js/Home()/refreshPosts()';
+  traceLog_line ();
+  traceLog_msg (1,  funcName , '   begin / end  ' );
+  setEffectstatus (4);  /* refreshPosts */
+}
+
+/* 
+  =================================================================================== 
+  Function : useEffect()
+  Description : 
+    This function is in charge of getting all the posts 
+    when effectstatus has specified values.
+    And updating the posts state.
+
+    The depedency list is effectstatus.
+    If the effectstatus is equals to : 
+     1 : a post update, post new, a start  has been done 
+     3:  a post delete has been done 
+     4:  a resfresh on the post list done 
+     In those cases : 
+        a request is sent to the back to fetch all the posts.
+        effectstatus is set to 10 : indicating that
+              a http GET request is beeing processed  
+        And, When the http get request is done 
+        The state posts is set to the posts obtained.
+        The effectstatus is set to 20 (ok), 21 (nok)
+
+    22 (No user is connected)
+
+   ================================================================================== 
+*/
+useEffect(() => {
     let funcName  = 'Home.js/Home()/useEffect()';
     traceLog_line ();
-    traceLog_obj (1,  funcName , 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  effectstatus ', effectstatus  );
+    traceLog_obj (1,  funcName , ' effectstatus = ', effectstatus  );
     
     switch (effectstatus) {
       case 1: break;     /* update, add, init */
-      case 2 : break ;   /* like */
+     /* case 2 : break ;    like */
       case 3 : break ;  /* delete */
       case 4 : break ;  /* refresh */
       default :   /* 10 treatment en cours, 20 - 29 : traitment fait ,  0 acknowledment  */
-         traceLog_msg  (1,  funcName , 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  No treatment ');
+         traceLog_msg  (1,  funcName , '  No treatment ');
          return;
     }
 
-    traceLog_msg  (1,  funcName , 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  treatment ');
+    traceLog_msg  (1,  funcName , ' Launching Treatment ');
     setEffectstatus (10);
 
     let token = getToken();
@@ -228,7 +138,7 @@ async  function refreshPosts() {
         })
         .then(response => response.json())
         .then(data => {
-          traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYY  response data   ', data  );
+          traceLog_obj (1,  funcName , ' Response data   ', data  );
             setPosts(data)
             setEffectstatus (20);
         })
@@ -239,93 +149,78 @@ async  function refreshPosts() {
     }
     else 
     {
-      traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYY  Not connected  token   ', token  );
+      traceLog_obj (1,  funcName , '  Not connected  token   ', token  );
       setEffectstatus (22);
       setPosts([])
     }  
  }, [effectstatus]);
 
 
-  function displayText (text)
-  {
-    alert (text);
-  }
-  /* =========================================================== */
-   function displayAllPosts (){
+/* 
+  ========================================================================= 
+  Function : displayAllPosts()
+  Description : 
+   if the user is logged in, this function display all the posts.
+   If there is no user logged, then it displays a welcomme message 
+   ========================================================================= 
+*/
+function displayAllPosts (){
    
    const  funcName = 'Home.js/displayAllPosts () :';
-   
-  
    traceLog_msg (1,  funcName , ' begin ');
-
    const current_user = getLocalStorageUser ();
   
    if (isConnected())
    {
-    traceLog_obj (1,  funcName , ' current current_user ', current_user );
-    const cur_username =  current_user.username;
-    const cur_userid = current_user.userid ; 
-    const cur_token = current_user.token ; 
-    const cur_usertype  = current_user.usertype ; 
-
-   const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
-
-
-  
-/*  */
-
-    traceLog_obj (1,  funcName , ' ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ    effectstatus ', effectstatus );
-  /* acknowledging use effect 
-    if (effectstatus >= 20 ) {  
-      setEffectstatus (0);
-    }
-    */
-
-    traceLog_obj (1,  funcName , ' cur_username =', cur_username );
-    traceLog_obj (1,  funcName , ' cur_user_isAdmin =', cur_user_isAdmin );
-    traceLog_obj (1,  funcName , ' posts ', posts );
-  
-    traceLog_msg (1,  funcName , ' Display  Posts      ' );
-    if (effectstatus === 10) {
-      return ( <Loader />)
-    }
+        traceLog_obj (1,  funcName , ' current current_user ', current_user );
+        const cur_username =  current_user.username;
+        const cur_userid = current_user.userid ; 
+        const cur_token = current_user.token ; 
+        const cur_usertype  = current_user.usertype ; 
+        const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
 
 
-    return (
-      <div >
- 
-          <div class='post_body'>
-          
-          <h2 class='connect_title'>Browse Our Posts </h2>
-          </div>
+        traceLog_obj (1,  funcName , ' effectstatus =  ', effectstatus );
+        traceLog_obj (1,  funcName , ' cur_username =', cur_username );
+        traceLog_obj (1,  funcName , ' cur_user_isAdmin =', cur_user_isAdmin );
+        traceLog_obj (1,  funcName , ' posts ', posts );  
+        traceLog_msg (1,  funcName , ' Display  Posts      ' );
 
-          <div class='refresh_button_container'>
-          <button className='refresh_button' onClick={() => refreshPosts ()}>Refresh</button>
-  </div>
-         
+       // The useEffect () function getting the posts from backend  
+       // A waiting lader animation is displayed  
+      if (effectstatus === 10) {
+          return ( <Loader />)
+      }
 
-<hr/>
-<div class="posts">
-{posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked,
-              cur_username, cur_userid, cur_token, cur_usertype
-             }) => (
+      // Return  all the posts obtained from the useEffect get Posts results 
+      return (
+        <div>
+              <div class='post_body'>
+              <h2 class='connect_title'>Browse Our Posts </h2>
+              </div>
+              <div class='refresh_button_container'>
+              <button className='refresh_button' onClick={() => refreshPosts ()}>Refresh</button>
+              </div>
               
-<Post   _id={_id}  
-        title={title}   text={text}  imageUrl={imageUrl}
-        userId={userId} userName={userName} 
-        postDate={postDate} usersLiked={usersLiked}  
-      
-        setEffectstatus={setEffectstatus}
-        />
- ))}
-</div>
-      </div>
-    );
-   
-   }
-   else {
-     /* Not connected */
+              <div class="posts">
+                  <div> {(posts.length == 0)? <p>No post at the moment ! </p> :null } 
+                  </div>
+                  {posts.map(({ _id, title, text, imageUrl, userId, userName,  
+                                postDate, usersLiked,
+                            }) => (
+                               <Post   _id={_id}   title={title}   text={text}  imageUrl={imageUrl}
+                                       userId={userId} userName={userName} 
+                                       postDate={postDate} usersLiked={usersLiked}  
+                                       setEffectstatus={setEffectstatus}
+                                />
+                   ))}
+              </div>
+        </div>
+      ); // end of return;
 
+   }  // end -of if connected  
+   else {
+         /* else : Not connected */
         return(
         <div class='connect_body'>
          <h2 class='connect_title'>Let's Communicate !</h2> 
@@ -333,85 +228,36 @@ async  function refreshPosts() {
          <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
         </div>
         )
-   }
+   }  // end of -else 
+} // end of  function  displayAllPosts 
+/* ================================================================== */
 
-  } 
-/* ----------
+
+
+/* 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ RETURN 
+   The home component displays 
+       - A header 
+       - if user connected, all the posts are displayed 
+         else a welcome message  
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
 
 */
-/* =========================================================== */
+
 traceLog_line ();
-traceLog_msg (1,  LoginCompName , 'begin');
-  
+traceLog_msg (1,  HomeCompName , '******* RETURN *****');
 return (
         <div>
          <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
             {displayAllPosts()} 
         </div>
-    );    
+);    
 
 }   // end of function Home
-/* =========================================================== */
-traceLog_msg (1,  LoginCompName , 'end');
+/* *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
+
+
+traceLog_msg (1,  HomeCompName , 'loaded');
 export default Home;
 
-
-/*
-
-
-<div class="posts">
-
-{posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
-
-
-   <div className="post" key={`post-${_id}`}>
-
-      <div class='post_info'>
-          {title ? <h2 className='post_title'>{title}</h2> : null}
-          <div className="post_date">{getStringTime(postDate)}   </div>
-          <div class='post_author_username'>  by  {userName}</div>
-             
-      </div>
-
-      
-
-      <div className='post_text_button' onClick={() => displayText (text)}>
-                 <div class='post_text'>{text}</div> 
-      </div>
-
-
-       <div class='post_image'>
-       <img   src={imageUrl} alt="" />
-       </div>
-       <div class='post_likes'>{usersLiked.length} Likes</div>
-
-       <div className="post_buttons">
-       
-        { isUserLiking(cur_userid,usersLiked )?
-                      <button  className='post_button' onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>Unlike</button>
-                      :
-                      <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>Like ❤</button>
-                      } 
-                  
-        { cur_username === userName  || cur_user_isAdmin ?
-                       <span>
-                      <button className='post_button' onClick={() => deletePost (_id, title)}>Delete</button>
-                      <button className='post_button'onClick={() => updatePost (_id, title)}>Update</button>
-                      </span>: null
-                      } 
-         
-        </div>
-     
-   
-
-
-   </div>
-  
-   
-
-
-
-   ))}
-</div>  
-
-*/
