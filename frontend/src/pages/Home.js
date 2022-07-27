@@ -12,7 +12,21 @@ const HomeCompName = 'Home.js';
 
 
 
-/* *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function : Home()
+ Description : 
+  This function is handling the main page of the application.
+  It displays : 
+    - a header 
+    - and a list of posts  
+ 
+  Two states are defined :
+    posts : contain the list of all the posts obtained  from the backend 
+    effectstatus : a status that is set to trigget the useEffect() function 
+    that will fetch the posts.
+ */
+
 function Home(props) {
 
   const [posts, setPosts] = useState([]);
@@ -52,7 +66,7 @@ function isConnected (){
 
 /* Function getHeaderState() : returns 3 to display the Home header and 0 if the user 
                                is not connected */ 
-                               
+
 function getHeaderState () {
         if (isConnected() ) {
             return (3);  /* All posts */ 
@@ -189,7 +203,9 @@ function displayAllPosts (){
        // The useEffect () function getting the posts from backend  
        // A waiting lader animation is displayed  
       if (effectstatus === 10) {
-          return ( <Loader />)
+          return ( 
+            <div className='xloader'><Loader /> </div>
+          )
       }
 
       // Return  all the posts obtained from the useEffect get Posts results 
@@ -199,12 +215,13 @@ function displayAllPosts (){
               <h2 class='connect_title'>Browse Our Posts </h2>
               </div>
               <div class='refresh_button_container'>
-              <button className='refresh_button' onClick={() => refreshPosts ()}>Refresh</button>
+              <div className='refresh_button' onClick={() => refreshPosts ()}><button> 👉🏻 Refresh </button></div>
               </div>
-              
+              <div class='no_post_message'> {(posts.length == 0)? <p>No post at the moment ! </p> :null } 
+              </div>
+
               <div class="posts">
-                  <div> {(posts.length == 0)? <p>No post at the moment ! </p> :null } 
-                  </div>
+
                   {posts.map(({ _id, title, text, imageUrl, userId, userName,  
                                 postDate, usersLiked,
                             }) => (
@@ -250,7 +267,7 @@ traceLog_msg (1,  HomeCompName , '******* RETURN *****');
 return (
         <div>
          <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
-            {displayAllPosts()} 
+          {displayAllPosts()} 
         </div>
 );    
 

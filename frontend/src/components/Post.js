@@ -64,7 +64,9 @@ function Post (props) {
     traceLog_obj (1,  funcName , 'postEffectstatus = ', postEffectstatus);
     traceLog_obj (1,  funcName , 'postId = ', postId);
    
-  
+    
+    checkReadMore (postId);
+
 
     if (postEffectstatus == 1)
     {
@@ -125,7 +127,33 @@ function getToken ()
   {
     alert (text);
   }
+
   function getStringTime(s_date)
+  {
+    let dateObj = new Date (s_date);
+    let options = {weekday: "long", year: "numeric", month: "long", day: "numeric"};
+
+    let l_date = dateObj.toLocaleDateString("en-US", options);
+
+    let hour = dateObj.getHours();
+    hour = ('0' + hour).slice(-2);
+    // To make sure the hour always has 2-character-formate
+    
+    let minute = dateObj.getMinutes();
+    minute = ('0' + minute).slice(-2);
+    // To make sure the minute always has 2-character-formate
+    
+    let second = dateObj.getSeconds();
+    second = ('0' + second).slice(-2);
+    // To make sure the second always has 2-character-formate
+    
+    const time = ` ${hour}:${minute}:${second}`;
+
+
+    return (l_date + ' at ' + time);
+  }
+
+  function getStringTime2(s_date)
   {
     let dateObj = new Date (s_date);
     let year = dateObj.getFullYear();
@@ -260,6 +288,40 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
    }
 /* =========================================================== */
 
+function showReadMoreButton(element){
+
+    console.log ( 'AAAAAAAAAAAAAAAAAAAAAAA   showReadMoreButton ', element ); 
+    
+    if (element.offsetHeight < element.scrollHeight ||
+         element.offsetWidth < element.scrollWidth) {
+         return (true );
+     } else {
+        return (false );
+     }
+    
+ }
+/* =========================================================== */
+ function checkReadMore (postId)
+ { 
+    let b =  false; 
+    
+    let  element =  document.getElementById(`postText-${postId}`);
+    if (element == null) {
+        return (false);
+    }
+
+
+    if (element.offsetHeight < element.scrollHeight ||
+        element.offsetWidth < element.scrollWidth) {
+        document.getElementById(`read-more-${postId}`).style.visibility = "visible";
+        return (true );
+    } else {
+       return (false );
+    }
+
+ }
+
+
 
 traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
 
@@ -270,12 +332,25 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
                  <div className="post_date"> {getStringTime(postDate)}  </div>
                 <div class='post_author_username'>  by  {userName}</div>
             </div>   
-            <div className='post_text_button' onClick={() => displayText (text)}>
-                 <div class='post_text'>{text}</div> 
+   
+
+            <div className='post_text_container' >
+                 <p id={`postText-${_id}`} class='post_text'>{text}</p>
             </div>
+            
+            <div>
+            
+            <div id={`read-more-${_id}`} class='read-more-text_container'>
+            <div className='read-more_text_button' onClick={() => displayText (text)}>   
+               Read More ...  </div>
+            </div>  
+            </div>
+           
             <div class='post_image'>
                   <img   src={imageUrl} alt="" />
-          </div>
+            </div>
+            
+
           <div class='post_likes'>{usersLiked.length} Likes</div>
 
           <div className="post_buttons">
@@ -284,14 +359,14 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
                      <button  className='post_button' onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>🤍 Unlike </button>
                      :
                      <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}> 🧡 Like </button>
-                     } 
+        } 
                  
        { cur_username === userName  || cur_user_isAdmin ?
                       <span>
                      <button className='post_button' onClick={() => deletePost (_id, title)}>❌ Delete</button>
                      <button className='post_button'onClick={() => updatePost (_id, title)}>⭕ Update</button>
                      </span>: null
-                     } 
+        } 
         
        </div>
     
