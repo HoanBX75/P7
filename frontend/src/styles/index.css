@@ -41,11 +41,16 @@ Primaire : #FD2D01
 
 .refresh_button{
   /* background-color: #FFD7D7; */
-  /* color:#FD2D01; */
+  /* color:#FD2D01; 
+    color :  #FD2D01;
+      background-color: #FFD7D7;
+  */
   border-radius: 10px;
   margin: 5px;
   padding:3px;
-  border: 1px solid black;
+
+  border: 1px solid FFD7D7;
+
 
 }
 

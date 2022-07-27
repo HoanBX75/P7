@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
-
+import Post  from "../components/Post";
 import { Link, useNavigate } from 'react-router-dom'
 import { Loader } from '../styles/Atoms'
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
@@ -304,6 +304,61 @@ async  function refreshPosts() {
   </div>
          
 
+<hr/>
+<div class="posts">
+{posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked,
+              cur_username, cur_userid, cur_token, cur_usertype
+             }) => (
+              
+<Post   _id={_id}  
+        title={title}   text={text}  imageUrl={imageUrl}
+        userId={userId} userName={userName} 
+        postDate={postDate} usersLiked={usersLiked}  
+      
+        setEffectstatus={setEffectstatus}
+        />
+ ))}
+</div>
+      </div>
+    );
+   
+   }
+   else {
+     /* Not connected */
+
+        return(
+        <div class='connect_body'>
+         <h2 class='connect_title'>Let's Communicate !</h2> 
+         <p class='connect_text'>   Just sign up, log in, and post    </p>
+         <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
+        </div>
+        )
+   }
+
+  } 
+/* ----------
+
+*/
+/* =========================================================== */
+traceLog_line ();
+traceLog_msg (1,  LoginCompName , 'begin');
+  
+return (
+        <div>
+         <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
+            {displayAllPosts()} 
+        </div>
+    );    
+
+}   // end of function Home
+/* =========================================================== */
+traceLog_msg (1,  LoginCompName , 'end');
+export default Home;
+
+
+/*
+
+
 <div class="posts">
 
 {posts.map(({ _id, title, text, imageUrl, userId, userName,  postDate, usersLiked  }) => (
@@ -352,44 +407,11 @@ async  function refreshPosts() {
 
    </div>
   
+   
+
+
 
    ))}
-</div>   
-
-<hr/>
-
-      </div>
-    );
-   
-   }
-   else {
-     /* Not connected */
-
-        return(
-        <div class='connect_body'>
-         <h2 class='connect_title'>Let's Communicate !</h2> 
-         <p class='connect_text'>   Just sign up, log in, and post    </p>
-         <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
-        </div>
-        )
-   }
-
-  } 
-/* ----------
+</div>  
 
 */
-/* =========================================================== */
-traceLog_line ();
-traceLog_msg (1,  LoginCompName , 'begin');
-  
-return (
-        <div>
-         <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
-            {displayAllPosts()} 
-        </div>
-    );    
-
-}   // end of function Home
-/* =========================================================== */
-traceLog_msg (1,  LoginCompName , 'end');
-export default Home;
