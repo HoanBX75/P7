@@ -1,6 +1,5 @@
 
 import  "../styles/index.css"
-
 import { Link, useNavigate } from 'react-router-dom'
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import logo from '../icons/icon-left-font.png'
@@ -27,7 +26,7 @@ function Post (props) {
     const [displayAllText, setDisplayAllText] = useState(false);
     const navigate = useNavigate();
 
- 
+    let funcName = 'Post.js/Post()';
  
     let  {_id, title, text, imageUrl, userId, userName,  postDate, usersLiked,
         setEffectstatus
@@ -40,7 +39,7 @@ function Post (props) {
         imageUrl = post.imageUrl;
     }
 
-    let funcName = 'Post.js/Post()';
+ 
     traceLog_line ();
     traceLog_obj (1,  funcName , 'props = ', props);
     traceLog_obj (1,  funcName , 'postEffectstatus = ', postEffectstatus);    
@@ -53,10 +52,6 @@ function Post (props) {
     }
 
 
-    //     setPost ({postId: _id});
-   //   setPost ({postId: _id, title: title, text : text,  imageUrl : imageUrl, 
-   //              userId : userId, userName : userName,  postDate : postDate, usersLiked : usersLiked})
-
     const current_user = getLocalStorageUser ();
     const cur_username =  current_user.username;
     const cur_userid = current_user.userid ; 
@@ -65,8 +60,15 @@ function Post (props) {
     const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
 
    
-          
+/* 
+=================================================================================== 
+            Miscellaneous Funtions 
+=================================================================================== 
+*/          
 
+/* ------------------------------------------------------------------------ */
+/* Function  getToken() : gets the user token stored in the localStorage    
+   ------------------------------------------------------------------------*/
 function getToken ()
 {
             let user = localStorage.getItem("user");
@@ -78,65 +80,33 @@ function getToken ()
               return null;
             }  
 }
-   /* =========================================================== */
- 
-  function getStringTime(s_date)
-  {
+
+/* ------------------------------------------------------------------------ */
+/* Function  getStringTime() : generates a date from a date string
+   with this format : Thursday, July 28, 2022 at 18:16:05                   
+   ------------------------------------------------------------------------ */ 
+function getStringTime(s_date) {
     let dateObj = new Date (s_date);
     let options = {weekday: "long", year: "numeric", month: "long", day: "numeric"};
-
     let l_date = dateObj.toLocaleDateString("en-US", options);
-
     let hour = dateObj.getHours();
     hour = ('0' + hour).slice(-2);
     // To make sure the hour always has 2-character-formate
-    
     let minute = dateObj.getMinutes();
     minute = ('0' + minute).slice(-2);
     // To make sure the minute always has 2-character-formate
-    
     let second = dateObj.getSeconds();
     second = ('0' + second).slice(-2);
     // To make sure the second always has 2-character-formate
-    
     const time = ` ${hour}:${minute}:${second}`;
-
-
     return (l_date + ' at ' + time);
-  }
+}
 
-  function getStringTime2(s_date)
-  {
-    let dateObj = new Date (s_date);
-    let year = dateObj.getFullYear();
-
-    let month = dateObj.getMonth();
-    month = ('0' + month).slice(-2);
-    // To make sure the month always has 2-character-formate. For example, 1 => 01, 2 => 02
-    
-    let date = dateObj.getDate();
-    date = ('0' + date).slice(-2);
-    // To make sure the date always has 2-character-formate
-    
-    let hour = dateObj.getHours();
-    hour = ('0' + hour).slice(-2);
-    // To make sure the hour always has 2-character-formate
-    
-    let minute = dateObj.getMinutes();
-    minute = ('0' + minute).slice(-2);
-    // To make sure the minute always has 2-character-formate
-    
-    let second = dateObj.getSeconds();
-    second = ('0' + second).slice(-2);
-    // To make sure the second always has 2-character-formate
-    
-    const time = `${year}/${month}/${date} ${hour}:${minute}:${second}`;
- 
-    return (time);
-  }
-     /* =========================================================== */
-  function isUserLiking ( cur_userid, usersLikesList)
-  {
+/* ------------------------------------------------------------------------ */
+/* Function  isUserLiking() : returns true if the user  connected likes 
+                                else false 
+   ------------------------------------------------------------------------ */ 
+function isUserLiking ( cur_userid, usersLikesList)  {
     let res_userid = null;
 
     if (usersLikesList.length === 0 ) {
@@ -152,9 +122,92 @@ function getToken ()
     else {
       return (false);
     }
-  }
+}
 
-/* =========================================================== */
+/* 
+  =================================================================================== 
+  Function : check_ToDisplaySeeMore()
+
+  Description : 
+      This function is invoked from the useEffect() function
+      This function verifies whether the entire post text can be 
+      displayed.
+      If it cannot, then the visibility of the element will be set 
+                     to visible.
+      Note that by default , it is set to hidden as  in  the css file : 
+      .read-more-text_container  {
+                 visibility: hidden;
+        }
+
+   Input 
+     postId : post id of a post 
+ 
+   ================================================================================== 
+*/
+
+function check_ToDisplaySeeMore (postId)
+{ 
+   let b =  false; 
+   
+   let  element =  document.getElementById(`postText-${postId}`);
+   if (element == null) {
+       return (false);
+   }
+
+   // Check here if the text enters in the element without scrolling 
+   // -----------------------------------------------------------------
+   if (element.offsetHeight < element.scrollHeight ||
+       element.offsetWidth < element.scrollWidth) {
+       document.getElementById(`read-more-${postId}`).style.visibility = "visible";
+       return (true );
+   } else {
+      return (false );
+   }
+
+}
+
+/* 
+  =================================================================================== 
+  Function : displayText()
+
+  Description : 
+      This function does the following : 
+            - set the state of the DisplayAllText 
+      It is invoked when clicking on the See more or See less button.
+   Input 
+     postId : post id of a post (it is passed just for the trace)
+     flag_all : true  all the text needs to  be displayed
+                false  the text will fit  to the display area    
+
+   ================================================================================== 
+*/
+
+function displayText (postId,  flag_all) {
+   let funcName = 'Post.js/Post()/displayAllText()';
+   traceLog_obj (1,  funcName , 'postId = ', postId);
+   traceLog_obj (1,  funcName , 'flag_all = ', flag_all);
+   // let  element =  document.getElementById(`postText-${postId}`);
+   setDisplayAllText(flag_all);
+ }
+
+/* 
+  =================================================================================== 
+  Function : likePost()
+
+  Description : 
+      This function is invoked when clicking on the post Like  button.
+      This functions does the following : 
+            - Send http Post  request  with the postId as parameter
+             and the  dotheLike (0, 1 as value)
+            - Invoke the Post setPostEffectstatus() state function 
+             to  re-display the Post itself (by the useEffect function).
+   Input 
+     postId : post id of a post 
+     dotheLike : 1  the user likes 
+                 0  the user cancels his like
+   ================================================================================== 
+*/
+
 async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     let funcName = 'Post.js/Post()/likePost()';
     traceLog_line ();
@@ -163,8 +216,6 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     traceLog_obj (1,  funcName , 'cur_token = ', cur_token);
     traceLog_obj (1,  funcName , 'dotheLike = ', dotheLike);
 
-
-
     const postData = { userid: cur_userid, 
                       dotheLike: dotheLike};
 
@@ -172,7 +223,10 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     let url_postlike = "http://localhost:3000/api/post/like/" + post_id; 
 
     traceLog (1,  funcName , 'send  HTTP post like  url =', url_postlike )
-    /* ---------- */
+
+    // Send HTTP POST  request to Like/UnLike a post 
+    // ---------------------------------------------- 
+
     await fetch(url_postlike, {
       method: 'POST',
       headers: {
@@ -183,142 +237,146 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     })
     .then((res) => {
 
-      traceLog_msg (1,  funcName , 'Response Like OK   ' );
-      traceLog_obj (1,  funcName , 'Response Like =  ', res  );
+        traceLog_msg (1,  funcName , 'Response Like OK   ' );
+        traceLog_obj (1,  funcName , 'Response Like =  ', res  );
 
-    //   setEffectstatus (2);
-    setPostEffectstatus (1);
-     // navigate ("/")
+        // Setting the Post PostEffectstatus  state to re-display the post
+        // --------------------------------------------------------------        
+        setPostEffectstatus (1);
 
     })
     .catch(err => console.log(err)) ;
 
     traceLog_msg (1,  funcName , ' End  ' );
-  
-
-  // navigate("/"); 
 
 }
 
-/* =========================================================== */
+/* 
+  =================================================================================== 
+  Function : deletePost()
 
- async function deletePost (id, name){
+  Description : 
+      This function is invoked when clicking on the post delete  button.
+      This functions does the following : 
+            - Send http delete request  with the postId as parameter
+            - Invoke the Home setEffectstatus() state function 
+             to redisplay the Posts list (by the Home.js useEffect function) .
+   Input 
+     postId : post id of a post 
+
+   ================================================================================== 
+*/
+
+ async function deletePost (id){
     let LoginCompName = 'Post.js/Post()/deletePost()';
     traceLog_line ();
     traceLog_obj (1,  LoginCompName , 'id = ', id);
+
     let token = getToken();
-    let url_delete = "http://localhost:3000/api/post/" + id; 
+    let url_delete = "http://localhost:3000/api/post/" + id;
+    
+    
+    // Send HTTP DELETE request to delete a post 
+    // ------------------------------------------- 
+
     await  fetch(url_delete, {
       method: 'DELETE',
       headers: {
         'authorization': 'bearer ' + token,
       },
-      
     })
     .then((res) => {
 
-      traceLog_msg (1,  LoginCompName , 'delete post  ' );
-      traceLog_obj (1,  LoginCompName , 'delete post  res ', res  );
+     
+      traceLog_obj (1,  LoginCompName , 'delete post  RES ', res  );
    
-      setEffectstatus (3);  /* deletePost */
-      // navigate ("/")
-
+     // Setting the Home  Effectstatus state to refresh the posts List 
+     // ---------------------------------------------------------------
+      setEffectstatus (3);  /* 3 indicates that 
+                               the invoker is  deletePost() function  */
     })
-    .catch(err => console.log(err)) ;
+    .catch(err => { 
+        // An error has occured  when sending the http delete request 
+        traceLog_msg (1,  LoginCompName , 'delete post  ERROR ', err );
+        setEffectstatus (3); 
+    }) ;
 
     traceLog_msg (1,  LoginCompName , 'delete end  ' );
 
   }
 
-/* =========================================================== */
- function updatePost (id, name){
+/* 
+  =================================================================================== 
+  Function : updatePost()
+
+  Description : 
+    This function is invoked when clicking on the post update button.
+    It will then request the Update Post page by passing the id of the post 
+    as a parameter.
+
+   Input 
+     postId : post id of a post 
+
+   ================================================================================== 
+*/
+
+ function updatePost (id){
     let funcName  = 'Post.js/Post()/updatePost';
+    traceLog_line ();
     traceLog_obj (1,  funcName , 'id = ', id);
-     navigate (`post/update/${id}`)
-
-     // `/post/edit/${element.id}`
-   }
-/* =========================================================== */
-
-function showReadMoreButton(element){
-
-    console.log ( 'AAAAAAAAAAAAAAAAAAAAAAA   showReadMoreButton ', element ); 
-    
-    if (element.offsetHeight < element.scrollHeight ||
-         element.offsetWidth < element.scrollWidth) {
-         return (true );
-     } else {
-        return (false );
-     }
-    
- }
-/* =========================================================== */
-
- function checkReadMore (postId)
- { 
-    let b =  false; 
-    
-    let  element =  document.getElementById(`postText-${postId}`);
-    if (element == null) {
-        return (false);
-    }
-
-    if (element.offsetHeight < element.scrollHeight ||
-        element.offsetWidth < element.scrollWidth) {
-        document.getElementById(`read-more-${postId}`).style.visibility = "visible";
-        return (true );
-    } else {
-       return (false );
-    }
-
- }
-
- function displayText (postId, text, flag_all)
-  {
-    let funcName = 'Post.js/Post()/displayAllText()';
-    traceLog_obj (1,  funcName , 'postId = ', postId);
-    let  element =  document.getElementById(`postText-${postId}`);
-    setDisplayAllText(flag_all);
-   //  element.innerText = text;
-   // element.style.visibility = "hidden";
-
-  }
-
-
+    navigate (`post/update/${id}`)
+}
 
 /* 
   =================================================================================== 
   Function : useEffect()
-  Description : 
-    This function is in charge of getting all the posts 
-    when effectstatus has specified values.
-    And updating the posts state.
 
+  Description : 
+    When a user has clicked on  Like/Unlike  button (postEffectstatus =1), 
+    this function is in charge of getting a post  (Http get request ) 
+    by using the postId. 
+    This function is also in charge of checking if the SeeMore button 
+    is to be enable if a post is too long.
+ 
+    This function is setting the status to 2 to indicate that it is process 
+    a Get request.
+    When a post is obtained : 
+           - postEffectstatus is postEffectstatus to 20 
+           -  the state post is set to the post data (from date of the HTTP get response );
+
+  Input 
+     postId : post id of a post 
 
    ================================================================================== 
 */
    useEffect(() => {
 
     let funcName = 'Post.js/Post()/useEffect()';
+
+    // Get the Post Id from the params 
     let postId = props._id;
     traceLog_line ();
     traceLog_obj (1,  funcName , 'postEffectstatus = ', postEffectstatus);
     traceLog_obj (1,  funcName , 'postId = ', postId);
    
-    
-    checkReadMore (postId);
+    // Check the Post text size and whether to display the SeeMore button or not 
+    // --------------------------------------------------------------------------
+    check_ToDisplaySeeMore (postId);
 
 
     if (postEffectstatus == 1)
     {
-        /* do the request */    
+        /* Setting  */    
         setPostEffectstatus (2);
         let token = getToken();
         traceLog_obj (1,  funcName , '  Token   ', token  );
         
-
+        // Check the token is still available 
+        // ---------------------------------
         if (getToken()) {
-            // Get One Post
+
+            // Send HTTP get request to get  post data
+            // --------------------------------------- 
             let url_getOne = 'http://localhost:3000/api/post/' + postId;
             traceLog_obj (1,  funcName , '  Send getOne Post request =  ', url_getOne  );
              fetch(url_getOne, {
@@ -329,26 +387,29 @@ function showReadMoreButton(element){
               })
               .then(response => response.json())
               .then(data => {
-                traceLog_obj (1,  funcName , 'ZZZZZZZZZZZZZZZZZZZZZZZ  response data   ', data  );
+                 // Handle the response 
+                 // -------------------
+                  traceLog_obj (1,  funcName , 'OK  response data   ', data  );
                   setPost(data)
                   setPostEffectstatus (20);
               })
               .catch(err => {
-                traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYY  Error response data   ', err   );
+                // Error :  Http request fails
+                traceLog_obj (1,  funcName , ' ERROR when getti  ', err   );
                 setPostEffectstatus (21);
                 console.log(err)
               });
           }
           else 
           {
-            traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYY  Not connected  token   ', token  );
+            // Error :  user not connected
+            traceLog_obj (1,  funcName , '  Not connected  token   ', token  );
             setPostEffectstatus (22);
             setPost([])
           }  
 
        return;
     }
-
    },[postEffectstatus])
 
    /* =========================================================== */
@@ -368,11 +429,10 @@ function showReadMoreButton(element){
 traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
 
     return (
-        <div className="post" key={`post-${_id}`}>
+    <div className="post" key={`post-${_id}`}>
             <div class='post_info'>
-            <div class='post_author_username'>    {userName}</div>
-            <div className="post_date"> {getStringTime(postDate)}  </div>
-             
+                <div class='post_author_username'>    {userName}</div>
+                <div className="post_date"> {getStringTime(postDate)}  </div>
             </div>   
    
             {!displayAllText?
@@ -386,13 +446,13 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
 
             {!displayAllText?
             <div id={`read-more-${_id}`} class='read-more-text_container'>
-                    <div className='read-more_text_button' onClick={() => displayText (_id, text, true )}>   
-                      See More ...  </div>
+                    <div className='read-more_text_button' onClick={() => displayText (_id, true )}>   
+                    ... See more   </div>
             </div> 
             : 
             <div id={`read-more-${_id}`} class='read-more-text_container'>
-            <div className='read-more_text_button' onClick={() => displayText (_id, text, false )}>   
-              See Less ...  </div>
+                    <div className='read-more_text_button' onClick={() => displayText (_id, false )}>   
+                    See less ...   </div>
             </div> 
             }
                
@@ -403,26 +463,25 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
             
 
           <div class='post_likes'>{usersLiked.length} Likes</div>
-
+        
+          <div class='post_separator'></div>
+          <div class='post_space'> <br /> </div>
           <div className="post_buttons">
        
-       { isUserLiking(cur_userid,usersLiked )?
+            { isUserLiking(cur_userid,usersLiked )?
                      <button  className='post_button' onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>🤍 Unlike </button>
                      :
-                     <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}> 🧡 Like </button>
-        } 
-                 
-       { cur_username === userName  || cur_user_isAdmin ?
-                      <span>
-                     <button className='post_button' onClick={() => deletePost (_id, title)}>❌ Delete</button>
-                     <button className='post_button'onClick={() => updatePost (_id, title)}>⭕ Update</button>
-                     </span>: null
-        } 
+                     <button className='post_button'  onClick={() => likePost (_id,  cur_token, cur_userid, 1)}>🧡 Like </button>
+             } 
         
-       </div>
-    
-
-      </div>
+            { cur_username === userName  || cur_user_isAdmin ?
+                      <span>
+                     <button className='post_button' onClick={() => deletePost (_id)}>❌ Delete</button>
+                     <button className='post_button'onClick={() => updatePost (_id)}>⭕ Update</button>
+                     </span>: null
+            } 
+            </div>
+    </div>
     );  
 
 

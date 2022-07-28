@@ -77,7 +77,6 @@ function displayText (text) {
   alert (text);
 }
 
-
 /* 
   =================================================================================== 
   Function : refreshPosts()
@@ -207,13 +206,14 @@ function displayAllPosts (){
       }
 
       // Return  all the posts obtained from the useEffect get Posts results 
+      // ---------------------------------------------------------------------
       return (
         <div>
               <div class='post_body'>
               <h2 class='connect_title'>Browse Our Posts </h2>
               </div>
               <div class='refresh_button_container'>
-              <div className='refresh_button' onClick={() => refreshPosts ()}><button> Refresh </button></div>
+              <div className='refresh_button' onClick={() => refreshPosts ()}><button>👇🏻 Refresh </button></div>
               </div>
               <div class='no_post_message'> {(posts.length == 0)? <p>No post at the moment ! </p> :null } 
               </div>
@@ -230,6 +230,7 @@ function displayAllPosts (){
                                 />
                    ))}
               </div>
+              <hr/>
         </div>
       ); // end of return;
 
@@ -238,7 +239,7 @@ function displayAllPosts (){
          /* else : Not connected */
         return(
         <div class='connect_body'>
-         <h2 class='connect_title'>Let's Communicate !</h2> 
+         <h2 class='connect_title'>Welcome to our Community!</h2> 
          <p class='connect_text'>   Just sign up, log in, and post    </p>
          <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
         </div>
