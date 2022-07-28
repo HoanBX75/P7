@@ -8,11 +8,23 @@ import {getLocalStorageUser} from '../utils/UserLocalStorage'
 import { useState, useEffect } from "react";
 
 
-/* =========================================================== */
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function : Post()
+ Description : 
+  This function displays a Post.
+  It displays : 
+       - A PostInfo (author, date)
+       - A Text  
+       - A number of likes 
+       - Buttons (like, delete , update) 
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
+ */
 function Post (props) {
 
     const [postEffectstatus, setPostEffectstatus] = useState(0);
     const [post, setPost] = useState(null);
+    const [displayAllText, setDisplayAllText] = useState(false);
     const navigate = useNavigate();
 
  
@@ -55,62 +67,6 @@ function Post (props) {
    
           
 
-   /* =========================================================== */
-   useEffect(() => {
-
-    let funcName = 'Post.js/Post()/useEffect()';
-    let postId = props._id;
-    traceLog_line ();
-    traceLog_obj (1,  funcName , 'postEffectstatus = ', postEffectstatus);
-    traceLog_obj (1,  funcName , 'postId = ', postId);
-   
-    
-    checkReadMore (postId);
-
-
-    if (postEffectstatus == 1)
-    {
-        /* do the request */    
-        setPostEffectstatus (2);
-        let token = getToken();
-        traceLog_obj (1,  funcName , '  Token   ', token  );
-        
-
-        if (getToken()) {
-            // Get One Post
-            let url_getOne = 'http://localhost:3000/api/post/' + postId;
-            traceLog_obj (1,  funcName , '  Send getOne Post request =  ', url_getOne  );
-             fetch(url_getOne, {
-              method: 'GET',
-              headers: {
-              'authorization': 'bearer ' + token},
-            
-              })
-              .then(response => response.json())
-              .then(data => {
-                traceLog_obj (1,  funcName , 'ZZZZZZZZZZZZZZZZZZZZZZZ  response data   ', data  );
-                  setPost(data)
-                  setPostEffectstatus (20);
-              })
-              .catch(err => {
-                traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYY  Error response data   ', err   );
-                setPostEffectstatus (21);
-                console.log(err)
-              });
-          }
-          else 
-          {
-            traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYY  Not connected  token   ', token  );
-            setPostEffectstatus (22);
-            setPost([])
-          }  
-
-       return;
-    }
-
-   },[postEffectstatus])
-
-   /* =========================================================== */
 function getToken ()
 {
             let user = localStorage.getItem("user");
@@ -123,11 +79,7 @@ function getToken ()
             }  
 }
    /* =========================================================== */
-  function displayText (text)
-  {
-    alert (text);
-  }
-
+ 
   function getStringTime(s_date)
   {
     let dateObj = new Date (s_date);
@@ -301,6 +253,7 @@ function showReadMoreButton(element){
     
  }
 /* =========================================================== */
+
  function checkReadMore (postId)
  { 
     let b =  false; 
@@ -309,7 +262,6 @@ function showReadMoreButton(element){
     if (element == null) {
         return (false);
     }
-
 
     if (element.offsetHeight < element.scrollHeight ||
         element.offsetWidth < element.scrollWidth) {
@@ -321,30 +273,129 @@ function showReadMoreButton(element){
 
  }
 
+ function displayText (postId, text, flag_all)
+  {
+    let funcName = 'Post.js/Post()/displayAllText()';
+    traceLog_obj (1,  funcName , 'postId = ', postId);
+    let  element =  document.getElementById(`postText-${postId}`);
+    setDisplayAllText(flag_all);
+   //  element.innerText = text;
+   // element.style.visibility = "hidden";
 
+  }
+
+
+
+/* 
+  =================================================================================== 
+  Function : useEffect()
+  Description : 
+    This function is in charge of getting all the posts 
+    when effectstatus has specified values.
+    And updating the posts state.
+
+
+   ================================================================================== 
+*/
+   useEffect(() => {
+
+    let funcName = 'Post.js/Post()/useEffect()';
+    let postId = props._id;
+    traceLog_line ();
+    traceLog_obj (1,  funcName , 'postEffectstatus = ', postEffectstatus);
+    traceLog_obj (1,  funcName , 'postId = ', postId);
+   
+    
+    checkReadMore (postId);
+
+
+    if (postEffectstatus == 1)
+    {
+        /* do the request */    
+        setPostEffectstatus (2);
+        let token = getToken();
+        traceLog_obj (1,  funcName , '  Token   ', token  );
+        
+
+        if (getToken()) {
+            // Get One Post
+            let url_getOne = 'http://localhost:3000/api/post/' + postId;
+            traceLog_obj (1,  funcName , '  Send getOne Post request =  ', url_getOne  );
+             fetch(url_getOne, {
+              method: 'GET',
+              headers: {
+              'authorization': 'bearer ' + token},
+            
+              })
+              .then(response => response.json())
+              .then(data => {
+                traceLog_obj (1,  funcName , 'ZZZZZZZZZZZZZZZZZZZZZZZ  response data   ', data  );
+                  setPost(data)
+                  setPostEffectstatus (20);
+              })
+              .catch(err => {
+                traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYYYY  Error response data   ', err   );
+                setPostEffectstatus (21);
+                console.log(err)
+              });
+          }
+          else 
+          {
+            traceLog_obj (1,  funcName , 'YYYYYYYYYYYYYYYYYYYYYYYYYYY  Not connected  token   ', token  );
+            setPostEffectstatus (22);
+            setPost([])
+          }  
+
+       return;
+    }
+
+   },[postEffectstatus])
+
+   /* =========================================================== */
+
+/* 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ RETURN 
+   The Post  component displays 
+       - A PostInfo (author, date)
+       - A Text  
+       - A number of likes 
+       - Buttons (like, delete , update) 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+
+*/
 
 traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
 
     return (
         <div className="post" key={`post-${_id}`}>
             <div class='post_info'>
-                  {title ? <h2 className='post_title'>{title}</h2> : null}
-                 <div className="post_date"> {getStringTime(postDate)}  </div>
-                <div class='post_author_username'>  by  {userName}</div>
+            <div class='post_author_username'>    {userName}</div>
+            <div className="post_date"> {getStringTime(postDate)}  </div>
+             
             </div>   
    
-
+            {!displayAllText?
             <div className='post_text_container' >
-                 <p id={`postText-${_id}`} class='post_text'>{text}</p>
+                <p id={`postText-${_id}`} class='post_text'>{text}</p>
             </div>
-            
-            <div>
-            
+            :<div className='post_text_container' >
+                <p id={`postTextALL-${_id}`} class='post_text_all'>{text}</p>
+            </div>
+            }
+
+            {!displayAllText?
             <div id={`read-more-${_id}`} class='read-more-text_container'>
-            <div className='read-more_text_button' onClick={() => displayText (text)}>   
-               Read More ...  </div>
-            </div>  
-            </div>
+                    <div className='read-more_text_button' onClick={() => displayText (_id, text, true )}>   
+                      See More ...  </div>
+            </div> 
+            : 
+            <div id={`read-more-${_id}`} class='read-more-text_container'>
+            <div className='read-more_text_button' onClick={() => displayText (_id, text, false )}>   
+              See Less ...  </div>
+            </div> 
+            }
+               
            
             <div class='post_image'>
                   <img   src={imageUrl} alt="" />

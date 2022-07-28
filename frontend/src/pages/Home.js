@@ -25,6 +25,7 @@ const HomeCompName = 'Home.js';
     posts : contain the list of all the posts obtained  from the backend 
     effectstatus : a status that is set to trigget the useEffect() function 
     that will fetch the posts.
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
  */
 
 function Home(props) {
@@ -34,9 +35,6 @@ function Home(props) {
   const navigate = useNavigate();
 
   const   HomeCompName = 'Home.js/Home()';
-
-
-
 
  
 /* 
@@ -215,7 +213,7 @@ function displayAllPosts (){
               <h2 class='connect_title'>Browse Our Posts </h2>
               </div>
               <div class='refresh_button_container'>
-              <div className='refresh_button' onClick={() => refreshPosts ()}><button> 👉🏻 Refresh </button></div>
+              <div className='refresh_button' onClick={() => refreshPosts ()}><button> Refresh </button></div>
               </div>
               <div class='no_post_message'> {(posts.length == 0)? <p>No post at the moment ! </p> :null } 
               </div>

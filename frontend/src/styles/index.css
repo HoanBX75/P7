@@ -209,7 +209,7 @@ input[type=text] {
 }
 .refresh_button_container button {
   font-size : 12px;
-  background-color: #FFD7D7;
+ /*  background-color: #FFD7D7; */
   border-radius: 5px;
 }
 
@@ -286,7 +286,7 @@ input[type=text] {
 .post_author_username {
  
   font-size:14px;
-  font-style: italic;
+  font-weight: bold;
 }
 
 .post_date {
@@ -308,7 +308,7 @@ input[type=text] {
  
 .post_text {
   
-  height: 8vh; 
+  height: 5vh; 
   font-size: 14px;
   margin: 0px;
  text-align: justify;
@@ -317,14 +317,30 @@ text-overflow: ellipsis;
 padding-top:5px;
 padding-left:5px;
 padding-right:5px;
+padding-bottom:5px;
 display: -webkit-box;
--webkit-line-clamp: 3; /* number of lines to show */
--line-clamp: 3;
+-webkit-line-clamp: 2; /* number of lines to show */
+
 -webkit-box-orient: vertical;
 overflow: hidden; 
 
 color: #4E5166 ;  /*  4E5166 */
 }  
+
+.post_text_all {
+  height:auto;
+  font-size: 14px;
+  margin: 0px;
+ text-align: justify;
+text-overflow: ellipsis;
+ padding: 0px;
+padding-top:5px;
+padding-left:5px;
+padding-right:5px;
+
+color: #4E5166 ;
+}
+
 
 /*  ===================================== */
 /*  Post Text Read More Part              */
@@ -392,6 +408,9 @@ color: #4E5166 ;  /*  4E5166 */
 
 .post_buttons button {
   margin-right: 5px;
+  background-color: white;
+  border: 1px solid white;
+
   /*
   background-color: #4E5166;
   color: white;
