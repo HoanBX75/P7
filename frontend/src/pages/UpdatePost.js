@@ -201,7 +201,7 @@ return (
      
         <div class='connect_body'>
             <h2 class='connect_title'>Update Your Post </h2>
-            <p class='connect_text'>Change your Text, and Image:  </p> 
+            <p class='connect_text'>Change your Text, Image:  </p> 
             <div>
                
                 <div class='addPost_form_container'>
