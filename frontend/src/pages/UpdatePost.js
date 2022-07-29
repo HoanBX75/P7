@@ -29,19 +29,21 @@ const UpdatePostCompName = 'UpdatePost.js';
 function UpdatePost (){
     const { register, handleSubmit } = useForm()
     const [isDataLoading, setDataLoading] = useState(false)
-    const [error, setError] = useState(false)   
+    const [error, setError] = useState()   
     const [postText, setPostText] = useState('')  
 
     const navigate = useNavigate()
     const params = useParams()
-    const UpdatePostCompName = 'UpdatePost.js/UpdatePost()';
 
+    const UpdatePostCompName = 'UpdatePost.js/UpdatePost()';
     let post_id = params.id;
 
 
 /*
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  Function :  'onSubmit()' function 
+ This function is invoking when clicking on the submit 
+ button (Update)
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  */
 
@@ -53,6 +55,20 @@ function UpdatePost (){
     traceLog_obj (1,  funcName , 'Input Form data ', data );
     traceLog_obj (1,  funcName , 'urlImage ', data.image[0] );
     traceLog_obj (1,  funcName , 'text ', data.text );
+    
+    /* Checking on the text field */
+    /* --------------------------- */
+    if (data.text == null)
+    {
+      setError("Unexpected Error on the Text field!")
+      return;
+    }
+    else {
+      if (data.text.length == 0) {  /* The text field must not be empty */
+        setError(" Please, fill the Text field !  ")
+        return;
+      } 
+    }
 
     let s_user  = localStorage.getItem ("user");   
     let user = JSON.parse (s_user);
@@ -177,16 +193,33 @@ function UpdatePost (){
 
 }, [isDataLoading])
 
+
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function :  'resetError()' function 
+ This function is invoked for resetting 
+ the error displayed.
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ */
+const resetError = () => {
+  let funcName  =  UpdatePostCompName + '/resetError()'; 
+  traceLog_msg (1,  funcName , 'Begin/End');
+  setError("")
+}
+
+
 /* 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  RETURN 
    The UpdatePost  component displays 
-    - a Header 
-     - a title : Update Your Post
-     - a text : Change your Text, Image:
-    - a Form consisting of 
+    + a Header 
+    + a Title : Update your post
+    + a text : Change your Text, Image:
+    + a Form consisting of 
        - an input Text
        - an input Image File (no default is provided for security reason)
+       - a submit button
+        - an error message (if an error occurs)
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
 */
 
@@ -210,19 +243,25 @@ return (
                         <div class='upd_label'>
                             <label htmlFor="texte">Text</label>
                         </div>
-                        <textarea {...register('text')} defaultValue={postText} type="text" 
-                                    rows="3" cols="100" autoFocus maxLength={500} id="texte" />
+                        <textarea {...register('text')} defaultValue={postText} 
+                                    type="text" 
+                                    rows="3" cols="100" autoFocus maxLength={500} id="texte"
+                                    onChange={resetError} />
                     </div>
+
                     <div class='upd_form_element'>
                         <div class='upd_label'> 
                             <label htmlFor="texte">Image</label> 
                         </div> 
-                        <input {...register('image')} aria-label="Update an Image " type="file"  />
+                        <input {...register('image')} aria-label="Update an Image " 
+                                type="file"  />
                     </div>
-                  
-                    <button>⭕ Update</button>
+
                     {error ?
-                        error : null}
+                        <><div className='connect_form_error'>{error}</div><br></br></> : null}  
+
+                    <button>⭕ Update</button>
+
                 </form>
             </div>
 

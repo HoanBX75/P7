@@ -1,12 +1,9 @@
-import { Link } from 'react-router-dom'
 import Header from "../components/Header";
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
-import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
+import { useState} from "react"
+import {traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
-import  "../styles/index.css"
-
 
 const AddPostCompName = 'AddPost.js';
 
@@ -18,9 +15,10 @@ const AddPostCompName = 'AddPost.js';
               Post text 
               An Image 
   And them to the back end to create a post. 
+
+
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
  */
-
 
 function AddPost (){
 
@@ -35,6 +33,8 @@ function AddPost (){
 /*
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  Function :  'onSubmit()' function 
+ This function is invoking when clicking on the submit 
+ button (Send)
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  */
   
@@ -43,7 +43,29 @@ const onSubmit = async (data) => {
     traceLog_line ();
     traceLog_obj (1,  AddPostFuncName , 'Input Form data ', data );
     traceLog_obj (1,  AddPostFuncName , 'urlImage ', data.image[0] );
+   
+    /*  Form Input checkings : text and Image file are mandatory */
+    /* --------------------------------------------------------- */
+    let l_error_msg = null;
+     if (data.text =="")
+     {
+        traceLog_msg (1,  AddPostFuncName , "The Text  is empty");
+        l_error_msg  =  "Please, fill the Text field!";
+     } 
 
+     if (data.image[0] == null)
+     {
+        traceLog_msg (1,  AddPostFuncName , "The Image  is not provided");
+        if (!l_error_msg) l_error_msg  =  "Please, provide an Image file!";
+        else  l_error_msg =  "Please, fill the Text field and provide an Image file!";
+     } 
+
+
+    if (l_error_msg != null)  {
+        setError(l_error_msg)
+        return;
+    }
+ 
 
      let s_user  = localStorage.getItem ("user");   
      let user = JSON.parse (s_user);
@@ -79,6 +101,7 @@ const onSubmit = async (data) => {
       })
       .catch(err => {
             traceLog_obj (1,  AddPostFuncName , 'HTTP request Error   ', err  );
+            alert ("Cannot create your new post! Error =  " + err);
       }) ;
 
       traceLog_msg (1,  AddPostFuncName , 'End' );
@@ -105,10 +128,14 @@ const resetError = () => {
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  RETURN 
    The AddPost component displays a  
-       a Header 
-       a form consisting of 
+       + Header 
+       + a title : Share your New Post:
+       + a text :  Just Provide your Text and Image:
+       + a form consisting of 
         - a Text
-        - an Image 
+        - an  Image File 
+        - a submit button
+        - an error message (if an error occurs)
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
 */
 
@@ -121,7 +148,7 @@ return (
     <Header  state={4} user={getLocalStorageUser()}/>
 
     <div class='connect_body'>
-        <h2 class='connect_title'>Send  Your New Post  </h2>
+        <h2 class='connect_title'>Send Your New Post  </h2>
         <p class='connect_text'>Just Provide your Text and Image:  </p> 
         <div>
 
@@ -130,21 +157,30 @@ return (
          
                 <form onSubmit={handleSubmit(onSubmit)}>
    
-                    <div>
-                        <div>
-                            <label htmlFor="texte">Text</label>
+                    <div class='upd_form_element'>
+                        
+                        <div class='upd_label'>
+                            <label htmlFor="texte">* Text </label>
                         </div>
-                        <textarea {...register('text')} type="text" rows="3" cols="100" maxLength={500} id="texte" />
+                        <textarea {...register('text')} 
+                                   type="text" 
+                                   rows="3" cols="100" maxLength={500} id="texte" 
+                                   onChange={resetError} />
                     </div>
 
-                    <div>
-                        <div> <label htmlFor="texte">Image</label> </div> 
-                        <input {...register('image')} aria-label="Ajouter une image" type="file" />
+                    <div class='upd_form_element'>
+                        <div class='upd_label'>  
+                             <label htmlFor="texte">* Image</label> 
+                        </div> 
+                        <input {...register('image')} aria-label="Add your image"
+                                 type="file" 
+                                 onChange={resetError}/>
                     </div>
-                    <br/>
+
+                    {error ?
+                        <><div className='connect_form_error'>{error}</div><br></br></> : null}  
+
                     <button>✍🏼 Send</button>
-                    
-                    {error ?error : null}
                 </form>
             </div>
 
@@ -158,24 +194,3 @@ return (
 
 traceLog_msg (1,  AddPostCompName , 'loaded');
 export default AddPost;    
-
-
-       //  formdata.append("urlImage", data.image[0])
-      // faire une requete vers le backend 
-      // https://developer.mozilla.org/fr/docs/Web/API/FormData/FormData
-     // https://fr.javascript.info/formdata
-
-
-/*
-
-                 <div>
-                        <div>
-                            <label htmlFor="titre">Post Title</label>
-                        </div>
-                        <textarea {...register('title')} type="text" 
-                                rows="1" cols="100" autoFocus maxLength={255} id="titre" />
-                    </div>
-
-
-*/
-
