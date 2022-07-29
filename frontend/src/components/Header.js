@@ -4,23 +4,34 @@ import  "../styles/index.css"
 import logo from '../icons/icon-left-font.png'
 
 
+
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function : Header()
+ Description : 
+  This function is in charge of displaying the header 
+  of the different pages.
+  The header takes two parameters : 
+    - user    : the usertype , and username are used to display 
+                the name and type (admin) of the user connected.
+    - state   : the state is indicating which header to display 
+                according to the page.
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
+*/
+
+
 function Header (props){
 
     let state = props.state;
     let user =  props.user;
     
+
     function getCurrentUser(){
       let admin=null
       if (user.usertype === 'admin') admin ='*';
          
-      /*
-      if (user.usertype === 'admin') 
-      return (<p>User*: {user.username}</p>);
-      else 
-      return (<p>User: {user.username}</p>);
-      */
       return (
-        <div class='current_user_container'>
+        <div className='current_user_container'>
           <span class='current_user'> {admin }Logged: </span> 
           <span class='current_username'>{user.username}</span> 
         </div>
@@ -28,12 +39,27 @@ function Header (props){
 
     }
 
+
+/* 
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ RETURN 
+ if state equals to 
+   0 :  Logout Page or Home page when user not connected
+   1:   Signup page  Header page 
+   2:   Login 
+   3:   Home  
+   4:   New Post page 
+   5:   Update page 
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+*/
+
     switch (state)
     {
-      case 0:   /* SIGN UP	LOGIN */
+      case 0:   /* LOGOUT + Home (not connected ) = SIGN UP	LOGIN */
       return (
          <div>
-          <nav class='header_connect_container'>
+          <nav className='header_connect_container'>
              <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
              <Link className='header_main_link' to="/">Home</Link> 
             <Link  className='header_link' to="/signup">Sign Up </Link> 
@@ -43,11 +69,10 @@ function Header (props){
           </div> 
        );   
 
-          break;
       case 1:   /* SIGNUP  =   HOME x SIGN UP	LOGIN  */ 
       return (
         <div>
-          <nav class='header_connect_container'> 
+          <nav className='header_connect_container'> 
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_link' to="/">Home</Link>  
                 <Link className='header_main_link' to="/signup">Sign Up </Link> 
@@ -61,7 +86,7 @@ function Header (props){
 
       return (
         <div>  
-            <nav class='header_connect_container'>
+            <nav className='header_connect_container'>
               <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
               <Link className='header_link' to="/">Home</Link> 
               <Link className='header_link' to="/signup">Sign Up</Link> 
@@ -87,7 +112,7 @@ function Header (props){
            
         </div> 
       );
-          break;
+        
       case 4 :    /* NEW POST =    ALL POSTS  x 	ADD POST  LOGOUT */
       return (
         <div>  
@@ -103,12 +128,12 @@ function Header (props){
            
         </div> 
           );
-          break;
+         
       case 5 :   /*  UPDATE POST =  ALL POSTS  	ADD POST  LOGOUT */
       return (
         <div>  
             {getCurrentUser()}
-            <nav class='header_connect_container'>
+            <nav className='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_link' to="/"> Posts</Link> 
  
@@ -124,7 +149,7 @@ function Header (props){
       default : 
          break;
     }
-
+    // Unexpected header 
     return (
         <nav>
         <p> Header : state = {state }</p>

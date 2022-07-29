@@ -7,7 +7,7 @@ import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/Trace
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 
 
-import  "../styles/index.css"
+
 
 
 const LoginCompName = 'Signup.js';
