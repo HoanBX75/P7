@@ -132,7 +132,7 @@ function Signup (){
                 </div>
                 {error ?
                     <><div className='connect_form_error'>{error}</div><br></br></> : null}
-                <button class='connect_button'>Sign up</button>
+                <button class='connect_button'>✔ Sign up</button>
             </form>
             </div>
         </div>

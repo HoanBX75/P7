@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom'
 import Header from "../components/Header";
 import { useForm } from "react-hook-form"
@@ -8,55 +7,62 @@ import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/Trace
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 import  "../styles/index.css"
 
-/* ------------------------------------------------- */
-const LoginCompName = 'AddPost.js';
-traceLog_msg (1,  LoginCompName , 'begin');
+
+const AddPostCompName = 'AddPost.js';
+
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function : AddPost()
+ Description : 
+  This function takes from a form : 
+              Post text 
+              An Image 
+  And them to the back end to create a post. 
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
+ */
 
 
 function AddPost (){
 
-    let  LoginCompName = 'AddPost.js/AddPost()';  
+    let  AddPostFuncName = 'AddPost.js/AddPost()';  
     traceLog_line ();
-    traceLog_msg (1,  LoginCompName , 'begin');
+    traceLog_msg (1,  AddPostFuncName , 'begin');
 
     const navigate = useNavigate()
     const { register, handleSubmit } = useForm()
     const [error, setError] = useState()
 
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function :  'onSubmit()' function 
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ */
+  
+const onSubmit = async (data) => {
+    let  AddPostFuncName = 'AddPost.js/AddPost()/onSubmit';  
+    traceLog_line ();
+    traceLog_obj (1,  AddPostFuncName , 'Input Form data ', data );
+    traceLog_obj (1,  AddPostFuncName , 'urlImage ', data.image[0] );
 
-/* ------------------------ */    
-    const onSubmit = async (data) => {
-      
-        traceLog_obj (1,  LoginCompName , 'Input Form data ', data );
-        traceLog_obj (1,  LoginCompName , 'urlImage ', data.image[0] );
-       //  formdata.append("urlImage", data.image[0])
-
-      // faire une requete vers le backend 
-      // https://developer.mozilla.org/fr/docs/Web/API/FormData/FormData
-     // https://fr.javascript.info/formdata
 
      let s_user  = localStorage.getItem ("user");   
      let user = JSON.parse (s_user);
-     traceLog_obj (1,  LoginCompName , 'localStorage user  ', user  );
-     traceLog_obj (1,  LoginCompName , 'localStorage user.token  ', user.token  );
-     traceLog_obj (1,  LoginCompName , 'localStorage user.userid  ', user.userid  );
+     traceLog_obj (1,  AddPostFuncName , 'localStorage user  ', user  );
 
+     // Prepare the form data 
+     // ----------------------
      let formData = new FormData();
      formData.append("userName", user.username)
      formData.append("text", data.text)
-     formData.append("title", data.title)
      formData.append("userId", user.userid)
      formData.append("image", data.image[0])
 
-    traceLog_obj (1,  LoginCompName , 'formData.values  ', formData.toString() );
+    traceLog_obj (1,  AddPostFuncName , 'formData.values  ', formData.toString() );
 
     let token =     user.token;
-    /*
-    for (let value of formData.values()) {
-        console.log(value);
-        console.log([value][0]);
-      };
-     */  
+
+     // Send the Post data to create a Post  
+     // -------------------------------------
 
      await fetch("http://localhost:3000/api/post/add", {
         method: 'POST',
@@ -66,63 +72,83 @@ function AddPost (){
         body: formData,
       })
       .then((res) => {
-
-        traceLog_msg (1,  LoginCompName , 'post added  ' );
-        traceLog_obj (1,  LoginCompName , 'post added  res ', res  );
-
-
+            // Get the response from the HTTP request   
+             // -----------------------------------------
+             traceLog_msg (1,  AddPostFuncName , 'post added  ' );
+             traceLog_obj (1,  AddPostFuncName , 'post added  res ', res  );
       })
-      .catch(err => console.log(err)) ;
+      .catch(err => {
+            traceLog_obj (1,  AddPostFuncName , 'HTTP request Error   ', err  );
+      }) ;
 
-      traceLog_msg (1,  LoginCompName , 'ZZZZZZZZZZZZZZZZZZZZ ' );
+      traceLog_msg (1,  AddPostFuncName , 'End' );
       
-       navigate ("/");
-    } // end of onSubmit
+      // Go to the Home page 
+      // -------------------
+      navigate ("/");
+} // end of onSubmit
 
   
 
-/* ------------------------ */ 
+/*
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ Function :  'resetError()' function 
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ */
 const resetError = () => {
-    let  LoginCompName = 'AddPost.js/resetError()';  
-    traceLog_msg (1,  LoginCompName , 'setError ()');
+    let  AddPostFuncName = 'AddPost.js/resetError()';  
+    traceLog_msg (1,  AddPostFuncName , 'setError ()');
     setError("")
 }
-/* ------------------------ */    
+ 
+/* 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+ RETURN 
+   The AddPost component displays a  
+       a Header 
+       a form consisting of 
+        - a Text
+        - an Image 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
+*/
 
-traceLog_msg (1,  LoginCompName , 'return');  
+traceLog_line ();
+traceLog_msg (1,  AddPostFuncName , '****** RETURN ********');  
 
 return (
 <div>
      
     <Header  state={4} user={getLocalStorageUser()}/>
-    <div class='connect_body'>
-         <h2 class='connect_title'>Send  Your New Post  </h2>
-    <div>   
-         <p class='connect_text'>Just Provide your Text, an Image:  </p> 
-         <div class='addPost_form_container'>
-         
-         <form onSubmit={handleSubmit(onSubmit)}>
-         <div>
-            <div>
-                <label htmlFor="titre">Post Title</label>
-            </div>
-            <textarea {...register('title')} type="text" rows="1" cols="100" autoFocus maxLength={255} id="titre" />
-        </div>
 
+    <div class='connect_body'>
+        <h2 class='connect_title'>Send  Your New Post  </h2>
+        <p class='connect_text'>Just Provide your Text and Image:  </p> 
         <div>
-            <div>
-                <label htmlFor="texte">Text</label>
+
+            
+            <div class='addPost_form_container'>
+         
+                <form onSubmit={handleSubmit(onSubmit)}>
+   
+                    <div>
+                        <div>
+                            <label htmlFor="texte">Text</label>
+                        </div>
+                        <textarea {...register('text')} type="text" rows="3" cols="100" maxLength={500} id="texte" />
+                    </div>
+
+                    <div>
+                        <div> <label htmlFor="texte">Image</label> </div> 
+                        <input {...register('image')} aria-label="Ajouter une image" type="file" />
+                    </div>
+                    <br/>
+                    <button>✍🏼 Send</button>
+                    
+                    {error ?error : null}
+                </form>
             </div>
-                <textarea {...register('text')} type="text" rows="3" cols="100" maxLength={500} id="texte" />
-        </div>
-        <div>
-                <input {...register('image')} aria-label="Ajouter une image" type="file" />
-        </div>
-        <button>Send</button>
-        {error ?error : null}
-        </form>
-        </div>
-    </div>  
+
+        </div>  
     </div>
 </div>  
 );    
@@ -130,5 +156,26 @@ return (
 
 }  //  end of  AddPost
 
-traceLog_msg (1,  LoginCompName , 'end');
+traceLog_msg (1,  AddPostCompName , 'loaded');
 export default AddPost;    
+
+
+       //  formdata.append("urlImage", data.image[0])
+      // faire une requete vers le backend 
+      // https://developer.mozilla.org/fr/docs/Web/API/FormData/FormData
+     // https://fr.javascript.info/formdata
+
+
+/*
+
+                 <div>
+                        <div>
+                            <label htmlFor="titre">Post Title</label>
+                        </div>
+                        <textarea {...register('title')} type="text" 
+                                rows="1" cols="100" autoFocus maxLength={255} id="titre" />
+                    </div>
+
+
+*/
+

@@ -9,6 +9,12 @@ Primaire : #FD2D01
 
 /* var(--star-fontsize) */
 
+
+/*  ===================================== */
+/*  HEADER                                */
+/*  ===================================== */
+
+
 /* header connect */
 .header_connect_container {
   display: flex;
@@ -54,6 +60,12 @@ Primaire : #FD2D01
 
 }
 
+
+/*  ===================================== */
+/*   USER                                */
+/*  ===================================== */
+
+
 .current_user_container {
   display:flex;
   flex-direction:row ;
@@ -97,7 +109,7 @@ Primaire : #FD2D01
     color: #FD2D01;
 }
 .connect_text  {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .connect_form_container  {
@@ -121,8 +133,9 @@ textarea {
 }
 
 
-.connect_button{
-    background-color: #4E5166; /* Green #4CAF50*/
+.xconnect_button{
+   /* background-color: #4E5166;  Green #4CAF50*/
+   background-color: #4E5166;  
     border: none;
     color: white;
     padding: 15px 32px;
@@ -141,8 +154,29 @@ textarea {
   color: #FD2D01;
 }
 
+/*
+textarea {
+  border: 2px solid #FFD7D7;
+  border-radius: 5px;;
+}
+*/
+
+textarea:focus { 
+  outline: none !important;
+  border-color: #4E5166;
+ /* box-shadow: 0 0 10px #719ECE; */
+}
+
+.upd_label {
+  margin-bottom: 5px; 
+}
+
+.upd_form_element {
+  margin-bottom: 10px; 
+}
 label {
     font-size: 16px;
+    
 }
 
 input[type=text] {
@@ -461,8 +495,12 @@ color: #4E5166 ;
   border-radius: 5px;
 }
 
+/*  ===================================== */
+/*  MEDIA                                */
+/*  ===================================== */
 
-  @media (max-width: 992px){
+
+@media (max-width: 992px){
 
     .posts{
       box-sizing: border-box;
@@ -484,8 +522,7 @@ color: #4E5166 ;
     
 }
 
-    @media screen and (max-width: 768px)
-    {
+@media screen and (max-width: 768px) {
       .posts{
         margin-top:25px;
         display: flex;
@@ -497,4 +534,4 @@ color: #4E5166 ;
         margin-left:25px;
         margin-right:25px;
       }
-    }    
+}    

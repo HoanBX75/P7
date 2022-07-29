@@ -132,7 +132,7 @@ function Login (){
             </div>
             {error ?
                 <><div>{error}</div><br></br></> : null}
-            <button class='connect_button'>Login</button>
+            <button class='connect_button'>✔ Login</button>
         </form>
         </div>
         </div>

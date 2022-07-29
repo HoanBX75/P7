@@ -240,7 +240,7 @@ function displayAllPosts (){
         return(
         <div class='connect_body'>
          <h2 class='connect_title'>Welcome to our Community!</h2> 
-         <p class='connect_text'>   Just sign up, log in, and post    </p>
+         <p class='connect_text'>   Just Sign up, Log in, and Post    </p>
          <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
         </div>
         )
