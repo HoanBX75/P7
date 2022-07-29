@@ -499,6 +499,12 @@ color: #4E5166 ;
   border-radius: 5px;
 }
 
+.center_msg {
+  background-color: #FFD7D7;
+  display:flex;
+  justify-content: center;
+}
+
 /*  ===================================== */
 /*  MEDIA                                */
 /*  ===================================== */

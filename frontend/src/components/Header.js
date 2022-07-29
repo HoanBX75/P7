@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import  "../styles/index.css"
 import logo from '../icons/icon-left-font.png'
 
-
-
 /*
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  Function : Header()
@@ -19,7 +17,6 @@ import logo from '../icons/icon-left-font.png'
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
 */
 
-
 function Header (props){
 
     let state = props.state;
@@ -32,13 +29,12 @@ function Header (props){
          
       return (
         <div className='current_user_container'>
-          <span class='current_user'> {admin }Logged: </span> 
-          <span class='current_username'>{user.username}</span> 
+          <span className='current_user'> {admin }Logged: </span> 
+          <span className='current_username'>{user.username}</span> 
         </div>
       );
 
     }
-
 
 /* 
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
@@ -101,7 +97,7 @@ function Header (props){
       return (
         <div>  
                 {getCurrentUser()}
-            <nav class='header_connect_container'>
+            <nav className='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_main_link' to="/"> Posts</Link> 
                 <Link className='header_link'  to="/post/add">New Post</Link> 
@@ -117,7 +113,7 @@ function Header (props){
       return (
         <div>  
             {getCurrentUser()}
-            <nav class='header_connect_container'>
+            <nav className='header_connect_container'>
                 <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
                 <Link className='header_link' to="/"> Posts</Link> 
                 <Link className='header_main_link'  to="/post/add">New Post</Link> 
@@ -145,7 +141,17 @@ function Header (props){
         </div>
       );
 
-          break; 
+      case 404: 
+      return (
+        <div>
+         <nav className='header_connect_container'>
+            <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
+            <Link className='header_main_link' to="/">Home</Link> 
+         </nav>
+         <hr/>    
+         </div> 
+      );   
+       
       default : 
          break;
     }
