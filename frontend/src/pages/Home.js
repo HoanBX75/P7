@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Post  from "../components/Post";
-import { Link, useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import { Loader } from '../styles/Atoms'
-import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
+import {traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 import communicate from '../icons/communicate.jpg'
 
 const HomeCompName = 'Home.js';
-
-
-
 
 /*
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
@@ -36,7 +33,6 @@ function Home(props) {
 
   const   HomeCompName = 'Home.js/Home()';
 
- 
 /* 
 =========================================================== 
             Miscellaneous Funtions 
@@ -86,7 +82,7 @@ function displayText (text) {
    to fetch the posts from backend.
   ================================================================================== 
 */  
-async  function refreshPosts() {
+function refreshPosts() {
   let funcName  = 'Home.js/Home()/refreshPosts()';
   traceLog_line ();
   traceLog_msg (1,  funcName , '   begin / end  ' );
@@ -166,7 +162,6 @@ useEffect(() => {
     }  
  }, [effectstatus]);
 
-
 /* 
   ========================================================================= 
   Function : displayAllPosts()
@@ -189,7 +184,6 @@ function displayAllPosts (){
         const cur_token = current_user.token ; 
         const cur_usertype  = current_user.usertype ; 
         const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
-
 
         traceLog_obj (1,  funcName , ' effectstatus =  ', effectstatus );
         traceLog_obj (1,  funcName , ' cur_username =', cur_username );
@@ -248,8 +242,6 @@ function displayAllPosts (){
 } // end of  function  displayAllPosts 
 /* ================================================================== */
 
-
-
 /* 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  RETURN 
@@ -258,7 +250,6 @@ function displayAllPosts (){
        - if user connected, all the posts are displayed 
          else a welcome message  
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
-
 */
 
 traceLog_line ();
@@ -272,7 +263,6 @@ return (
 
 }   // end of function Home
 /* *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- */
-
 
 traceLog_msg (1,  HomeCompName , 'loaded');
 export default Home;

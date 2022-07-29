@@ -1,11 +1,8 @@
-
 import  "../styles/index.css"
-import { Link, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import {traceLog,traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
-import logo from '../icons/icon-left-font.png'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 import { useState, useEffect } from "react";
-
 
 /*
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
@@ -17,6 +14,10 @@ import { useState, useEffect } from "react";
        - A Text  
        - A number of likes 
        - Buttons (like, delete , update) 
+
+   The handling of the 'like Post' of 'delete Post' is handled.
+   The update post is handled by  the UpdatePost.js by invoking its 
+   page.
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
  */
 function Post (props) {
@@ -39,7 +40,6 @@ function Post (props) {
         imageUrl = post.imageUrl;
     }
 
- 
     traceLog_line ();
     traceLog_obj (1,  funcName , 'props = ', props);
     traceLog_obj (1,  funcName , 'postEffectstatus = ', postEffectstatus);    
@@ -51,7 +51,6 @@ function Post (props) {
         setPostEffectstatus (0)
     }
 
-
     const current_user = getLocalStorageUser ();
     const cur_username =  current_user.username;
     const cur_userid = current_user.userid ; 
@@ -59,7 +58,6 @@ function Post (props) {
     const cur_usertype  = current_user.usertype ; 
     const cur_user_isAdmin = (cur_usertype == 'admin' ? true : false);
 
-   
 /* 
 =================================================================================== 
             Miscellaneous Funtions 
@@ -104,7 +102,7 @@ function getStringTime(s_date) {
 
 /* ------------------------------------------------------------------------ */
 /* Function  isUserLiking() : returns true if the user  connected likes 
-                                else false 
+                                        else false 
    ------------------------------------------------------------------------ */ 
 function isUserLiking ( cur_userid, usersLikesList)  {
     let res_userid = null;
@@ -163,7 +161,6 @@ function check_ToDisplaySeeMore (postId)
    } else {
       return (false );
    }
-
 }
 
 /* 
@@ -178,7 +175,6 @@ function check_ToDisplaySeeMore (postId)
      postId : post id of a post (it is passed just for the trace)
      flag_all : true  all the text needs to  be displayed
                 false  the text will fit  to the display area    
-
    ================================================================================== 
 */
 
@@ -219,7 +215,6 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     const postData = { userid: cur_userid, 
                       dotheLike: dotheLike};
 
-
     let url_postlike = "http://localhost:3000/api/post/like/" + post_id; 
 
     traceLog (1,  funcName , 'send  HTTP post like  url =', url_postlike )
@@ -248,7 +243,6 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     .catch(err => console.log(err)) ;
 
     traceLog_msg (1,  funcName , ' End  ' );
-
 }
 
 /* 
@@ -363,7 +357,6 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     // --------------------------------------------------------------------------
     check_ToDisplaySeeMore (postId);
 
-
     if (postEffectstatus == 1)
     {
         /* Setting  */    
@@ -395,9 +388,8 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
               })
               .catch(err => {
                 // Error :  Http request fails
-                traceLog_obj (1,  funcName , ' ERROR when getti  ', err   );
+                traceLog_obj (1,  funcName , ' ERROR when getting post Error = ', err   );
                 setPostEffectstatus (21);
-                console.log(err)
               });
           }
           else 
@@ -412,14 +404,13 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     }
    },[postEffectstatus])
 
-   /* =========================================================== */
-
 /* 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  RETURN 
    The Post  component displays 
        - A PostInfo (author, date)
        - A Text  
+       - (A See more / See Less button) 
        - A number of likes 
        - Buttons (like, delete , update) 
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
@@ -437,10 +428,10 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
    
             {!displayAllText?
             <div className='post_text_container' >
-                <p id={`postText-${_id}`} class='post_text'>{text}</p>
+                <p id={`postText-${_id}`} class='post_text' dangerouslySetInnerHTML={{__html:text}}></p>
             </div>
             :<div className='post_text_container' >
-                <p id={`postTextALL-${_id}`} class='post_text_all'>{text}</p>
+                <p id={`postTextALL-${_id}`} class='post_text_all' dangerouslySetInnerHTML={{__html:text}}></p>
             </div>
             }
 
@@ -455,18 +446,17 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
                     See less ...   </div>
             </div> 
             }
-               
-           
+                   
             <div class='post_image'>
                   <img   src={imageUrl} alt="" />
             </div>
             
 
-          <div class='post_likes'>{usersLiked.length} Likes</div>
+            <div class='post_likes'>{usersLiked.length} Likes</div>
         
-          <div class='post_separator'></div>
-          <div class='post_space'> <br /> </div>
-          <div className="post_buttons">
+            <div class='post_separator'></div>
+            <div class='post_space'> <br /> </div>
+            <div className="post_buttons">
        
             { isUserLiking(cur_userid,usersLiked )?
                      <button  className='post_button' onClick={() => likePost ( _id, cur_token, cur_userid, 0)}>🤍 Unlike </button>
@@ -483,8 +473,7 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
             </div>
     </div>
     );  
-
-
 }
 
 export default Post;
+
