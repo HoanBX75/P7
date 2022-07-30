@@ -256,139 +256,169 @@ exports.deletePost = async  (req, res, next) =>{
 
 } // end of delete 
 
-// ======================
-// 6. UPDATE POST 
-// ======================
-/*
-PUT /api/post/:id 
-EITHER
-Post  as JSON
-OR { post: String,
-image: File }
-The response :  { message: String }
 
-controllers/post.js/updatePost() :  postObject     =  {
-  userName: 'titi',
-  text: 'zzzz',
-  title: 'zzzzz',
-  userId: '62cc84c93b888b5ec569245a',
-  image: 'undefined'
+/*  
+-----------------------------------------------------------------------  
+5. UPDATE SAUCE  : updatePost()
+-----------------------------------------------------------------------
+API : PUT /api/post/:id 
+id : identifier of a post 
+-----------------------------------------------------------------------
+Description : 
+This function updates  a Post.
+   Get the Post from mongodb
+   It checks first if the requestor user is the owner of the post.
+   If a image file is provided : 
+        - deletes the previous file image 
+        - updates the post in monogodb mongodb 
+    If an image is not provided : 
+        - updates the post in monogodb mongodb 
+
+Inputs : 
+    1/ without file (the Post information is in the body as a Json object  string )
+    Sauce as JSON . 
+
+    req body  =  [Object: null prototype] {
+        userName: 'titi',
+        text: 'merci',
+        userId: '62e000b034044eca56025ee3',
+        image: 'undefined'
+    }
+
+    2/ with a file :  (the PostPost information is in the body as a sauce String   )
+ 
+ req file  =  {
+  fieldname: 'image',
+  originalname: 'fred-kleber-gTbaxaVLvsg-unsplash.jpg',
+  encoding: '7bit',
+  mimetype: 'image/jpeg',
+  destination: 'images',
+  filename: 'fred-kleber-gTbaxaVLvsg-unsplash.jpg1659197220743.jpg',
+  path: 'images\\fred-kleber-gTbaxaVLvsg-unsplash.jpg1659197220743.jpg',
+  size: 79032
 }
 
-En base :
-    _id    :62cdeb974b8d11f7c369d07a
-    userId    :"62cdb253b4135cd12ad451dc"
-    userName    :"hoan"
-    title    :"jkdljf"
-    text    :"ff"
-    imageUrl    :"http://localhost:3000/images/annie-spratt-Eg1qcIitAuA-unsplash.jpg1657..."
-    usersLiked    :    Array
-    postDate    :2022-07-12T21:45:59.085+00:00
-    __v
-    :0
+The response :  { message: String }
 
 */
 
 exports.updatePost = (req, res, next) => {
   
-    // Search for a sauce with the id 
+
     const scriptname = 'controllers/post.js';
     const funcName =  scriptname + '/updatePost() : '; 
-    console.log ('--------------------------------------> ');
+    console.log("========================================================================>");
+  
     console.log (funcName + " post  id (params id ) = ", req.params.id);
   
-
-
-    console.log("============");
-   //  console.log (funcName + " req  = ", req );
     console.log (funcName + " req file  = ", req.file );
     console.log (funcName + " req image  = ", req.image );
     console.log (funcName + " req body  = ", req.body );
- //   res.status(200).json({ message: 'Sauce modifiée avec succès !' });
-  
-   if (req.file ) {
-       // The image is to udpate  :  Post  as JSON
-    console.log (funcName + " Image to update   ");
-    Post.findOne({_id: req.params.id})
-    .then(post  => {
 
-        console.log (funcName + " Found in MongoDB post  id = ", req.params.id);
-        let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
-        const filename = post.imageUrl.split('/images/')[1];
-        console.log (funcName + " deleting this file  = ", filename);
+   //  Get the Post  from mongodb  
+   // ============================
+   Post.findOne({_id: req.params.id})
+    .then(post => {
 
+        // Sauce is found  
+        console.log (funcName + " Found in MongoDB Post id = ", req.params.id);
+       // Check that the requestor is the owner of the Post  
+        // ===================================================
+
+        console.log (funcName +  ' Post  userid  = ' +  post.userId);
+        console.log (funcName +    'req userid  = ' +  req.userId);
+
+        if ( post.userId !== req.userId) {
+            res.status(401).json(  { message: 'unauthorized request' } );
+        }
+        else 
+        {
+            if (req.file ) {
+               // ============================================                        
+                 // The image is to udpate  :  Post  as JSON
+                // ============================================  
+                console.log (funcName + " Image to update   ");
+                console.log (funcName + " Found in MongoDB post  id = ", req.params.id);
+                let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         
-        fs.unlink(`images/${filename}`, () => {
-            console.log (funcName + " Ok deleted file  = ", filename);
-            
-      
+                const filename = post.imageUrl.split('/images/')[1];
+                console.log (funcName + " deleting this file  = ", filename);
 
-            let opost =  req.body;
-            let i_date =   Date.now();
+                  try {
+                   
+                        // Unlink the image  (delete the image )
+                         // --------------------------------------
+                        fs.unlink(`images/${filename}`, () => {
+                            console.log (funcName + " Ok deleted file  = ", filename);
+                            
+                            let opost =  req.body;
+                            let i_date =   Date.now();
 
-            console.log (funcName + " req opost  = ", opost);
-            console.log (funcName + "  imageUrl  = ", url0);
-            const postObject = {
-                  ...opost,
-                imageUrl: url0,
-                postDate: i_date 
-            };
+                            console.log (funcName + " req opost  = ", opost);
+                            console.log (funcName + "  imageUrl  = ", url0);
+                            const postObject = {
+                                ...opost,
+                                imageUrl: url0,
+                                postDate: i_date 
+                            };
 
+                            console.log (funcName + " input post   = ", postObject);
 
-            console.log (funcName + " input post   = ", postObject);
-
-            Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-            .then(() =>{ 
-                console.log (funcName + " OK post  updated -  id   = ", req.params.id);
-                console.log("============");
-                res.status(200).json({ message: 'Post  updated with success !' });
-            })
-            .catch(error =>{
-                console.log (funcName + " ERROR  post  updated -  id   = ", error );
+                            // Update the post in mongoDB
+                             // --------------------------
  
-
-                res.status(400).json({ error })
-            })
-            
-        })    ;
-        // .catch(error => res.status(500).json({ error })); 
-
+                            Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+                            .then(() =>{ 
+                                console.log (funcName + " OK post  updated -  id   = ", req.params.id);
+                                console.log("============");
+                                res.status(200).json({ message: 'Post  updated with success !' });
+                            })
+                            .catch(error =>{
+                                console.log (funcName + " ERROR  when updating in mongodb -  error   = ", error );
+                                res.status(400).json({ error })
+                            })
+                        })   ;
+                  
+                  } 
+                  catch (err ) {
+                    // Error occured in the unlink ;
+                    console.log (funcName + " Error  when unlinking  the file - Error =  ",err);
+                    res.status(500).json( err );
+                }  
+            }
+            else {
+                // The image is not updated :  Post as JSON
+                // =========================================
+             
+                 console.log (funcName + " No  image to update   ");
+                
+                 let i_date =   Date.now();
+                const postObject = { ...req.body,  postDate: i_date } ;
+             
+               //   const postObject = { ...req.body } ;
+                console.log (funcName + " postObject     = ", postObject);
+             
+                // Update the Post in mongodb
+                // --------------------------
+                 Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+                     .then(() => {
+                      console.log (funcName + " OK Post  updated -  id   = ", req.params.id);
+                      res.status(200).json({ message: 'Post updated with success !' })
+                     })
+                     .catch(error => {
+                        console.log (funcName + " Error  when updating Post in mongodb - Error =  ",error);
+                        res.status(400).json({ error })
+                    });
+            }
+        }
     })
     .catch(error => {
-        console.log (funcName + " Error Post  update - error    = ", error);
-        res.status(400).json({error})
-    } );    
-   }
-   else {
-   // The image is not updated :  Sauce as JSON
-   // ============================================
+        console.log (funcName + " Error Post not found    = ", error);
+        res.status(400).json({error});
+    } ); 
 
-    console.log (funcName + " No  image to update   ");
-   
-   //  delete postObject.image;
-   // delete postObject._id;
-   
-    let i_date =   Date.now();
-   const postObject = { ...req.body,  postDate: i_date } ;
-
- //   const postObject = { ...req.body } ;
-   console.log (funcName + " postObject     = ", postObject);
-
-
-    Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-        .then(() => {
-         console.log (funcName + " OK Post  updated -  id   = ", req.params.id);
-         console.log("============");
-         res.status(200).json({ message: 'Post updated with success !' })
-        })
-        .catch(error => res.status(400).json({ error }));
-
-   }
-
-
-
-}
+} // end of update  
 
 
 
@@ -410,8 +440,6 @@ exports.updatePost = (req, res, next) => {
         console.log (funcName + " post  id   ", post_id);
         console.log (funcName + " userid   ", userid);
         console.log (funcName + " dotheLike   ", dotheLike);
-
-       
 
 
          // Search for a Post  with the id 
@@ -464,10 +492,6 @@ exports.updatePost = (req, res, next) => {
             console.log (funcName + " Cannot find Post - Error   = ", error) ;
             res.status(400).json({error})
         });
-       
-
-  
-
 }
 
 console.log (scriptname + 'loaded');
