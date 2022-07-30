@@ -25,6 +25,7 @@ function Post (props) {
     const [postEffectstatus, setPostEffectstatus] = useState(0);
     const [post, setPost] = useState(null);
     const [displayAllText, setDisplayAllText] = useState(false);
+  
     const navigate = useNavigate();
 
     let funcName = 'Post.js/Post()';
@@ -159,6 +160,8 @@ function check_ToDisplaySeeMore (postId)
        document.getElementById(`read-more-${postId}`).style.visibility = "visible";
        return (true );
    } else {
+      // dont render the component 
+      document.getElementById(`read-more-${postId}`).style.height="0px";
       return (false );
    }
 }
@@ -435,6 +438,7 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
             </div>
             }
 
+
             {!displayAllText?
             <div id={`read-more-${_id}`} class='read-more-text_container'>
                     <div className='read-more_text_button' onClick={() => displayText (_id, true )}>   
@@ -446,6 +450,7 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
                     See less ...   </div>
             </div> 
             }
+
                    
             <div class='post_image'>
                   <img   src={imageUrl} alt="" />
