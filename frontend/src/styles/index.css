@@ -1,14 +1,10 @@
-/*
 
 
-
-*/
-/* var(--star-fontsize) */
-
+/* Lato font */
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
-
+/*  ===================================== */
 
 label {
   font-size: 16px;
@@ -54,6 +50,8 @@ textarea {
 body, input,textarea,button, p, h2{
   font-family: "Lato",sans-serif ;
 }
+
+/* Groupomania Colors  */
 
 :root{
   --colorPrimaire : #FD2D01;
