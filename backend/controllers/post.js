@@ -443,14 +443,19 @@ Rsp { message: String }
 id : post Id 
 -----------------------------------------------------------------------
 Description : 
-This function gives a Like status for a sauce and according to a user.
-if like = 0 then it cancels the like or dislike by removing the user 
-from the like and dislike list 
-If like =1  then the user is added to a like list .
-if the like = -1  then the user is in the  dislike list 
+This function gives a Like status to a  Post 
+if dotheLike = 0 then it cancels the like 
+If dotheLike =1  then the user likes  so it is added to a like list .
+
+
+The treatment  is the following : 
+    - Find the post 
+    - According to the dotheLike 
+        add or remove the issuer user of the like 
+    - Update the Post in mongoDB    
 
 Inputs : 
-In the body (req.body.userId , req.body.like)
+In the body (req.body.userId , req.body.dotheLike)
   { userId: String, like: Number }
 Returns : 
 In response, it returns a message  as  { message: String }
@@ -484,7 +489,6 @@ exports.likePost = (req, res, next) => {
              let usersLiked =  post.usersLiked;
             let new_usersLiked = [];
 
-         
             switch (dotheLike) {
                  /* unlike case */ 
                 case 0: 
