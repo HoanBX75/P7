@@ -47,7 +47,7 @@ module.exports = (req, res, next) => {
     });
   }
 };
-console.log ("auth.js fin ");
+
 
 
 

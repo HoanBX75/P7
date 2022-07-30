@@ -6,34 +6,47 @@ scriptname = 'controllers/post.js: ';
 
 
 /*
-  This file is a set of middlewares handling sauce requests.
+  This file is a set of middlewares handling Post requests.
+*/
+
+/*  
+-----------------------------------------------------------------------  
+1. CREATE POST   : createPost()
+---------------------------------------------------------------------------
+API : POST  /api/post/add
+-----------------------------------------------------------------------
+Description : 
+This function creates  a Post  in mongodb.
+It does the following : 
+    - extract the post  attributes from the request body
+    - build the other Post  attributes
+    - Create the Post  in the mongodb 
+
+Inputs : 
+Input  Post  information is stored in  the body 
+
+req.body =  [Object: null prototype] {
+  userName: 'toto',
+  text: 'DFDF',
+  userId: '62dfffa934044eca56025ed0'
+}
+and the req.file.name 
+ req.file.filename =  aw-creative-VGs8z60yT2c-unsplash.jpg1659191025684.jpg
+
+In response, it returns a message  as  { message: String }
 */
 
 
-
-// ========================================
-// 1.  CREATE POST 
-// ========================================
-/*
-DB post : 
- {
-_id: "62cda538f4a278fac373ba14"
-imageUrl: "http://localhost:3000/images/febrian-zakaria-sjvU0THccQA-unsplash.jpg1657644344094.jpg"
-postDate: "2022-07-12T16:45:44.098Z"
-text: "fg"
-title: "rdetg"
-userId: "62cc84c93b888b5ec569245a"
-userName: "titi"
-usersLiked: Array []
-  }
-*/
 
 exports.createPost = (req, res, next) => {
     scriptname = 'controllers/post.js';
     const funcName =  scriptname + '/createPost() : '; 
-    console.log ('--------------------------------------> ');
-    console.log (funcName  + "begin :  req.body = ", req.body);
-
+    console.log("========================================================================>")
+    console.log (funcName + 'begin '  );
+    console.log (funcName  + " req.body = ", req.body);
+    console.log (funcName  + " req.file.filename = ", req.file.filename);
+   // Get pOST  fields from the request body
+    // -------------------------------------
     let i_post = req.body;
     delete i_post._id;
     let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
@@ -43,9 +56,8 @@ exports.createPost = (req, res, next) => {
     console.log (funcName  + " i_date  = ", i_date);
     console.log (funcName  + " url0 = ", url0);
 
-    // let i_date =  new Date().toJSON();
-    // const backToDate = new Date(i_date);
-    //   https://www.w3schools.com/js/js_dates.asp
+    // Build Model POST  object :
+    // -------------------------
 
     const db_post = new Post ({
             ...i_post,
@@ -56,6 +68,8 @@ exports.createPost = (req, res, next) => {
 
     console.log (funcName  + " Create DB post =  ", db_post);
 
+    // Create POST object in mongodb
+    // ------------------------------
     db_post.save()
     .then(() => { 
             console.log (funcName  + "End: Post added sucessfully  ");
@@ -69,85 +83,170 @@ exports.createPost = (req, res, next) => {
     })
 }
         
-// ========================================    
-// 2. GET ALL POSTS
-// ========================================
+/*  
+-----------------------------------------------------------------------  
+3. GET ALL  POSTS  : getAllPost()
+-----------------------------------------------------------------------
+API : GET  /api/post/
 
+-----------------------------------------------------------------------
+Description : 
+This function gets  all POSTS  from mongodb.
+In the response, it returns a Json table containing all the posts (a 
+    post  is following the model object post  for mongodb mongodb). 
+Returns Array of Post  
+*/
 
 exports.getAllPost = (req, res, next) => {
-    console.log (scriptname + 'getAllPost() '  );
-   //  console.log (scriptname + 'getAllPost()  req ', req.body  );
-   //  console.log (scriptname + 'getAllPost()  req ================ '  );
+    scriptname = 'controllers/post.js';
+   
+    const funcName =  scriptname + ' - getAllPost() : ';
+    console.log("========================================================================>");
+    console.log (funcName + 'begin '  );
+
     // https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573/12
     // https://stackoverflow.com/questions/67264632/mongoose-sorting-by-createdat
     // https://www.statology.org/mongodb-sort-by-date/
 
     
+    // Get Posts object from  mongodb
+    // --------------------------------
+
         Post.find().sort({"postDate": -1}) 
         .then(posts => {
-          //   console.log (scriptname + ' - getAll  posts= ', posts );
+          //   console.log (funcName + ' - getAll  posts= ', posts );
+          console.log (funcName + ' - getAllPosts OK  ' );
             res.status(200).json(posts);
         }
         )
         .catch(error => {
-            console.log (scriptname + ' - getAll  error= ', error );
+            console.log (funcName + ' - getAllPosts  error= ', error );
             res.status(400).json({error})
         });
         
 }
 
+/*  
+-----------------------------------------------------------------------  
+3. GET ONE  POST  : getOnePost()
+-----------------------------------------------------------------------
+API : GET /api/POST/:id 
+id : identifier of a POST  
+-----------------------------------------------------------------------
+Description : 
+This function gets  a POST  information from mongodb.
+In the response, it returns a Json string form the returned 
+model object POST obtained from mongodb. 
 
-// 3. GET ONE POST 
+Returns a Single Post 
+*/
+
 exports.getOnePost = (req, res, next) => {
-    console.log (scriptname + ' - getOnePost '  );
-  //   console.log (scriptname + 'getOnePost req = ', req  );
-    
+
+        scriptname = 'controllers/post.js';
+        const funcName =  scriptname + ' - getOnePost() : ';
+        console.log("========================================================================>");
+        console.log (funcName + 'BEGIN '  );
+
+        // Get POST object from  mongodb
+        // --------------------------------
+
         Post.findOne({_id: req.params.id})
         .then(post => { 
-            console.log (scriptname + ' - getOnePost  post = '  , post );
+            console.log (funcName + ' - getOnePost  post = '  , post );
             res.status(200).json(post)})
         .catch(error => {
-            console.log (scriptname + ' - getOnePost  error  = '  , error );
+            console.log (funcName + ' - getOnePost  error  = '  , error );
             res.status(400).json({error})
         });
-
-
-    
     }
 
-// ========================================
-// 4. DELETE  ONE POST 
-// ========================================
+/*  
+-----------------------------------------------------------------------  
+4. DELETE  POST  : deletePost()
+-----------------------------------------------------------------------
+API : DELETE  /api/post/:id 
+id : identifier of a post 
+-----------------------------------------------------------------------
+Description : 
+This function deletes  a post.
+   Get the Post  from mongodb
+   It checks first if the requestor user is the owner of the post.
+   If a image file is provided : 
+        - deletes the previous file image 
+        - delete the post in  mongodb 
+    If an image is not provided : 
+        - delete the post in  mongodb 
+
+The response :  { message: String }
+
+*/
+
 exports.deletePost = async  (req, res, next) =>{
     const scriptname = 'controllers/post.js';
     const funcName =  scriptname + '/deletePost() : '; 
-    console.log ('--------------------------------------> ');
+    console.log("========================================================================>");
     console.log (funcName + " post  id (params id ) = ", req.params.id);
 
-    // Search for a post  with the id 
-
+    //  Get the post from mongodb  by the id 
+   // --------------------------------------
 
     Post.findOne({_id: req.params.id})
     .then(post => {
         console.log (funcName + " Found post  id = ", req.params.id);
+
+        console.log (funcName +  ' post userid  = ' +  post.userId);
+        console.log (funcName +    'req userid  = ' +  req.userId);
+
         const filename = post.imageUrl.split('/images/')[1];
         console.log (funcName + " Image Filename to remove  = ", filename);
 
-        
-        fs.unlink(`images/${filename}`, () => {
-            // Image Post  is deleted 
-            console.log (funcName + " Deleted filename   = ", filename);
-            // Delete the object Post in Mongodb  
-            Post.deleteOne({_id: req.params.id})
-            .then(() => {
-                console.log (funcName + " Deleted Post  id  = ", req.params.id);
-                res.status(200).json({message: 'Post deleted .'})
+        // Check that the requestor is the owner of the Post 
+        // -------------------------------------------------
 
-            })
-        .catch(error => res.status(400).json({error}));
-        });
-        
-        
+        if ( post.userId !== req.userId) {
+            console.log (funcName +    'unauthorized request  ' );
+            res.status(401).json(  { message: 'unauthorized request' } );
+        }
+        else 
+        {
+            try {
+                console.log (funcName +    'Unlinking the file   ' );
+                const filename = post.imageUrl.split('/images/')[1];
+                console.log (funcName + " Image Filename to remove  = ", filename);
+
+                // Unlink the image  (delete the image )
+                // --------------------------------------
+                fs.unlink(`images/${filename}`, (err) => {
+
+                    if (err) {
+                        console.log (funcName + "  ERROR  deleted file  = ", filename);
+                        console.log (funcName + "  ERROR  deleted file err  = ", err);
+                         throw err; 
+                     }
+
+                     console.log (funcName + " Deleted filename   = ", filename);
+
+                     // Delete the object Post  in Mongodb  
+                    // -----------------------------------
+                    Post.deleteOne({_id: req.params.id})
+                    .then(() => {
+                       console.log (funcName + " OK Deleted post  id  = ", req.params.id);
+                      res.status(200).json({message: 'Post supprimé.'})
+                    })
+                    .catch(error => {
+                        console.log (funcName + " Error mongodb update fails   = ", error);
+                         res.status(400).json({error})
+                    });
+
+                });
+            }
+            catch (error){
+                // Error occured in the unlink ;
+                console.log (funcName +    'Error while deleting image and  updating   error =  ', error  );
+                res.status(500).json( error );
+            }
+        }
      })
     .catch(error => {
         console.log (funcName + " Error Not Deleted file   = ", error);
