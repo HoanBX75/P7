@@ -21,7 +21,7 @@ mongoose.connect(MY_CONNECT,
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-
+// Create the express 
 const app = express();
 
 // Allow cross origin, methods, and header attributes 
@@ -35,11 +35,9 @@ app.use((req, res, next) => {
     next();
   });
 
-
 // Express Json   
 
 app.use(express.json());
-
 
 // gestion de requête vers le dossier images/-- chemin d'accès absolu.
 app.use('/images', express.static(path.join(__dirname, 'images')));
@@ -48,10 +46,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // Routes 
 // ------
 
-
 app.use('/api/auth/', userRoutes);
 app.use('/api/post/', postRoutes);
-
-
 
 module.exports = app;
