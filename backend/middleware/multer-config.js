@@ -20,8 +20,6 @@ Description :
 
 const scriptMultername = 'middleware/multer-config.js : ';
 
-
-
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         console.log ('========================================================>');
