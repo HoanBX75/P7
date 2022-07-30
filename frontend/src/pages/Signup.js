@@ -113,10 +113,10 @@ function Signup (){
     return (
     <div>
         <Header  state={1} user={getLocalStorageUser()}/>
-        <div class='connect_body'>
-            <h2 class='connect_title'>Join our   Community </h2>
-            <p class='connect_text'>Just Fill the Form: </p> 
-            <div class='connect_form_container'>
+        <div className='connect_body'>
+            <h2 className='connect_title'>Join our   Community </h2>
+            <p className='connect_text'>Just Fill the Form: </p> 
+            <div className='connect_form_container'>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label htmlFor="email">Email</label>
@@ -132,7 +132,7 @@ function Signup (){
                 </div>
                 {error ?
                     <><div className='connect_form_error'>{error}</div><br></br></> : null}
-                <button class='connect_button'>✔ Sign up</button>
+                <button className='connect_button'>✔ Sign up</button>
             </form>
             </div>
         </div>

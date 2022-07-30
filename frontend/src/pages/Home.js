@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Post  from "../components/Post";
 import {useNavigate } from 'react-router-dom'
-import { Loader } from '../styles/Atoms'
+import {Loader} from '../styles/Loader'
 import {traceLog_line, traceLog_obj, traceLog_msg} from '../utils/TraceLog'
 import {getLocalStorageUser} from '../utils/UserLocalStorage'
 import communicate from '../icons/communicate.jpg'
