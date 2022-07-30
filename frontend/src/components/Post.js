@@ -81,6 +81,23 @@ function getToken ()
 }
 
 /* ------------------------------------------------------------------------ */
+/* Function  getUsername() : gets the  username stored in the localStorage    
+   ------------------------------------------------------------------------*/
+
+function getUsername ()
+{
+            let user = localStorage.getItem("user");
+            if (user) {
+              let o_user =  JSON.parse (user);
+              return (o_user.username);
+            }
+            else {
+              return null;
+            }  
+}
+
+
+/* ------------------------------------------------------------------------ */
 /* Function  getStringTime() : generates a date from a date string
    with this format : Thursday, July 28, 2022 at 18:16:05                   
    ------------------------------------------------------------------------ */ 
@@ -276,17 +293,31 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     // Send HTTP DELETE request to delete a post 
     // ------------------------------------------- 
 
+   
+  
+
     await  fetch(url_delete, {
       method: 'DELETE',
       headers: {
         'authorization': 'bearer ' + token,
       },
+      
     })
     .then((res) => {
 
      
       traceLog_obj (1,  LoginCompName , 'delete post  RES ', res  );
    
+      if (res.ok) {
+      
+        traceLog_msg (1,  LoginCompName , 'Post  Deleted   OK  ' );
+        traceLog_obj (1,  LoginCompName , 'Post Deleted  res ', res  );
+      }   
+      else {
+        traceLog_obj (1,  LoginCompName , 'Post  NOT Deleted    ', res  );
+        throw 'Cannot Delete Post - status = ' + res.status 
+      } 
+
      // Setting the Home  Effectstatus state to refresh the posts List 
      // ---------------------------------------------------------------
       setEffectstatus (3);  /* 3 indicates that 
@@ -295,6 +326,7 @@ async function likePost ( post_id, cur_token, cur_userid, dotheLike){
     .catch(err => { 
         // An error has occured  when sending the http delete request 
         traceLog_msg (1,  LoginCompName , 'delete post  ERROR ', err );
+        alert ('Error occured :  ' +  err);
         setEffectstatus (3); 
     }) ;
 

@@ -54,7 +54,9 @@ function Header (props){
     {
       case 0:   /* LOGOUT + Home (not connected ) = SIGN UP	LOGIN */
       return (
+      
          <div>
+          
           <nav className='header_connect_container'>
              <img  className='header_image_logo' src={logo} alt="logo Groupomania"/>
              <Link className='header_main_link' to="/">Home</Link> 

@@ -108,15 +108,15 @@ function UpdatePost (){
         traceLog_obj (1,  funcName , 'Post Updated  res ', res  );
         }
         else {
-            traceLog_msg (1,  funcName , 'Post   NOT  Updated   ' );
+        
             traceLog_obj (1,  funcName , 'Post  NOT Updated   ', res  );
-            throw 'Cannot update Post '
+            throw 'Cannot update Post - status = ' + res.status 
         }
 
       })
       .catch(err => {
-        traceLog_obj (1,  funcName , 'Post updated ERROR    ', err );
-        alert ('Cannot Update Post - Error ', err);
+        traceLog_obj (1,  funcName , 'Post updated ERROR  =   ', err );
+        alert ('Cannot Update Post - Error ' +  err);
       }) ;
 
     traceLog_msg (1,  funcName , 'End ' );

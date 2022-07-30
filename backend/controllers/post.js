@@ -1,9 +1,10 @@
 const Post = require('../models/post');
+const User = require('../models/User');
+
 const fs = require('fs');
+const adminUserList  = require ('../data/adminUserList.js');
 
 scriptname = 'controllers/post.js: ';
-
-
 
 /*
   This file is a set of middlewares handling Post requests.
@@ -182,6 +183,7 @@ The response :  { message: String }
 
 */
 
+
 exports.deletePost = async  (req, res, next) =>{
     const scriptname = 'controllers/post.js';
     const funcName =  scriptname + '/deletePost() : '; 
@@ -193,18 +195,20 @@ exports.deletePost = async  (req, res, next) =>{
 
     Post.findOne({_id: req.params.id})
     .then(post => {
+
+
         console.log (funcName + " Found post  id = ", req.params.id);
 
         console.log (funcName +  ' post userid  = ' +  post.userId);
         console.log (funcName +    'req userid  = ' +  req.userId);
+        console.log (funcName +    'req username  = ' +  req.username);
 
         const filename = post.imageUrl.split('/images/')[1];
         console.log (funcName + " Image Filename to remove  = ", filename);
 
-        // Check that the requestor is the owner of the Post 
-        // -------------------------------------------------
-
-        if ( post.userId !== req.userId) {
+        // Check that the requestor is the owner of the Post  or an admin user
+        // -------------------------------------------------------------------
+        if (( post.userId !== req.userId)  && (!isUserAdmin(req.username)))  {
             console.log (funcName +    'unauthorized request  ' );
             res.status(401).json(  { message: 'unauthorized request' } );
         }
@@ -246,20 +250,21 @@ exports.deletePost = async  (req, res, next) =>{
                 console.log (funcName +    'Error while deleting image and  updating   error =  ', error  );
                 res.status(500).json( error );
             }
+
         }
+
      })
     .catch(error => {
         console.log (funcName + " Error Not Deleted file   = ", error);
         res.status(400).json({error})
     });
-
-
 } // end of delete 
+
 
 
 /*  
 -----------------------------------------------------------------------  
-5. UPDATE SAUCE  : updatePost()
+5. UPDATE Post  : updatePost()
 -----------------------------------------------------------------------
 API : PUT /api/post/:id 
 id : identifier of a post 
@@ -309,6 +314,9 @@ The response :  { message: String }
 
 */
 
+
+
+
 exports.updatePost = (req, res, next) => {
   
 
@@ -322,21 +330,22 @@ exports.updatePost = (req, res, next) => {
     console.log (funcName + " req image  = ", req.image );
     console.log (funcName + " req body  = ", req.body );
 
-
+  
    //  Get the Post  from mongodb  
    // ============================
    Post.findOne({_id: req.params.id})
     .then(post => {
 
-        // Sauce is found  
+        // Post  is found  
         console.log (funcName + " Found in MongoDB Post id = ", req.params.id);
-       // Check that the requestor is the owner of the Post  
-        // ===================================================
+       // Check that the requestor is the owner of the Post  Or is Admin 
+        // =============================================================
 
         console.log (funcName +  ' Post  userid  = ' +  post.userId);
         console.log (funcName +    'req userid  = ' +  req.userId);
+        console.log (funcName +    'req username ' ,  req.userName);
 
-        if ( post.userId !== req.userId) {
+        if (( post.userId !== req.userId)  && (!isUserAdmin(req.userName)))  {
             res.status(401).json(  { message: 'unauthorized request' } );
         }
         else 
@@ -365,7 +374,7 @@ exports.updatePost = (req, res, next) => {
                             console.log (funcName + " req opost  = ", opost);
                             console.log (funcName + "  imageUrl  = ", url0);
                             const postObject = {
-                                ...opost,
+                                text: opost.text,
                                 imageUrl: url0,
                                 postDate: i_date 
                             };
@@ -401,7 +410,7 @@ exports.updatePost = (req, res, next) => {
                  console.log (funcName + " No  image to update   ");
                 
                  let i_date =   Date.now();
-                const postObject = { ...req.body,  postDate: i_date } ;
+                const postObject = { text: req.body.text,  postDate: i_date } ;
              
                //   const postObject = { ...req.body } ;
                 console.log (funcName + " postObject     = ", postObject);
@@ -428,14 +437,9 @@ exports.updatePost = (req, res, next) => {
 } // end of update  
 
 
-
-// 5. LIKE  DISLIKE SAUCE     
-// /api/post/like/:id
-
-
 /*  
 -----------------------------------------------------------------------  
-5. LIKE UNLIKE POST SAUCE :  likeDisslikeSauce()
+5. LIKE UNLIKE POST  :  likePost()
 -----------------------------------------------------------------------
 API  POST  /api/post/like/:id
 Req body { userid: String, dotheLike: action type }
@@ -537,5 +541,26 @@ exports.likePost = (req, res, next) => {
             res.status(400).json({error})
         });
 }
+
+
+/*
+ Function isUserAdmin 
+ This function returns true if the username is an admin
+*/
+
+function isUserAdmin (username)
+{
+    const scriptname = 'controllers/post.js';
+    const funcName =  scriptname + '/isUserAdmin() : '; 
+
+    let found   = adminUserList.find (name => name === username);
+    console.log (funcName  + "username =  ", username);
+    console.log (funcName  + "ZZZZZZZZZZZZZZZZZZZZZZZZZZ  admin flag =  ", found);
+    if (found)  return (true);
+
+    return (false);
+}
+
+
 
 console.log (scriptname + 'loaded');
