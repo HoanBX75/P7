@@ -230,29 +230,24 @@ input[type=text] {
   justify-content: center;
 }
 
+
 /*  ===================================== */
 /*  POSTS                                 */
 /*  ===================================== */
-.posts{
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);  
 
-  row-gap: 3%;
-  column-gap: 4%;
-  margin:0%;
-  margin-bottom:3%;
+.posts{
+
+  margin-top:25px;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  margin:0;
+  padding:0px;
+ 
   margin-left:25px;
   margin-right:25px;
-
-/*
-  padding:3%;
-  padding-top:0px;
-  padding-bottom: 9%;
-  
-  border: 1px solid black;  */
-
 }
+
 
 /*  ===================================== */
 /*  POSTS  : refresh button               */
@@ -291,12 +286,14 @@ input[type=text] {
 .no_post_message {
   display:flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: center; 
+
   
 }
 
 .no_post_message p {
   background-color: #FFD7D7;
+  
 }
 
   
@@ -304,6 +301,21 @@ input[type=text] {
 /*  Post                                 */  
 /*  ===================================== */
 
+.page_main{
+   /* border:  1px  dotted red;  xdebug */
+   max-width: 1500px;
+   /*overflow:hidden; */
+   padding:0px;
+   
+   
+   margin-top:0;
+   margin-left:15px;
+   margin-right:15px;
+   margin:auto;
+   
+   padding-left: 15px;
+   padding-right: 15px;
+}
 
 .post {
  
@@ -505,14 +517,34 @@ color: #4E5166 ;
   justify-content: center;
 }
 
+
+
 /*  ===================================== */
-/*  MEDIA                                */
+/*  MEDIA                                 */
 /*  ===================================== */
 
 
+/* desktop 
+.posts{
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  
+
+  row-gap: 3%;
+  column-gap: 4%;
+  margin:0%;
+  margin-bottom:3%;
+  margin-left:25px;
+  margin-right:25px;
+
+
+}
+
+*/
+/*
 @media (max-width: 992px){
 
-    .posts{
+.posts{
       box-sizing: border-box;
       display: grid;
       grid-template-columns: repeat(2, 1fr);  
@@ -526,12 +558,12 @@ color: #4E5166 ;
       padding-top:0px;
       padding-bottom: 9%;
       
-    /*  border: 1px solid black;  */
    
-    }
-    
+   
+    }  
 }
-
+*/
+/*
 @media screen and (max-width: 768px) {
       .posts{
         margin-top:25px;
@@ -544,4 +576,5 @@ color: #4E5166 ;
         margin-left:25px;
         margin-right:25px;
       }
-}    
+} 
+*/   

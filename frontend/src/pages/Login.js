@@ -24,7 +24,7 @@ const LoginCompName = 'Login.js';
           as parameter
 
   If the  http request is succesffull, the login is succesfull
-  for the backend;
+  for the backend; 
   In this case, the user token will be stored in the LocalStorage 
   with some user data.
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-     
@@ -49,6 +49,8 @@ function Login (){
     - send a http request to login against a user,password
     - if ok 
         then  store user data (token)  in the LocalStorage.
+              go to the home page 
+        else  An alert message is displayed      
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
  */
 
@@ -64,10 +66,10 @@ function Login (){
         if (data.password === "" || data.email === "") {
             traceLog_msg (1,  LoginCompName , 'Input Form Fields are not all filled!');
             let msg = null;
-           if (data.email === "") msg = "Please fill the Email field!";
+           if (data.email === "") msg = "Please, fill the Email field!";
            if (data.password === "") {
-                 if (msg == null ) msg = "Please fill the Password field!";
-                 else msg = "Please fill the Email and Password fields!";
+                 if (msg == null ) msg = "Please, fill the Password field!";
+                 else msg = "Please, fill the Email and Password fields!";
            }
            setError(msg);
         }
@@ -124,7 +126,9 @@ function Login (){
                 traceLog_obj (1,  LoginCompName , 'HTTP post Error =', err );
                 err_msg =  err_msg + err;
             });
-   
+
+            /* Epilog  */
+            /* ------- */   
             if (resp_ok) {
                 traceLog_msg (1,  LoginCompName , 'Login Succesfull');
                 traceLog_obj (1,  LoginCompName , 'user = ', user );
@@ -132,19 +136,21 @@ function Login (){
                 /* Registering the user data (in particular the token) in the LocalStorage */
                 /* ----------------------------------------------------------------------- */
                 localStorage.setItem( 'user' , JSON.stringify(user));
+                /* Go to the HOME page */
+                /* -------------------- */
+
+                navigate("/");                 
             }
             else 
             {
                 // An error has occurred when sending the htpp post 
                 traceLog_msg (1,  LoginCompName , 'Login Fails');
                 traceLog (1,  LoginCompName , 'err_msg = ', err_msg );
+                document.getElementById('form_signin').reset();
                 alert ('Login fails : \n' + err_msg);
             } 
 
-            /* Go to the HOME page */
-            /* -------------------- */
 
-            navigate("/"); 
         }   // end of else : form fields are filled 
 
 
@@ -185,32 +191,32 @@ const resetError = () => {
 
     traceLog_msg (1,  LoginCompName , 'return');
     return (
-    <div>
+    <div className='page_main'>
         <Header  state={2} user={getLocalStorageUser()}/>
         <div class='connect_body'>
         <h2 class='connect_title'>Connect to our Community</h2>
         <p class='connect_text'>Just Provide your Credentials: </p>
         <div class='connect_form_container'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id='form_signin' onSubmit={handleSubmit(onSubmit)}>
            
 
             <div  class='upd_form_element'>
                 <div class='upd_label'>
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">* Email</label>
                 </div>
                 <input {...register('email')} type="email"  id="email"  onChange={resetError}/>
             </div>
 
             <div  class='upd_form_element'>
                 <div class='upd_label'>
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">* Password</label>
                 </div>
                 <input type="password"  {...register('password')} id="password" 
                 onChange={resetError}/>
             </div>
             {error ?
                         <><div className='connect_form_error'>{error}</div><br></br></> : null}  
-            <button class='connect_button'>✔ Login</button>
+            <button class='connect_button'>✔ Log In</button>
         </form>
         </div>
         </div>

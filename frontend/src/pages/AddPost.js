@@ -143,7 +143,7 @@ traceLog_line ();
 traceLog_msg (1,  AddPostFuncName , '****** RETURN ********');  
 
 return (
-<div>
+<div className='page_main'>
      
     <Header  state={4} user={getLocalStorageUser()}/>
 

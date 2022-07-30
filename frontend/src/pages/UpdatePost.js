@@ -228,7 +228,7 @@ traceLog_obj (1,  UpdatePostCompName , ' ****** BEGIN ****** post_id = ', post_i
 traceLog_msg (1,  UpdatePostCompName , '****** RETURN ********');  
 
 return (
-    <div>
+  <div className='page_main'>
         <Header state={5} user={getLocalStorageUser()}/>
      
         <div class='connect_body'>

@@ -209,7 +209,7 @@ function displayAllPosts (){
               <div class='refresh_button_container'>
               <div className='refresh_button' onClick={() => refreshPosts ()}><button>👇🏻 Refresh </button></div>
               </div>
-              <div class='no_post_message'> {(posts.length == 0)? <p>No post at the moment ! </p> :null } 
+              <div class='no_post_message'> {(posts.length == 0)? <p>No post at the moment! </p> :null } 
               </div>
 
               <div class="posts">
@@ -255,7 +255,7 @@ function displayAllPosts (){
 traceLog_line ();
 traceLog_msg (1,  HomeCompName , '******* RETURN *****');
 return (
-        <div>
+        <div className='page_main'>
          <Header  state={getHeaderState()} user={getLocalStorageUser()}/>
           {displayAllPosts()} 
         </div>

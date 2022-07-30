@@ -1,6 +1,4 @@
-
 import Header from "../components/Header";
-
 
 /*
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*- 
@@ -18,7 +16,7 @@ import Header from "../components/Header";
 function DefaultPage() {
 
     return (
-        <div>
+        <div className='page_main'>
         <Header  state={404} />
         <div className="center_msg"><p>No Page Found here!</p></div>
         <hr/>

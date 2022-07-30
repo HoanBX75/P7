@@ -21,7 +21,7 @@ function Logout (){
     localStorage.clear();
  
 return (
-<div>
+<div className='page_main'>
      
     <Header  state={0}/>
     <div className='connect_body'>
