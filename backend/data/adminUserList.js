@@ -1,7 +1,7 @@
  const adminUserList = [
 'admin',
 'adrien',
-'rene'
+'hoan'
 ]
 
 module.exports = adminUserList;

@@ -2,7 +2,14 @@ const Post = require('../models/post');
 const fs = require('fs');
 
 scriptname = 'controllers/post.js: ';
-console.log (scriptname + 'begin'  );
+
+
+
+/*
+  This file is a set of middlewares handling sauce requests.
+*/
+
+
 
 // ========================================
 // 1.  CREATE POST 
@@ -364,4 +371,4 @@ exports.updatePost = (req, res, next) => {
 
 }
 
-console.log (scriptname + 'end');
+console.log (scriptname + 'loaded');
