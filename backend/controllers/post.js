@@ -275,8 +275,8 @@ This function updates  a Post.
         - updates the post in monogodb mongodb 
 
 Inputs : 
-    1/ without file (the Post information is in the body as a Json object  string )
-    Sauce as JSON . 
+    1/ without file (the Post information is in the body as a Json object   )
+  
 
     req body  =  [Object: null prototype] {
         userName: 'titi',
@@ -285,8 +285,15 @@ Inputs :
         image: 'undefined'
     }
 
-    2/ with a file :  (the PostPost information is in the body as a sauce String   )
- 
+    2/ with a file :  (the post  information is in the body , and file information 
+        is stored in req.file     )
+
+    req body  =  [Object: null prototype] {
+        userName: 'titi',
+        text: 'merci',
+        userId: '62e000b034044eca56025ee3',
+        image: 'undefined'
+    }
  req file  =  {
   fieldname: 'image',
   originalname: 'fred-kleber-gTbaxaVLvsg-unsplash.jpg',
@@ -424,10 +431,33 @@ exports.updatePost = (req, res, next) => {
 
 // 5. LIKE  DISLIKE SAUCE     
 // /api/post/like/:id
-// { userId: String, like: Number }
-// { message: String }
 
-    exports.likePost = (req, res, next) => {
+
+/*  
+-----------------------------------------------------------------------  
+5. LIKE UNLIKE POST SAUCE :  likeDisslikeSauce()
+-----------------------------------------------------------------------
+API  POST  /api/post/like/:id
+Req body { userid: String, dotheLike: action type }
+Rsp { message: String }
+id : post Id 
+-----------------------------------------------------------------------
+Description : 
+This function gives a Like status for a sauce and according to a user.
+if like = 0 then it cancels the like or dislike by removing the user 
+from the like and dislike list 
+If like =1  then the user is added to a like list .
+if the like = -1  then the user is in the  dislike list 
+
+Inputs : 
+In the body (req.body.userId , req.body.like)
+  { userId: String, like: Number }
+Returns : 
+In response, it returns a message  as  { message: String }
+*/
+
+
+exports.likePost = (req, res, next) => {
 
         const funcName =  scriptname + ' - likePost() : ';
     
@@ -435,34 +465,43 @@ exports.updatePost = (req, res, next) => {
         const dotheLike = req.body.dotheLike;
         const post_id =  req.params.id;
 
-        console.log("============");
+        console.log("========================================================================>")
         console.log (funcName + " req   ", req.body);
         console.log (funcName + " post  id   ", post_id);
         console.log (funcName + " userid   ", userid);
         console.log (funcName + " dotheLike   ", dotheLike);
 
 
-         // Search for a Post  with the id 
+   //  Get the Post  from mongodb  
+   // ============================
+
         Post.findOne({_id: post_id})
         .then((post) => {
             console.log (funcName + " post  found   ", post );
-             // Get the  user likes 
+
+             // Get the  user likes table 
+             // --------------------------
              let usersLiked =  post.usersLiked;
             let new_usersLiked = [];
 
          
             switch (dotheLike) {
-                case 0:  /* unlike case */ 
+                 /* unlike case */ 
+                case 0: 
                     // the user cancels his choice 
-                    // so we need to remove the user from the like list or dislike list 
-                    // https://developer.mozilla.org/fr/docs/Learn/JavaScript/First_steps/Arrays
-
+                    // so we need to remove the user from the like list 
+                    // ---------------------------------------------------
+                    console.log (funcName + " The user UnLikes  ");
                     let l_liked = usersLiked.length;
                     new_usersLiked = usersLiked.filter (function(value, index, arr){ 
                         return userid != value ; });
    
                     break;
-                case 1 :    /* like case */
+                /* like case */
+                case 1 :   
+                    // Add the user to the like List 
+                    // -----------------------------
+                    console.log (funcName + " The user Likes  ");
                     usersLiked.push (userid);
                     new_usersLiked = usersLiked;
                     break;
@@ -472,7 +511,8 @@ exports.updatePost = (req, res, next) => {
             console.log (funcName + " new usersLiked   ", new_usersLiked);
             console.log (funcName + " new usersLiked  length  ", new_usersLiked.length);
 
-            // Update the Post  
+            // In Mongodb Update the Post  with the new list of likes 
+            //  ------------------------------------------------------
             const newPost_usersLiked  = {
                 usersLiked: new_usersLiked
             }
