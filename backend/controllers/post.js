@@ -3,6 +3,7 @@ const User = require('../models/User');
 
 const fs = require('fs');
 const adminUserList  = require ('../data/adminUserList.js');
+const trace=require ('../utils/TraceLogB');
 
 scriptname = 'controllers/post.js: ';
 
@@ -41,11 +42,11 @@ In response, it returns a message  as  { message: String }
 
 exports.createPost = (req, res, next) => {
     scriptname = 'controllers/post.js';
-    const funcName =  scriptname + '/createPost() : '; 
-    console.log("========================================================================>")
-    console.log (funcName + 'begin '  );
-    console.log (funcName  + " req.body = ", req.body);
-    console.log (funcName  + " req.file.filename = ", req.file.filename);
+    const funcName =  scriptname + '/createPost()'; 
+    trace.Log_line();
+    trace.Log_msg (1,funcName , 'BEGIN '  );
+    trace.Log_obj(1,funcName  , " req.body = ", req.body);
+    trace.Log_obj(1,funcName  , " req.file.filename = ", req.file.filename);
    // Get pOST  fields from the request body
     // -------------------------------------
     let i_post = req.body;
@@ -53,9 +54,9 @@ exports.createPost = (req, res, next) => {
     let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
 
     let i_date =   Date.now();
-    console.log (funcName  + " i_post  = ", i_post);
-    console.log (funcName  + " i_date  = ", i_date);
-    console.log (funcName  + " url0 = ", url0);
+    trace.Log_obj(1,funcName  , " i_post  = ", i_post);
+    trace.Log_obj(1,funcName  , " i_date  = ", i_date);
+    trace.Log_obj(1,funcName  , " url0 = ", url0);
 
     // Build Model POST  object :
     // -------------------------
@@ -67,19 +68,19 @@ exports.createPost = (req, res, next) => {
             postDate: i_date
     })
 
-    console.log (funcName  + " Create DB post =  ", db_post);
+    trace.Log_obj(1,funcName  , " Create DB post =  ", db_post);
 
     // Create POST object in mongodb
     // ------------------------------
     db_post.save()
     .then(() => { 
-            console.log (funcName  + "End: Post added sucessfully  ");
-            console.log ('--------------------------------------> ');
+            trace.Log_msg (1,funcName  , "End: Post added sucessfully  ");
+            trace.Log_line();
             res.status(201).json({message: "Post  added !"})
             })
     .catch((error) => {
-            console.log (funcName  + " End:  Error,  Post not added : " + error );
-            console.log ('--------------------------------------> ');
+            trace.Log_obj(1,funcName  , " End:  Error,  Post not added : " + error );
+            trace.Log_line();
             res.status(400).json({error} ) 
     })
 }
@@ -102,8 +103,8 @@ exports.getAllPost = (req, res, next) => {
     scriptname = 'controllers/post.js';
    
     const funcName =  scriptname + ' - getAllPost() : ';
-    console.log("========================================================================>");
-    console.log (funcName + 'begin '  );
+    trace.Log_line();
+    trace.Log_msg (1,funcName , 'BEGIN '  );
 
     // https://www.mongodb.com/community/forums/t/sorting-with-mongoose-and-mongodb/122573/12
     // https://stackoverflow.com/questions/67264632/mongoose-sorting-by-createdat
@@ -115,13 +116,13 @@ exports.getAllPost = (req, res, next) => {
 
         Post.find().sort({"postDate": -1}) 
         .then(posts => {
-          //   console.log (funcName + ' - getAll  posts= ', posts );
-          console.log (funcName + ' - getAllPosts OK  ' );
+          //    (funcName + ' - getAll  posts= ', posts );
+          trace.Log_msg (1,funcName ,' - getAllPosts OK  ' );
             res.status(200).json(posts);
         }
         )
         .catch(error => {
-            console.log (funcName + ' - getAllPosts  error= ', error );
+            trace.Log_obj(1, funcName  , ' - getAllPosts  error= ', error );
             res.status(400).json({error})
         });
         
@@ -146,18 +147,18 @@ exports.getOnePost = (req, res, next) => {
 
         scriptname = 'controllers/post.js';
         const funcName =  scriptname + ' - getOnePost() : ';
-        console.log("========================================================================>");
-        console.log (funcName + 'BEGIN '  );
+        trace.Log_line();
+        trace.Log_msg (1,funcName , 'BEGIN '  );
 
         // Get POST object from  mongodb
         // --------------------------------
 
         Post.findOne({_id: req.params.id})
         .then(post => { 
-            console.log (funcName + ' - getOnePost  post = '  , post );
+            trace.Log_obj(1,funcName , ' - getOnePost  post = '  , post );
             res.status(200).json(post)})
         .catch(error => {
-            console.log (funcName + ' - getOnePost  error  = '  , error );
+            trace.Log_obj(1,funcName , ' - getOnePost  error  = '  , error );
             res.status(400).json({error})
         });
     }
@@ -186,9 +187,9 @@ The response :  { message: String }
 
 exports.deletePost = async  (req, res, next) =>{
     const scriptname = 'controllers/post.js';
-    const funcName =  scriptname + '/deletePost() : '; 
-    console.log("========================================================================>");
-    console.log (funcName + " post  id (params id ) = ", req.params.id);
+    const funcName =  scriptname + '/deletePost()'; 
+    trace.Log_line();
+    trace.Log_obj(1,funcName , " post  id (params id ) = ", req.params.id);
 
     //  Get the post from mongodb  by the id 
    // --------------------------------------
@@ -196,50 +197,49 @@ exports.deletePost = async  (req, res, next) =>{
     Post.findOne({_id: req.params.id})
     .then(post => {
 
+        trace.Log_obj(1,funcName , " Found post  id = ", req.params.id);
 
-        console.log (funcName + " Found post  id = ", req.params.id);
-
-        console.log (funcName +  ' post userid  = ' +  post.userId);
-        console.log (funcName +    'req userid  = ' +  req.userId);
-        console.log (funcName +    'req username  = ' +  req.username);
+        trace.Log_obj(1,funcName , ' post userid  = ' +  post.userId);
+        trace.Log_obj(1,funcName ,    'req userid  = ' +  req.userId);
+        trace.Log_obj(1,funcName ,    'req username  = ' +  req.username);
 
         const filename = post.imageUrl.split('/images/')[1];
-        console.log (funcName + " Image Filename to remove  = ", filename);
+        trace.Log_obj(1,funcName , " Image Filename to remove  = ", filename);
 
         // Check that the requestor is the owner of the Post  or an admin user
         // -------------------------------------------------------------------
         if (( post.userId !== req.userId)  && (!isUserAdmin(req.username)))  {
-            console.log (funcName +    'unauthorized request  ' );
+            trace.Log_msg (1,funcName ,   'unauthorized request  ' );
             res.status(401).json(  { message: 'unauthorized request' } );
         }
         else 
         {
             try {
-                console.log (funcName +    'Unlinking the file   ' );
+                trace.Log_msg (1,funcName ,    'Unlinking the file   ' );
                 const filename = post.imageUrl.split('/images/')[1];
-                console.log (funcName + " Image Filename to remove  = ", filename);
+                trace.Log_obj(1,funcName , " Image Filename to remove  = ", filename);
 
                 // Unlink the image  (delete the image )
                 // --------------------------------------
                 fs.unlink(`images/${filename}`, (err) => {
 
                     if (err) {
-                        console.log (funcName + "  ERROR  deleted file  = ", filename);
-                        console.log (funcName + "  ERROR  deleted file err  = ", err);
+                        trace.Log_obj(1,funcName , "  ERROR  deleted file  = ", filename);
+                        trace.Log_obj(1,funcName , "  ERROR  deleted file err  = ", err);
                          throw err; 
                      }
 
-                     console.log (funcName + " Deleted filename   = ", filename);
+                     trace.Log_obj(1,funcName , " Deleted filename   = ", filename);
 
                      // Delete the object Post  in Mongodb  
                     // -----------------------------------
                     Post.deleteOne({_id: req.params.id})
                     .then(() => {
-                       console.log (funcName + " OK Deleted post  id  = ", req.params.id);
+                       trace.Log_obj(1,funcName , " OK Deleted post  id  = ", req.params.id);
                       res.status(200).json({message: 'Post supprimé.'})
                     })
                     .catch(error => {
-                        console.log (funcName + " Error mongodb update fails   = ", error);
+                        trace.Log_obj(1,funcName , " Error mongodb update fails   = ", error);
                          res.status(400).json({error})
                     });
 
@@ -247,7 +247,8 @@ exports.deletePost = async  (req, res, next) =>{
             }
             catch (error){
                 // Error occured in the unlink ;
-                console.log (funcName +    'Error while deleting image and  updating   error =  ', error  );
+                trace.Log_obj(1,funcName ,    
+                    'Error while deleting image and  updating   error =  ', error  );
                 res.status(500).json( error );
             }
 
@@ -255,7 +256,7 @@ exports.deletePost = async  (req, res, next) =>{
 
      })
     .catch(error => {
-        console.log (funcName + " Error Not Deleted file   = ", error);
+        trace.Log_obj(1,funcName ," Error Not Deleted file   = ", error);
         res.status(400).json({error})
     });
 } // end of delete 
@@ -315,20 +316,18 @@ The response :  { message: String }
 */
 
 
-
-
 exports.updatePost = (req, res, next) => {
   
 
     const scriptname = 'controllers/post.js';
-    const funcName =  scriptname + '/updatePost() : '; 
-    console.log("========================================================================>");
+    const funcName =  scriptname + '/updatePost()'; 
+    trace.Log_line();
   
-    console.log (funcName + " post  id (params id ) = ", req.params.id);
+    trace.Log_obj(1,funcName , " post  id (params id ) = ", req.params.id);
   
-    console.log (funcName + " req file  = ", req.file );
-    console.log (funcName + " req image  = ", req.image );
-    console.log (funcName + " req body  = ", req.body );
+    trace.Log_obj(1,funcName , " req file  = ", req.file );
+    trace.Log_obj(1,funcName , " req image  = ", req.image );
+    trace.Log_obj(1,funcName , " req body  = ", req.body );
 
   
    //  Get the Post  from mongodb  
@@ -337,15 +336,15 @@ exports.updatePost = (req, res, next) => {
     .then(post => {
 
         // Post  is found  
-        console.log (funcName + " Found in MongoDB Post id = ", req.params.id);
+        trace.Log_obj(1,funcName , " Found in MongoDB Post id = ", req.params.id);
        // Check that the requestor is the owner of the Post  Or is Admin 
         // =============================================================
 
-        console.log (funcName +  ' Post  userid  = ' +  post.userId);
-        console.log (funcName +    'req userid  = ' +  req.userId);
-        console.log (funcName +    'req username ' ,  req.userName);
+        trace.Log_obj(1,funcName ,  ' Post  userid  = ' , post.userId);
+        trace.Log_obj(1,funcName ,   'req userid  = ' ,  req.userId);
+        trace.Log_obj(1,funcName ,    'req username ' ,  req.username);
 
-        if (( post.userId !== req.userId)  && (!isUserAdmin(req.userName)))  {
+        if (( post.userId !== req.userId)  && (!isUserAdmin(req.username)))  {
             res.status(401).json(  { message: 'unauthorized request' } );
         }
         else 
@@ -354,44 +353,44 @@ exports.updatePost = (req, res, next) => {
                // ============================================                        
                  // The image is to udpate  :  Post  as JSON
                 // ============================================  
-                console.log (funcName + " Image to update   ");
-                console.log (funcName + " Found in MongoDB post  id = ", req.params.id);
+                trace.Log_msg (1,funcName , " Image to update   ");
+                trace.Log_obj(1,funcName , " Found in MongoDB post  id = ", req.params.id);
                 let url0 = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         
                 const filename = post.imageUrl.split('/images/')[1];
-                console.log (funcName + " deleting this file  = ", filename);
+                trace.Log_obj(1,funcName , " deleting this file  = ", filename);
 
                   try {
                    
                         // Unlink the image  (delete the image )
                          // --------------------------------------
                         fs.unlink(`images/${filename}`, () => {
-                            console.log (funcName + " Ok deleted file  = ", filename);
+                            trace.Log_obj(1,funcName , " Ok deleted file  = ", filename);
                             
                             let opost =  req.body;
                             let i_date =   Date.now();
 
-                            console.log (funcName + " req opost  = ", opost);
-                            console.log (funcName + "  imageUrl  = ", url0);
+                            trace.Log_obj(1,funcName , " req opost  = ", opost);
+                            trace.Log_obj(1,funcName , "  imageUrl  = ", url0);
                             const postObject = {
                                 text: opost.text,
                                 imageUrl: url0,
                                 postDate: i_date 
                             };
 
-                            console.log (funcName + " input post   = ", postObject);
+                            trace.Log_obj(1,funcName , " input post   = ", postObject);
 
                             // Update the post in mongoDB
                              // --------------------------
  
                             Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
                             .then(() =>{ 
-                                console.log (funcName + " OK post  updated -  id   = ", req.params.id);
-                                console.log("============");
+                                trace.Log_obj(1,funcName ," OK post  updated -  id   = ", req.params.id);
+                              
                                 res.status(200).json({ message: 'Post  updated with success !' });
                             })
                             .catch(error =>{
-                                console.log (funcName + " ERROR  when updating in mongodb -  error   = ", error );
+                                trace.Log_obj(1,funcName ," ERROR  when updating in mongodb -  error   = ", error );
                                 res.status(400).json({ error })
                             })
                         })   ;
@@ -399,7 +398,7 @@ exports.updatePost = (req, res, next) => {
                   } 
                   catch (err ) {
                     // Error occured in the unlink ;
-                    console.log (funcName + " Error  when unlinking  the file - Error =  ",err);
+                    trace.Log_obj(1,funcName , " Error  when unlinking  the file - Error =  ",err);
                     res.status(500).json( err );
                 }  
             }
@@ -407,30 +406,30 @@ exports.updatePost = (req, res, next) => {
                 // The image is not updated :  Post as JSON
                 // =========================================
              
-                 console.log (funcName + " No  image to update   ");
+                trace.Log_msg (1, funcName , " No  image to update   ");
                 
                  let i_date =   Date.now();
                 const postObject = { text: req.body.text,  postDate: i_date } ;
              
                //   const postObject = { ...req.body } ;
-                console.log (funcName + " postObject     = ", postObject);
+               trace.Log_obj(1,funcName  ," postObject     = ", postObject);
              
                 // Update the Post in mongodb
                 // --------------------------
                  Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
                      .then(() => {
-                      console.log (funcName + " OK Post  updated -  id   = ", req.params.id);
+                        trace.Log_obj(1,funcName , " OK Post  updated -  id   = ", req.params.id);
                       res.status(200).json({ message: 'Post updated with success !' })
                      })
                      .catch(error => {
-                        console.log (funcName + " Error  when updating Post in mongodb - Error =  ",error);
+                        trace.Log_obj(1,funcName,  " Error  when updating Post in mongodb - Error =  ",error);
                         res.status(400).json({ error })
                     });
             }
         }
     })
     .catch(error => {
-        console.log (funcName + " Error Post not found    = ", error);
+        trace.Log_obj(1, funcName , " Error Post not found    = ", error);
         res.status(400).json({error});
     } ); 
 
@@ -468,17 +467,17 @@ In response, it returns a message  as  { message: String }
 
 exports.likePost = (req, res, next) => {
 
-        const funcName =  scriptname + ' - likePost() : ';
+        const funcName =  scriptname + ' - likePost()';
     
         const userid  = req.body.userid;
         const dotheLike = req.body.dotheLike;
         const post_id =  req.params.id;
 
-        console.log("========================================================================>")
-        console.log (funcName + " req   ", req.body);
-        console.log (funcName + " post  id   ", post_id);
-        console.log (funcName + " userid   ", userid);
-        console.log (funcName + " dotheLike   ", dotheLike);
+        trace.Log_line();
+        trace.Log_obj(1,funcName , " req   ", req.body);
+        trace.Log_obj(1,funcName , " post  id   ", post_id);
+        trace.Log_obj(1,funcName, " userid   ", userid);
+        trace.Log_obj(1,funcName, " dotheLike   ", dotheLike);
 
 
    //  Get the Post  from mongodb  
@@ -486,7 +485,7 @@ exports.likePost = (req, res, next) => {
 
         Post.findOne({_id: post_id})
         .then((post) => {
-            console.log (funcName + " post  found   ", post );
+            trace.Log_obj(1,funcName , " post  found   ", post );
 
              // Get the  user likes table 
              // --------------------------
@@ -499,7 +498,7 @@ exports.likePost = (req, res, next) => {
                     // the user cancels his choice 
                     // so we need to remove the user from the like list 
                     // ---------------------------------------------------
-                    console.log (funcName + " The user UnLikes  ");
+                    trace.Log_msg (1,funcName + " The user UnLikes  ");
                     let l_liked = usersLiked.length;
                     new_usersLiked = usersLiked.filter (function(value, index, arr){ 
                         return userid != value ; });
@@ -509,15 +508,15 @@ exports.likePost = (req, res, next) => {
                 case 1 :   
                     // Add the user to the like List 
                     // -----------------------------
-                    console.log (funcName + " The user Likes  ");
+                    trace.Log_msg (1,funcName + " The user Likes  ");
                     usersLiked.push (userid);
                     new_usersLiked = usersLiked;
                     break;
         
             }
 
-            console.log (funcName + " new usersLiked   ", new_usersLiked);
-            console.log (funcName + " new usersLiked  length  ", new_usersLiked.length);
+            trace.Log_obj(1,funcName , " new usersLiked   ", new_usersLiked);
+            trace.Log_obj(1,funcName , " new usersLiked  length  ", new_usersLiked.length);
 
             // In Mongodb Update the Post  with the new list of likes 
             //  ------------------------------------------------------
@@ -527,17 +526,17 @@ exports.likePost = (req, res, next) => {
 
             Post.updateOne({ _id: req.params.id }, {...newPost_usersLiked, _id: req.params.id})
             .then(()=> {
-                console.log (funcName + " Post usersLiked updated    ");
+                trace.Log_msg (1,funcName + " Post usersLiked updated    ");
                  res.status(201).json({message: 'usersLike  updated .'})
             })
             .catch(error => {
-                console.log (funcName + " Post usersLiked Not updated  - Error =    ", error) ;
+                trace.Log_obj(1,funcName , " Post usersLiked Not updated  - Error =    ", error) ;
                 res.status(400).json({error})
             });
 
         })
         .catch(error => { 
-            console.log (funcName + " Cannot find Post - Error   = ", error) ;
+            trace.Log_obj(1,funcName , " Cannot find Post - Error   = ", error) ;
             res.status(400).json({error})
         });
 }
@@ -551,11 +550,11 @@ exports.likePost = (req, res, next) => {
 function isUserAdmin (username)
 {
     const scriptname = 'controllers/post.js';
-    const funcName =  scriptname + '/isUserAdmin() : '; 
+    const funcName =  scriptname + '/isUserAdmin()'; 
 
     let found   = adminUserList.find (name => name === username);
-    console.log (funcName  + "username =  ", username);
-    console.log (funcName  + "ZZZZZZZZZZZZZZZZZZZZZZZZZZ  admin flag =  ", found);
+    trace.Log_obj(1,funcName  , "username =  ", username);
+    trace.Log_obj(1,funcName  , "  admin flag =  ", found);
     if (found)  return (true);
 
     return (false);
@@ -563,4 +562,4 @@ function isUserAdmin (username)
 
 
 
-console.log (scriptname + 'loaded');
+trace.Log_msg (1,scriptname , 'loaded');

@@ -3,6 +3,7 @@ const bcrypt =  require ('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const adminUserList  = require ('../data/adminUserList.js');
+const trace=require ('../utils/TraceLogB');
 
 const  scriptUsername = 'controllers/user.js : ';
 
@@ -31,15 +32,16 @@ The response :  { message: String }
 
 exports.signup = (req, res, next) => {
     const funcName =  scriptUsername + ' - signup() : ';
-    console.log("========================================================================>")
-    console.log (funcName + 'begin '  );
+    trace.Log_line();
+    trace.Log_msg (1, funcName, 'BEGIN');
+
 
     // Hash the password 
     // -----------------
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      console.log (funcName  + "hashing = ", hash);
-
+      
+      trace.Log_obj(1,funcName,'hashing = ', hash);
       let  username = req.body.username 
       let usertype = 'user';
 
@@ -48,8 +50,8 @@ exports.signup = (req, res, next) => {
       let found   = adminUserList.find (name => name === username);
       if (found)  usertype = 'admin';
 
-      console.log (funcName  + "username =  ", username);
-      console.log (funcName  + "usertype =  ", usertype);
+      trace.Log (1,funcName, "username =  ", username);
+      trace.Log (1,funcName,  "usertype =  ", usertype);
 
     // Build the Model User object
       // -----------------------------       
@@ -60,23 +62,23 @@ exports.signup = (req, res, next) => {
           password: hash
         });
 
-      console.log (funcName  + "signup user =  ", user);
+        trace.Log_obj(1,funcName ,  "signup user =  ", user);
 
       // Create a user in mongodb
       // ------------------------- 
       user.save()
         .then(() =>
         { 
-          console.log (funcName  + "signup OK    ");
+          trace.Log_msg (1,funcName ,  "signup OK    ");
             res.status(201).json({ message: 'User created !' })
         })
         .catch(error => {
-          console.log (funcName  + "signup ERROR  : ", error );
+          trace.Log_obj(1,funcName ,  "signup ERROR  : ", error );
           res.status(500).json({ error })
         });
       })
     .catch(error => { 
-      console.log (funcName  + " signup ERROR  : ", error );
+      trace.Log_obj(1,funcName ,  " signup ERROR  : ", error );
       res.status(500).json({ error })
     });
 };
@@ -103,9 +105,9 @@ The response :  { message: String }
 
 exports.login = (req, res, next) => {
     const funcName =  scriptUsername + ' - login() : ';
-    console.log("========================================================================>")
-    console.log (funcName + 'begin '  );
-    console.log (funcName + 'email =  ', req.body.email  );
+    trace.Log_line();
+    trace.Log_msg (1, funcName , 'BEGIN '  );
+    trace.Log_obj(1,funcName , 'email =  ', req.body.email  );
 
 
     // Check that  user exists in DB  by using the email 
@@ -115,11 +117,11 @@ exports.login = (req, res, next) => {
     .then(user => {
 
           if (!user) {
-            console.log (funcName + 'email Not found ', req.body.email  );
+            trace.Log_obj(1,funcName , 'email Not found ', req.body.email  );
             return res.status(401).json({ error: 'User not found !' });
           }
 
-          console.log (funcName + 'email  found ', req.body.email  ); 
+          trace.Log_obj(1,funcName , 'email  found ', req.body.email  ); 
 
         //  Check password by comparing hashed password  stored in db
         // ---------------------------------------------------------
@@ -127,7 +129,7 @@ exports.login = (req, res, next) => {
           bcrypt.compare(req.body.password, user.password)
           .then(valid => {
               if (!valid) {
-              console.log (funcName + 'Wrong password  req.body.password', req.body.password ); 
+                trace.Log_obj(1,funcName , 'Wrong password  req.body.password', req.body.password ); 
               return res.status(401).json({ error: 'Wrong password !' });
               }
               
@@ -140,9 +142,9 @@ exports.login = (req, res, next) => {
                    secret_token,
                   { expiresIn: '24h' });
 
-                  console.log (funcName + 'user id '  , user._id  );             
-                  console.log (funcName + 'the token'  , s_token  ); 
-                  console.log (funcName + 'Sign in OK '  ); 
+                  trace.Log_obj(1,funcName , 'user id '  , user._id  );             
+                  trace.Log_obj(1,funcName , 'the token'  , s_token  ); 
+                  trace.Log_msg (1,funcName , 'Sign in OK '  ); 
 
             // Send the response with the token and user id 
             // --------------------------------------------
@@ -155,15 +157,15 @@ exports.login = (req, res, next) => {
 
           })
           .catch(error => { 
-            console.log (funcName + ' Error Sign in ', error   ); 
+            trace.Log_obj(1,funcName , ' Error Sign in ', error   ); 
             res.status(500).json({ error })
         });
     })
     .catch(error => {  
-      console.log (funcName + ' Error Sign in ', error   ); 
+      trace.Log_obj(1,funcName , ' Error Sign in ', error   ); 
       res.status(500).json({ error })
   });
 
   };
       
-  console.log (scriptUsername + 'loaded  '  );
+  trace.Log_msg (1,scriptUsername , 'loaded  '  );
