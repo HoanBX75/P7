@@ -13,7 +13,7 @@ const postRoutes= require('./routes/post');
 const dotenv = require("dotenv");
 dotenv.config();
 const MY_CONNECT =  process.env.MY_CONNECT;
-console.log ("MY_CONNECT ", MY_CONNECT);
+
 
 // Connect to mongodb 
 //--------------------
