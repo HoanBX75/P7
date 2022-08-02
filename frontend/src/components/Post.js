@@ -456,43 +456,43 @@ traceLog_msg (1,  funcName , ' *********** RETURN  ******** ' );
 
     return (
     <div className="post" key={`post-${_id}`}>
-            <div class='post_info'>
-                <div class='post_author_username'>    {userName}</div>
+            <div className='post_info'>
+                <div className='post_author_username'>    {userName}</div>
                 <div className="post_date"> {getStringTime(postDate)}  </div>
             </div>   
    
             {!displayAllText?
             <div className='post_text_container' >
-                <p id={`postText-${_id}`} class='post_text' dangerouslySetInnerHTML={{__html:text}}></p>
+                <p id={`postText-${_id}`} className='post_text' dangerouslySetInnerHTML={{__html:text}}></p>
             </div>
             :<div className='post_text_container' >
-                <p id={`postTextALL-${_id}`} class='post_text_all' dangerouslySetInnerHTML={{__html:text}}></p>
+                <p id={`postTextALL-${_id}`} className='post_text_all' dangerouslySetInnerHTML={{__html:text}}></p>
             </div>
             }
 
 
             {!displayAllText?
-            <div id={`read-more-${_id}`} class='read-more-text_container'>
+            <div id={`read-more-${_id}`} className='read-more-text_container'>
                     <div className='read-more_text_button' onClick={() => displayText (_id, true )}>   
                     ... See more   </div>
             </div> 
             : 
-            <div id={`read-more-${_id}`} class='read-more-text_container'>
+            <div id={`read-more-${_id}`} className='read-more-text_container'>
                     <div className='read-more_text_button' onClick={() => displayText (_id, false )}>   
                     See less ...   </div>
             </div> 
             }
 
                    
-            <div class='post_image'>
+            <div className='post_image'>
                   <img   src={imageUrl} alt="" />
             </div>
             
 
-            <div class='post_likes'>{usersLiked.length} Likes</div>
+            <div className='post_likes'>{usersLiked.length} Likes</div>
         
-            <div class='post_separator'></div>
-            <div class='post_space'> <br /> </div>
+            <div className='post_separator'></div>
+            <div className='post_space'> <br /> </div>
             <div className="post_buttons">
        
             { isUserLiking(cur_userid,usersLiked )?

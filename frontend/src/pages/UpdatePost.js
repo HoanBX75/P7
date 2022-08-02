@@ -231,16 +231,16 @@ return (
   <div className='page_main'>
         <Header state={5} user={getLocalStorageUser()}/>
      
-        <div class='connect_body'>
-            <h2 class='connect_title'>Update Your Post </h2>
-            <p class='connect_text'>Change your Text, Image:  </p> 
+        <div className='connect_body'>
+            <h2 className='connect_title'>Update Your Post </h2>
+            <p className='connect_text'>Change your Text, Image:  </p> 
             <div>
                
-                <div class='addPost_form_container'>
+                <div className='addPost_form_container'>
                 <form onSubmit={handleSubmit(onSubmit)}>
 
-                    <div class='upd_form_element'>
-                        <div class='upd_label'>
+                    <div className='upd_form_element'>
+                        <div className='upd_label'>
                             <label htmlFor="texte">Text</label>
                         </div>
                         <textarea {...register('text')} defaultValue={postText} 
@@ -249,8 +249,8 @@ return (
                                     onChange={resetError} />
                     </div>
 
-                    <div class='upd_form_element'>
-                        <div class='upd_label'> 
+                    <div className='upd_form_element'>
+                        <div className='upd_label'> 
                             <label htmlFor="texte">Image</label> 
                         </div> 
                         <input {...register('image')} aria-label="Update an Image " 

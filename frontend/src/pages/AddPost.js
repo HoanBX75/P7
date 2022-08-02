@@ -147,19 +147,19 @@ return (
      
     <Header  state={4} user={getLocalStorageUser()}/>
 
-    <div class='connect_body'>
-        <h2 class='connect_title'>Send Your New Post  </h2>
-        <p class='connect_text'>Just Provide your Text and Image:  </p> 
+    <div className='connect_body'>
+        <h2 className='connect_title'>Send Your New Post  </h2>
+        <p className='connect_text'>Just Provide your Text and Image:  </p> 
         <div>
 
             
-            <div class='addPost_form_container'>
+            <div className='addPost_form_container'>
          
                 <form onSubmit={handleSubmit(onSubmit)}>
    
-                    <div class='upd_form_element'>
+                    <div className='upd_form_element'>
                         
-                        <div class='upd_label'>
+                        <div className='upd_label'>
                             <label htmlFor="texte">* Text </label>
                         </div>
                         <textarea {...register('text')} 
@@ -168,8 +168,8 @@ return (
                                    onChange={resetError} />
                     </div>
 
-                    <div class='upd_form_element'>
-                        <div class='upd_label'>  
+                    <div className='upd_form_element'>
+                        <div className='upd_label'>  
                              <label htmlFor="texte">* Image</label> 
                         </div> 
                         <input {...register('image')} aria-label="Add your image"

@@ -185,20 +185,20 @@ function Signup (){
             <p className='connect_text'>Just Fill all the Fields  : </p> 
             <div className='connect_form_container'>
             <form id='form_signup' onSubmit={handleSubmit(onSubmit)}>
-                <div class='upd_form_element'>
-                    <div class='upd_label'>
+                <div className='upd_form_element'>
+                    <div className='upd_label'>
                     </div>
                     <label htmlFor="email">* Email</label>
                     <input {...register('email')} type="email" onChange={resetError} id="email" />
                 </div>
-                <div class='upd_form_element'>
-                    <div class='upd_label'>
+                <div className='upd_form_element'>
+                    <div className='upd_label'>
                     <label htmlFor="username">* Username</label>
                     </div>
                     <input {...register('username')} type="text" onChange={resetError} id="username" />
                 </div>
-                <div class='upd_form_element'>
-                   <div class='upd_label'>
+                <div className='upd_form_element'>
+                   <div className='upd_label'>
                     <label htmlFor="password">* Password</label>
                     </div>
                     <input type="password" {...register('password')}   onChange={resetError} id="password" />

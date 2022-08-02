@@ -193,22 +193,22 @@ const resetError = () => {
     return (
     <div className='page_main'>
         <Header  state={2} user={getLocalStorageUser()}/>
-        <div class='connect_body'>
-        <h2 class='connect_title'>Connect to our Community</h2>
-        <p class='connect_text'>Just Provide your Credentials: </p>
-        <div class='connect_form_container'>
+        <div className='connect_body'>
+        <h2 className='connect_title'>Connect to our Community</h2>
+        <p className='connect_text'>Just Provide your Credentials: </p>
+        <div className='connect_form_container'>
         <form id='form_signin' onSubmit={handleSubmit(onSubmit)}>
            
 
-            <div  class='upd_form_element'>
-                <div class='upd_label'>
+            <div  className='upd_form_element'>
+                <div className='upd_label'>
                 <label htmlFor="email">* Email</label>
                 </div>
                 <input {...register('email')} type="email"  id="email"  onChange={resetError}/>
             </div>
 
-            <div  class='upd_form_element'>
-                <div class='upd_label'>
+            <div  className='upd_form_element'>
+                <div className='upd_label'>
                 <label htmlFor="password">* Password</label>
                 </div>
                 <input type="password"  {...register('password')} id="password" 
@@ -216,7 +216,7 @@ const resetError = () => {
             </div>
             {error ?
                         <><div className='connect_form_error'>{error}</div><br></br></> : null}  
-            <button class='connect_button'>✔ Log In</button>
+            <button className='connect_button'>✔ Log In</button>
         </form>
         </div>
         </div>

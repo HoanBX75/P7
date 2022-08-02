@@ -203,16 +203,16 @@ function displayAllPosts (){
       // ---------------------------------------------------------------------
       return (
         <div>
-              <div class='post_body'>
-              <h2 class='connect_title'>Browse Our Posts </h2>
+              <div className='post_body'>
+              <h2 className='connect_title'>Browse Our Posts </h2>
               </div>
-              <div class='refresh_button_container'>
+              <div className='refresh_button_container'>
               <div className='refresh_button' onClick={() => refreshPosts ()}><button>👇🏻 Refresh </button></div>
               </div>
-              <div class='no_post_message'> {(posts.length == 0)? <p>No post at the moment! </p> :null } 
+              <div className='no_post_message'> {(posts.length == 0)? <p>No post at the moment! </p> :null } 
               </div>
 
-              <div class="posts">
+              <div className="posts">
 
                   {posts.map(({ _id, title, text, imageUrl, userId, userName,  
                                 postDate, usersLiked,
@@ -232,9 +232,9 @@ function displayAllPosts (){
    else {
          /* else : Not connected */
         return(
-        <div class='connect_body'>
-         <h2 class='connect_title'>Welcome to our Community!</h2> 
-         <p class='connect_text'>   Just Sign up, Log in, and Post    </p>
+        <div className='connect_body'>
+         <h2 className='connect_title'>Welcome to our Community!</h2> 
+         <p className='connect_text'>   Just Sign up, Log in, and Post    </p>
          <img  className='home_communicate_image' src={communicate} alt="logo Groupomania"/>
         </div>
         )
