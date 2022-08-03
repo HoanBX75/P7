@@ -208,7 +208,7 @@ exports.deletePost = async  (req, res, next) =>{
 
         // Check that the requestor is the owner of the Post  or an admin user
         // -------------------------------------------------------------------
-        if (( post.userId !== req.userId)  && (!isUserAdmin(req.username)))  {
+        if (( post.userId !== req.userId)  && (!isUserAdmin(req.usertype)))  {
             trace.Log_msg (1,funcName ,   'unauthorized request  ' );
             res.status(401).json(  { message: 'unauthorized request' } );
         }
@@ -343,8 +343,10 @@ exports.updatePost = (req, res, next) => {
         trace.Log_obj(1,funcName ,  ' Post  userid  = ' , post.userId);
         trace.Log_obj(1,funcName ,   'req userid  = ' ,  req.userId);
         trace.Log_obj(1,funcName ,    'req username ' ,  req.username);
+        trace.Log_obj(1,funcName ,    'req usertype ' ,  req.usertype);
 
-        if (( post.userId !== req.userId)  && (!isUserAdmin(req.username)))  {
+      //   if (( post.userId !== req.userId)  && (!isUserAdmin(req.username)))  {
+        if (( post.userId !== req.userId)  && (!isUserAdmin(req.usertype)))  {
             res.status(401).json(  { message: 'unauthorized request' } );
         }
         else 
@@ -547,17 +549,21 @@ exports.likePost = (req, res, next) => {
  This function returns true if the username is an admin
 */
 
-function isUserAdmin (username)
+function isUserAdmin (usertype)
 {
     const scriptname = 'controllers/post.js';
     const funcName =  scriptname + '/isUserAdmin()'; 
-
+    if ( usertype == null ) return false ;
+    if ( usertype == 'admin' )  return (true);
+    return (false);
+/*
     let found   = adminUserList.find (name => name === username);
     trace.Log_obj(1,funcName  , "username =  ", username);
     trace.Log_obj(1,funcName  , "  admin flag =  ", found);
     if (found)  return (true);
 
     return (false);
+    */ 
 }
 
 

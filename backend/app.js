@@ -9,20 +9,49 @@ const trace=require ('./utils/TraceLogB');
 const bcrypt =  require ('bcrypt');
 
 
+/*
+-------------------------------------------------------------------------
+Function createAdminUser()
+Description : 
+   This function is used to create an Admin user at the start of the 
+   backend server.
+   Input parameters 
+   i_username : user name 
+   i_password : user password 
+   i_email :  user mail
+-------------------------------------------------------------------------
+*/
+
 async function  createAdminUser (i_username, i_password, i_email) 
 {
   const funcName =  'app.js/createAdminUser()'; 
   trace.Log_line();
   trace.Log_msg (1,funcName , 'BEGIN '  );
    
-  /* Check that the userId is related to an existing user */
-  /* A Find Request is done against MongoDb user collection */
- //  await  User.findOne({username: i_username})
- //  await  User.findOne({username: 'i_username'})
+  /* check parameters */
+  if ((i_username==null) ||(i_username.length == 0)) {
+    console.log ('Warning : User name must be provided in the .env file with ADMIN_USERNAME to \
+create an Admin User. Else just remove ADMIN_USERNAME property.');
+    return;
+  }
+  if ((i_password==null) ||(i_password.length == 0)) {
+    console.log ('Warning : User password must be provided in the .env file with ADMIN_PASSWORD \
+create an Admin User. Else just remove ADMIN_PASSWORD property. ');
+    return;
+  }
+  if ((i_email==null) ||(i_email.length == 0)) {
+     console.log ('Warning : User mail  must be provided in the .env file with ADMIN_EMAIL \
+  create an Admin User. Else just remove ADMIN_EMAIL property. ');
+     return;
+  }
 
- let found = true;
 
-await  User.findOne({username: i_username, email:i_email})
+ 
+  /* Check that the user defined  by email and username is related to an existing user.  */
+  /* ---------------------------------------------------------------------------------- */
+  let found = true;
+  let b_error =  false;
+  await  User.findOne({username: i_username, email:i_email})
   .then((user) =>  {
       
        if (user != null)  {
@@ -32,81 +61,100 @@ await  User.findOne({username: i_username, email:i_email})
        else  {
          found = false;
         trace.Log_msg(1,funcName , 'The user is Not found   ');
-       }             
-    })
-    .catch(error => { 
-        found = false;
+       }            
+  })
+  .catch(error => { 
+        found = true;
         trace.Log_msg (1,funcName , 'The user not found - error = ', error);
-     });
+  });
 
-  
+  /* If the user is found, no user creation */
+  /* --------------------------------------- */
 
   if (found) {
-    console.log (`Warning :  At server start, no admin user is created with name '${i_username}' or email '${i_email}  (user name/email is already used).`);
+    console.log (`Warning :  At the server start, no admin user is created with name '${i_username}' or \n email '${i_email}' \
+      (user name  or email is already used).`);
     return;
   } 
 
-  // Creating the user 
-  // ------------------
+  // ---------------------
+  // Create an Admin  user 
+  // ---------------------
 
+  // Hash the password 
+  // ---------------
   bcrypt.hash(i_password, 10)
   .then(hash => {
-
-        const user = new User({
+      const user = new User({
               email: i_email,
               username: i_username,
               usertype: 'admin',
               password: hash});
 
-        trace.Log_obj(1,funcName  , "user=",user );
+      trace.Log_obj(1,funcName  , "user=",user );
 
       // Create a user in mongodb
       // ------------------------- 
       user.save()
         .then(() =>
         { 
-          trace.Log_msg (1,funcName ,  "Signup Admin OK    ");
-          console.log (`The Admin user '{i_username}' with '{i_email}'  has been created.`);
-           // res.status(201).json({ message: 'User created !' })
+          trace.Log_msg (1,funcName ,  "Create Admin User  OK    ");
+          console.log (`The Admin user with '${i_username}' name  and '${i_email}' email has been created.`);
         })
         .catch(error => {
-
-          trace.Log_obj(1,funcName ,  "Signup Admin Fails -  ERROR message = ", error.message );
+          trace.Log_obj(1,funcName ,  "Create Admin User Fails -  error message = ", error.message );
           console.log (`Warning :  At server start, no admin user is created with name '${i_username}' or email '${i_email}.`);
         });
 
   })
   .catch(error => { 
-    trace.Log_obj(1,funcName ,  " signup ERROR  : " +  error );
-    res.status(500).json({ error })
+    trace.Log_obj(1,funcName ,  " Create Admin User is not created - ERROR  : " +  error );
+    console.log ("Create Admin User Fails - ERROR  : " +  error );
   });  
 
 }
 
-
-function manageAdminUser (i_username, i_password, i_email, i_action)
+/*
+-------------------------------------------------------------------------
+Function manageAdminUser()
+Description : 
+   This function is used to manage an Admin user at the start of the 
+   backend server.
+   Here it is invoking createAdminUser() to create an Admin User.
+   Input parameters 
+   i_username : user name 
+   i_password : user password 
+   i_email :  user mail
+-------------------------------------------------------------------------
+*/
+function manageAdminUser (i_username, i_password, i_email)
 {
-
   const funcName =  'app.js/manageAdminUser()'; 
   trace.Log_line();
   trace.Log_msg (1,funcName , 'BEGIN '  );
   trace.Log_obj(1,funcName  , "admin_username=",i_username );
   trace.Log_obj(1,funcName  , "admin_password=",i_password );
   trace.Log_obj(1,funcName  , "admin_email=",i_email );
-  trace.Log_obj(1,funcName  , "admin_action=",i_action );
+  
+  /* ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD  are mandatory  */
+  if ((i_username == null) && (i_password == null) &&(i_email == null )) {
+    return ;
+  }
+    
+  let l_action = "create"; /* other actions can be developed ... */
 
-  if (i_action) 
+  if (l_action) 
   {
      trace.Log_msg(1,funcName  ,'action');
-      switch (i_action)
+      switch (l_action)   /* switch for future actions as update, delete to be developed */
       {
         case 'create':
           trace.Log_msg(1,funcName  ,'create');
           createAdminUser (i_username, i_password, i_email)
           break;
-        case 'update': 
-        trace.Log_msg(1,funcName  ,'update');
-          break;
+          /*
+          case 'update:' ..... break;
+          */
         default:
           trace.Log_msg(1,funcName  ,'default');
           break;
@@ -123,7 +171,7 @@ const MY_CONNECT =  process.env.MY_CONNECT;
 const admin_username =  process.env.ADMIN_USERNAME
 const admin_email =  process.env.ADMIN_EMAIL
 const admin_password =  process.env.ADMIN_PASSWORD
-const admin_action =  process.env.ADMIN_ACTION
+
 
 // Connect to mongodb 
 //--------------------
@@ -170,7 +218,7 @@ app.use('/api/post/', postRoutes);
 
 // Manage  Admin user 
 // ------------------ 
-manageAdminUser (admin_username,admin_password,admin_email, admin_action);
+manageAdminUser (admin_username,admin_password,admin_email);
 
 
 

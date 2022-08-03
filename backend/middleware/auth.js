@@ -47,7 +47,8 @@ module.exports = (req, res, next) => {
         trace.Log_msg (1,scriptAuthName , 'Authorization OK');
        /* add   userId, username to the request   as they  will be used  */
       req.username = user.username ; 
-      req.userId = userId;                          
+      req.userId = userId;   
+      req.usertype = user.usertype;                       
       next();
       })
       .catch(error => { 
