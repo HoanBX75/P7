@@ -1,8 +1,21 @@
-This Readme describes how to test the application 
-using a predefined mongoDB dump.
+Readme.txt
+----------------------------------------------------------------------------------------
+
+
+This Readme.txt  describes how to test the application 
+by restoring  a  ***** mongoDB dump ******** .
+
 
 A MongoDB dump in the directory ./test/MongoDB_dump directory.
-This dump corresponds to the mongoDB database testP7_DB 
+This dump corresponds to the mongoDB database testP7_DB .
+Restoring this dump will create monogoDB  Database testP7_DB 
+populated with posts and users.
+
+The test directory contains 
+1. MongoDB_dump  : directory where the mongoDB dump is stored
+2. MongoDB_dump_images : images related to the mongoDB dump posts 
+3. images : images that can be used if you creat posts
+
 
 ==============================================================================
 1/ To restore the dump of the mongoDB database  testP7_DB, do the following : 
