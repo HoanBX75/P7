@@ -11,9 +11,6 @@ Il y a 3 répertoires principaux :
  - test     : contient le dump de la base de donnnée mongoDB  avec des 'posts', des 'users'
            et un Readme.txt qui décrit comment restaurer la base de donnée MongoDB .
 
-
-
-
 ------------------------------------------------------------------------------------------------
 1. Configuer, Démarrer front et back end, se connecter à l'application 
 ------------------------------------------------------------------------------------------------
