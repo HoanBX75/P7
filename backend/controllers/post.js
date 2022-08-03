@@ -2,7 +2,6 @@ const Post = require('../models/post');
 const User = require('../models/User');
 
 const fs = require('fs');
-const adminUserList  = require ('../data/adminUserList.js');
 const trace=require ('../utils/TraceLogB');
 
 scriptname = 'controllers/post.js: ';
@@ -184,7 +183,6 @@ The response :  { message: String }
 
 */
 
-
 exports.deletePost = async  (req, res, next) =>{
     const scriptname = 'controllers/post.js';
     const funcName =  scriptname + '/deletePost()'; 
@@ -199,9 +197,9 @@ exports.deletePost = async  (req, res, next) =>{
 
         trace.Log_obj(1,funcName , " Found post  id = ", req.params.id);
 
-        trace.Log_obj(1,funcName , ' post userid  = ' +  post.userId);
-        trace.Log_obj(1,funcName ,    'req userid  = ' +  req.userId);
-        trace.Log_obj(1,funcName ,    'req username  = ' +  req.username);
+        trace.Log_obj(1,funcName , ' post userid  = ' ,  post.userId);
+        trace.Log_obj(1,funcName ,    'req userid  = ' , req.userId);
+        trace.Log_obj(1,funcName ,    'req username  = ' , req.username);
 
         const filename = post.imageUrl.split('/images/')[1];
         trace.Log_obj(1,funcName , " Image Filename to remove  = ", filename);
@@ -556,14 +554,7 @@ function isUserAdmin (usertype)
     if ( usertype == null ) return false ;
     if ( usertype == 'admin' )  return (true);
     return (false);
-/*
-    let found   = adminUserList.find (name => name === username);
-    trace.Log_obj(1,funcName  , "username =  ", username);
-    trace.Log_obj(1,funcName  , "  admin flag =  ", found);
-    if (found)  return (true);
 
-    return (false);
-    */ 
 }
 
 

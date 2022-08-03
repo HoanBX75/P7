@@ -9,6 +9,10 @@ const trace=require ('./utils/TraceLogB');
 const bcrypt =  require ('bcrypt');
 
 
+/* ======================================================================================================== */
+/*                                          FUNCTIONS                                                       */
+/* ======================================================================================================== */
+
 /*
 -------------------------------------------------------------------------
 Function createAdminUser()
@@ -19,6 +23,13 @@ Description :
    i_username : user name 
    i_password : user password 
    i_email :  user mail
+
+ The processing is the following : 
+ 1/ check the input parameters 
+ 2/ Do a find request is the user is already existing (do a findOne in mongoDB) 
+ 3/ if the user does not exist , create an an Admin user 
+    by inserting a user in mongodb 
+
 -------------------------------------------------------------------------
 */
 
@@ -28,23 +39,56 @@ async function  createAdminUser (i_username, i_password, i_email)
   trace.Log_line();
   trace.Log_msg (1,funcName , 'BEGIN '  );
    
-  /* check parameters */
+  /* check username  */
+  /* --------------- */
   if ((i_username==null) ||(i_username.length == 0)) {
     console.log ('Warning : User name must be provided in the .env file with ADMIN_USERNAME to \
 create an Admin User. Else just remove ADMIN_USERNAME property.');
     return;
   }
+  else 
+  {
+    let regName = /^[ a-zA-Z0-9._\s -]+$/g;
+    if(!regName.test(i_username)){
+      console.log ('Warning : Bad format User name. Update the user name in the .env file with ADMIN_USERNAME to \
+create an Admin User.');
+        return;
+    }
+  }
+
+  /* check password  */
+  /* --------------- */
   if ((i_password==null) ||(i_password.length == 0)) {
     console.log ('Warning : User password must be provided in the .env file with ADMIN_PASSWORD \
 create an Admin User. Else just remove ADMIN_PASSWORD property. ');
     return;
   }
-  if ((i_email==null) ||(i_email.length == 0)) {
-     console.log ('Warning : User mail  must be provided in the .env file with ADMIN_EMAIL \
-  create an Admin User. Else just remove ADMIN_EMAIL property. ');
-     return;
+  else 
+  {
+    let regName = /^[ a-zA-Z0-9._\s -]+$/g;
+    if(!regName.test(i_password)){
+      console.log ('Warning : Bad format User password. Update the user password in the .env file with ADMIN_PASSWORD to \
+create an Admin User.');
+        return;
+    }
   }
 
+  /* check email  */
+  /* ------------ */
+  if ((i_email==null) ||(i_email.length == 0)) {
+     console.log ('Warning : User mail  must be provided in the .env file with ADMIN_EMAIL \
+create an Admin User.');
+     return;
+  }
+  else 
+  {
+    let regEmail = /^[a-zA-Z0-9._\s-]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/g;
+    if(!regEmail.test(i_email)){
+      console.log ('Warning : Bad format User email. Update the user email  in the .env file with ADMIN_EMAIL to \
+create an Admin User. ');
+        return;
+    }
+  }
 
  
   /* Check that the user defined  by email and username is related to an existing user.  */
@@ -73,7 +117,7 @@ create an Admin User. Else just remove ADMIN_PASSWORD property. ');
 
   if (found) {
     console.log (`Warning :  At the server start, no admin user is created with name '${i_username}' or \n email '${i_email}' \
-      (user name  or email is already used).`);
+(user name/email areused or user already exists).`);
     return;
   } 
 
@@ -131,16 +175,16 @@ function manageAdminUser (i_username, i_password, i_email)
 {
   const funcName =  'app.js/manageAdminUser()'; 
   trace.Log_line();
-  trace.Log_msg (1,funcName , 'BEGIN '  );
-  trace.Log_obj(1,funcName  , "admin_username=",i_username );
-  trace.Log_obj(1,funcName  , "admin_password=",i_password );
-  trace.Log_obj(1,funcName  , "admin_email=",i_email );
   
   /* ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD  are mandatory  */
   if ((i_username == null) && (i_password == null) &&(i_email == null )) {
+    trace.Log_msg(1,funcName  ,'No Admin user management');
     return ;
   }
-    
+  trace.Log_obj(1,funcName  , "admin_username=",i_username );
+  trace.Log_obj(1,funcName  , "admin_password=",i_password );
+  trace.Log_obj(1,funcName  , "admin_email=",i_email );  
+
   let l_action = "create"; /* other actions can be developed ... */
 
   if (l_action) 
@@ -161,6 +205,8 @@ function manageAdminUser (i_username, i_password, i_email)
       }
   }
 }
+/* ======================================================================================================== */
+
 
 
 // Getting environment parameters 
@@ -186,9 +232,6 @@ mongoose.connect(MY_CONNECT,
   
 // Create the express 
 const app = express();
-
-// Check if there is an admin 
-
 
 
 // Allow cross origin, methods, and header attributes 
@@ -216,7 +259,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth/', userRoutes);
 app.use('/api/post/', postRoutes);
 
-// Manage  Admin user 
+// Manage  Admin user (creata an admin user if needed)
 // ------------------ 
 manageAdminUser (admin_username,admin_password,admin_email);
 

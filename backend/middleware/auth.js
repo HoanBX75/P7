@@ -44,6 +44,7 @@ module.exports = (req, res, next) => {
       User.findOne({_id: userId})
       .then((user) =>  {
         trace.Log_obj(1,scriptAuthName , 'The username  = ', user.username);
+        trace.Log_obj(1,scriptAuthName , 'The usertype  = ', user.usertype);
         trace.Log_msg (1,scriptAuthName , 'Authorization OK');
        /* add   userId, username to the request   as they  will be used  */
       req.username = user.username ; 

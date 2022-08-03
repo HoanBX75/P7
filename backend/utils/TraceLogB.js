@@ -1,5 +1,5 @@
 
-const trace_level = 0; /* 0 disable the trace , 5 enable the trace*/
+const trace_level = 5; /* 0 disable the trace , 5 enable the trace*/
 
 exports.Log_msg = (level, component, msg) => {
     if (trace_level > level )

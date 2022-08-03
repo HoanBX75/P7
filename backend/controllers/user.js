@@ -2,9 +2,8 @@ const User = require ('../models/User');
 const bcrypt =  require ('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const adminUserList  = require ('../data/adminUserList.js');
-const trace=require ('../utils/TraceLogB');
 
+const trace=require ('../utils/TraceLogB');
 const  scriptUsername = 'controllers/user.js : ';
 
 /*
@@ -45,10 +44,10 @@ exports.signup = (req, res, next) => {
       let  username = req.body.username 
       let usertype = 'user';
 
-      // Check if the user is an admin User 
-      // ----------------------------------
-      let found   = adminUserList.find (name => name === username);
-      if (found)  usertype = 'admin';
+      //  the user is an  user type  (admin user is created at start of the backend server ) 
+      // ---------------------------
+  
+      usertype = 'user';
 
       trace.Log (1,funcName, "username =  ", username);
       trace.Log (1,funcName,  "usertype =  ", usertype);
