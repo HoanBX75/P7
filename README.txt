@@ -1,147 +1,113 @@
-Ceci est le code d'implémentation du projet P7 : 
-Créez un réseau social d’entreprise 
+README.txt (projet P7)
+----------------------------------------------------------------------------------------
+Ce README décrit comment :
+  1. configurer et démarrer le frontend et backend serveur du project P7 (Créez un réseau social d’entreprise).
+  2. initialiser une base de donnée mongoDB de users, posts à partir d'un dump mongoDB 
+      
+
+Il y a 3 répertoires principaux : 
+ - backend  : contient le code du backend 
+ - frontend : contient le code du frontend
+ - test     : contient le dump de la base de donnnée mongoDB  avec des 'posts', des 'users'
+           et un Readme.txt qui décrit comment restaurer la base de donnée MongoDB .
 
 
-Le code est constitué de deux parties, deux répertoires  : 
-  - frontend 
-  - backend 
 
-Dans ce Readme, nous vous indiquons comment 
-configurer le backend, frontend, et pour votre 
-base de données . 
-Enfin, vous trouverez  comm exemple un cas d'utilisation 
-de l'applicaton.
 
--------------------- 
-- Base de données :
--------------------- 
+------------------------------------------------------------------------------------------------
+1. Configuer, Démarrer front et back end, se connecter à l'application 
+------------------------------------------------------------------------------------------------
 
-La base de données utilisée est MongoDB Atlas (une base donnée locale 
-peut être utilisée).
-Aussi, pour ce projet il faut créer une base de donnée dans MongoDB 
-et avoir accès à celle-ci avec un utilisateur . 
 
-Connaitre la string de connection à la base, comme par exemple  :
-mongodb+srv://george:georgepass@cluster0.kpc66n.mongodb.net/testp7?retryWrites=true&w=majority
-          -   le nom est george 
+1.1 Configurer le backend  (** un utilisateur admin ***, MongoDB connect string, token string) 
+--------------------------------------------------------------------------------------
+-  Pré-requis : pour ce projet il faut créer une base de donnée dans MongoDB  Atlas
+(une base donnée locale) et avoir accès à celle-ci avec un utilisateur . 
+
+Pour configurer, suivre ces étapes: 
+
+A/  Aller dans le répertoire backend 
+B/ Ajouter un dossier "images" au dossier backend.
+C/  Renommer le .env_template en .env et remplisser clefs avec vos valeurs : 
+
+  MY_CONNECT=<'string' de connection à la base mongodb>
+  SECRET_TOKEN=<'string' servant à signer et vérifier le token de connection>
+
+  ADMIN_USERNAME=<user name de l'administrateur>
+  ADMIN_EMAIL=<user email de l'administrateur>
+  ADMIN_PASSWORD=<user password de l'administrateur >
+
+ Au démarrage du serveur backend - s'il n'existe pas un utilisateur 
+administrateur, il sera créé avec les valeurs des propriétés ADMIN_USERNAME, ADMIN_EMAIL, 
+ADMIN_PASSWORD.
+
+Exemple: 
+--------
+MY_CONNECT=mongodb+srv://george:georgepass@cluster0.kpc66n.mongodb.net/testp7
+          -  le nom est george 
           - le password gerogepass 
           - le nom de la base de donnée est testp7
-Important, il faut que george ait les droits en écriture et lecture sur la base.
-Cette string sera celle qui sera utilisée dans le backend (dans le fichier .env).
 
-Note : vous n'avez pas à créer des collections et documents en base, l'application 
-le fera pour vous :-)
+SECRET_TOKEN=RANDOM_TOKEN_SECRET
 
--------------------- 
-- Pour le backend : 
--------------------- 
+Et, un user administrateur sera créé dans la collectection user de mongodb 
+ave le nom admin, email admin@gmail.com et le mot de passe admin.
 
-1/ Ajouter un dossier "images" au dossier backend.
-2/ Renommer le .env_template en .env et remplisser clefs avec vos valeurs : 
- MY_CONNECT : la 'string' de connection à la base mongodb 
- SECRET_TOKEN= la 'string' servant à signer et vérifier le token de connection 
-3/ Lancer le backend avec la commande : 
+ADMIN_USERNAME=admin
+ADMIN_EMAIL=admin@gmail.com
+ADMIN_PASSWORD=admin
+
+1.2 Démarrer le backend 
+-----------------------
+
+ - aller dans le répertoire backend , et  taper  la commande : 
    nodemon server
 
 
--------------------- 
-- Pour le frontend :
----------------------
+1.3  Démarrer le frontend 
+-----------------------
 
-Pour lancer le frontend, taper la command : 
+ - aller dans le répertoire frontend ,  taper la commande : 
 npm start 
 
 Noter que le port d'écoute est 4200 (celui est configurable dans package.json)
 
------------------------------------------------- 
-Notes Importantes pour creer un  Administrateur 
-------------------------------------------------
 
-- Pas besoin de pré créer des collections (user, post). Elles seront 
-crées directement , par l'application à l'utilisation .
-
-- Les utilisateurs peuvent être crées au sign up de l'application.
-Pour avoir des ***  utilisateurs administrateur *** , il suffit que vous enregistrer 
-les utilisateurs suivants avec les noms fixes prédéfinis admin ou adrien  : 
-
-  - utisisateur     nom = admin  (obligatoire pour être administrateur  )
-                    email  admin@gmail.com 
-                     password admin
-
-    - utisisateur    nom = adrien   (obligatoire pour être administrateur )
-                    email   adrien@gmail.com 
-                    password adrien 
- 
- Aussi admin et adrien ont les roles admin automatiquement.
-
------------------------------------------------------
-Exemple de création de users (dont 2 admins) , et posts
-------------------------------------------------------
-Dans frontend/src/zTest_images, des exemples d'images 
-qui pourront servir comme images d'example ont été mises.
-Ce sont ces photos qui sont utilisées pour cet exemple.
+1.4 Invoker l'application 
+-------------------------
+  Dans un browser, aller à http://localhost:4200
 
 
-1/ Créer  4 users (dont 2 administrateurs )
--- 2 users admin  (adrien, admin)
-Email, user, password  
-admin@gmail.com   -  admin / admin
-adrien@gmail.com  -  adrien  /adrien
- 
--- 2 users 'normaux'  (titi, toto)
-titi@gmail.com  titi/titi
-toto@gmail.com  toto/toto
+------------------------------------------------------------------------------------------------
+2. Initializer la base de données (MongoDB ) de l'application avec un dump d'une base prédéfinie.
+------------------------------------------------------------------------------------------------
+
+Dans le répertoire test se trouvent :  
+ - un dump d'une base de données contenant des posts et users 
+ - les images correspondants  aux images des posts dans le dump 
+ - un Readme.txt qui explique comment restaurer la base de données 
+ à partir du dump.
+  cd .\test\MongoDB_dump
+  mongorestore --uri=mongodb+srv://<username:password@cluster_host>/testP7_DB  testP7_DB
+
+Pour plus de détail, lire le Readme.txt dans  le répertoire test.
+
+Une fois que la base de donnée est restaurée, démarer le front 
+end, et le backend comme décrit ci dessus.
 
 
-2/ Créer  des posts 
-2.1 titi : 2 posts 
-* titi_poste1
-Text:
-Je suis titi et je loue un appartement
-comme vous pouver le voir sur la photo 
-de mon post.
-Photo : annie-spratt-Eg1qcIitAuA-unsplash.jpg
 
-* titi_poste2
-Text:
-Salut, c'est titi
-Je passes des vacances de rêve dans un appartement
-à Lyon. 
-Et j'aimerais vous le recommander! 
-Photo :  aw-creative-VGs8z60yT2c-unsplash.jpg
 
-2.2 toto : 1 post  
-* toto_post1
-Je m'appelle toto et je cherche un appartement.
-Voir la photo.
-J'ai lu un article qui pourrait vous intéresser:
-Dans le secteur privé, la loi permet de sous-louer son appartement
-(en totalité ou en partie), si l’on a l’accord de son bailleur. 
-Dans le secteur social, la loi l’interdit totalement. 
- Les HLM et les logements « conventionnés » (construits, rénovés ou achetés avec une aide de l’Etat),
- qui permettent de se loger à un prix inférieur à celui du marché.
-Photo : emile-guillemot-Bj_rcSC5XfE-unsplash.jpg
 
-2.3 adrien : 2 posts 
 
-* adrien_post1
-Je voudrais faire un échange d'appartement.
-Le mien sur la photo.
-Photo : marcus-loke-WQJvWU_HZFo-unsplash.jpg
 
-* adrien_post2
-Y aurait -il une personne intéressée pour acheter l'appartement 
-de mon voisin ?
-Je partage ce dernier  article lu :
-La France a déjà connu une vague de chaleur précoce en juin 
-et sort tout juste d’une deuxième (12-25 juillet), qui a favorisé plusieurs incendies, 
-notamment en Gironde, où près de 21 000 hectares de forêt ont été détruits. 
-Cette troisième vague « constitue désormais la 45e vague de chaleur recensée depuis 1947 », 
-« la troisième la plus intense.
-Photo : febrian-zakaria-M6S1WvfW68A-unsplash.jpg
 
-2.4  admin : 0 post 
 
-3/  Puis Liker, updater, deleter des posts ....
+
+
+
+
+
+
 
 

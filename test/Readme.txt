@@ -1,7 +1,5 @@
 Readme.txt
 ----------------------------------------------------------------------------------------
-
-
 This Readme.txt  describes how to test the application 
 by restoring  a  ***** mongoDB dump ******** .
 
@@ -25,7 +23,7 @@ A/ cd .\test\MongoDB_dump
 
 B/  provide the <mongoDB_db_connect_string string> value in the mongoDB restore 
 command  :
-    mongorestore --uri=mongodb+srv://<mongoDB_db_connect_string>/testP7_DB  testP7_DB
+    mongorestore --uri=mongodb+srv://<username:password@cluster_host>/testP7_DB  testP7_DB
 
 and execute the mongoDB restore command.
 As for instance : 
@@ -38,7 +36,7 @@ C/ Then, in the mongoDB database will be populate as the following  :
         Username=admin
         Password=admin
 
-        - Deux users 'normaux'  =  titi, toto
+        - two  users 'normaux'  =  titi, toto
         Email=titi@gmail.com
         Username=titi
         Password=titi
@@ -76,7 +74,6 @@ C/ Then, in the mongoDB database will be populate as the following  :
         Image: emile-guillemot-Bj_rcSC5XfE-unsplash.jpg
 
         - admin : post 4
-
         Text:
         Je voudrais faire un échange d'appartement.
         Le mien sur la photo.
@@ -98,15 +95,15 @@ C/ Then, in the mongoDB database will be populate as the following  :
 
        copy ./test/MongoDB_dump_images   ./backend/images 
 
-
-
 ================================================================================
 3/ Use the Post site  
 =================================================================================
 
-A/ Connect to the site  http://localhost:4200
+A/ Start backend, frontend servers
 
-B/ You can then Login 
+B/ Connect to the site  http://localhost:4200
+
+C/  You can  Login 
   with the Admin user 
              Email=admin@gmail.com  / Password=admin
   or with the users 

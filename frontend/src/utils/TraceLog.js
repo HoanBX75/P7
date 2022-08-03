@@ -4,7 +4,7 @@
  To enbale the trace, set trace_level to 5 
  To disable the trace, set trace_level to 0  
 */
-const trace_level = 5; 
+const trace_level = 0; 
 
 const   traceLog_line =  () =>{
 if (trace_level > 0 )
